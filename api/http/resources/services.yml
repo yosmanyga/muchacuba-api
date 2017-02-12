@@ -1,0 +1,12 @@
+muchacuba.http.server.controller_dispatcher:
+    class: 'Symsonte\Http\Server\ControllerDispatcher'
+    arguments:
+        - '@symsonte.service_kit.resource.loader'
+        - '#symsonte.resource.builder'
+        - '@symsonte.service_kit.container'
+        - '@symsonte.http.server.request.resolution.nikic_fast_route_finder'
+        - '@symsonte.http.server.request.authorization.checker'
+        - '@symsonte.http.server.request.authentication.credential.authorization_resolver'
+        - '@muchacuba.http.server.request.authentication.credential.processor'
+        - '@muchacuba.http.server.request.authorization.role.collector'
+        - '@symsonte.http.server'

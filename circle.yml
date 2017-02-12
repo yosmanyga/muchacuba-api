@@ -1,0 +1,16 @@
+machine:
+  services:
+    - docker
+  environment:
+    DOCKER_VERSION: "1.11.2-0~trusty"
+    DOCKER_COMPOSE_VERSION: "1.6.2"
+
+dependencies:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+
+test:
+  post:
+    - docker version
+    - docker-compose version
+    - cd docker && docker-compose up -d && sudo lxc-attach -n "$(docker inspect --format "{{.Id}}" muchacuba_php)" -- bash -c "echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && cd .. && composer install --no-interaction --prefer-dist && chmod 777 -R var/cache && cd ../ && ../vendor/behat/behat/bin/behat"

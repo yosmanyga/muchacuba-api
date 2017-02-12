@@ -1,0 +1,8 @@
+muchacuba.cli.server.command_dispatcher:
+    class: 'Symsonte\Cli\Server\CommandDispatcher'
+    arguments:
+        - '@symsonte.service_kit.resource.loader'
+        - '#symsonte.resource.builder'
+        - '@symsonte.service_kit.container'
+        - '@symsonte.cli.server.input.resolution.ordinary_finder'
+        - '@symsonte.cli.server'

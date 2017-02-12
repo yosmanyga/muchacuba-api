@@ -1,0 +1,62 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:1.11.9-alpine
+    container_name: muchacuba_nginx
+    links:
+      - php
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ../app/build:/var/www
+    working_dir: /var/www
+    environment:
+      - VIRTUAL_HOST=muchacuba.com
+      - LETSENCRYPT_HOST=muchacuba.com
+      - LETSENCRYPT_EMAIL=contact@cubalider.com
+    restart: always
+  php:
+    image: cubalider/php
+    container_name: muchacuba_php
+    volumes:
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ../api:/var/www/
+    links:
+      - mongo
+    working_dir: /var/www
+    restart: always
+  cron:
+    image: cubalider/php
+    container_name: muchacuba_cron
+    volumes:
+      - ../api:/var/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./cron:/root
+    links:
+      - mongo
+    working_dir: /var/www
+    entrypoint: /root/entrypoint.sh
+    environment:
+      PHP_IDE_CONFIG: "serverName=docker"
+      PHP_XDEBUG_ENABLED: 1
+      XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.18.0.1"
+    restart: always
+  mongo:
+    image: mvertes/alpine-mongo:3.2.10-3
+    container_name: muchacuba_mongo
+    volumes:
+      - ../api/var/db:/data/db
+    restart: always
+  mysql:
+    image: mysql:5.7.17
+    container_name: muchacuba_mysql
+    volumes:
+      - ../api/var/db_mysql:/var/lib/mysql
+      - ./mysql:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+
+networks:
+  default:
+    external:
+      name: proxy_default

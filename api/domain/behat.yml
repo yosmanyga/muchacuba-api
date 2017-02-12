@@ -1,0 +1,18 @@
+default:
+  extensions:
+    Symsonte\Behat\ServiceContainer\SymsonteExtension:
+      parametersFile: ../config/parameters.yml
+      cacheDir: ../var/cache
+      namespaces: ['Muchacuba', 'Symsonte']
+  suites:
+    mule:
+      paths: [%paths.base%/features/Mule]
+      contexts:
+        - Muchacuba\Mule\ManageOfferContext
+        - Muchacuba\Mule\SearchOffersContext
+    internauta:
+      paths: [%paths.base%/features/Internauta]
+      contexts:
+        - Muchacuba\Internauta\RequestContext
+        - Muchacuba\Internauta\Context
+        - Muchacuba\Internauta\Advertising\Context
