@@ -69,7 +69,7 @@ class ManageStorage
                 ))
                     ->selectCollection(
                         $this->db,
-                        'requests'
+                        'internauta_requests'
                     );
         }
 

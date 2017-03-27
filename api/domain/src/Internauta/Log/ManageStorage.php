@@ -69,7 +69,7 @@ class ManageStorage
                 ))
                     ->selectCollection(
                         $this->db,
-                        'logs'
+                        'internauta_logs'
                     );
         }
 
