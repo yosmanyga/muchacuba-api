@@ -44,8 +44,6 @@ class SendEmail
     {
         // TODO: Throw exception if subject, body or attachments are too big
 
-        $mg = new Mailgun($this->mailgunApiKey);
-
         $events = [];
 
         $attachmentData = [];
@@ -59,8 +57,26 @@ class SendEmail
 
             list($width, $height, $type, $attr) = getimagesize($filename);
             unset($width, $height, $attr);
-            $type = image_type_to_mime_type($type);
-            list($type, $subtype) = explode('/', $type);
+
+            if (!is_null($type)) {
+                $type = image_type_to_mime_type($type);
+                list($type, $subtype) = explode('/', $type);
+            } else {
+                $type = mime_content_type($filename);
+                if ($type == 'image/svg+xml') {
+                    $subtype = 'svg';
+                } else {
+                    $events[] = new Event(
+                        $this,
+                        'UnknownType',
+                        [
+                            'type' => $type
+                        ]
+                    );
+
+                    continue;
+                }
+            }
 
             $newFilename = sprintf("%s.%s", $filename, $subtype);
             rename($filename, $newFilename);
@@ -87,7 +103,7 @@ class SendEmail
             ]
         );
 
-        $mg->sendMessage(
+        (new Mailgun($this->mailgunApiKey))->sendMessage(
             'muchacuba.com',
             [
                 'from' => $sender,
