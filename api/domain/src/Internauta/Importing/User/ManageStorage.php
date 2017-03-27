@@ -73,21 +73,20 @@ class ManageStorage
                         $this->db,
                         'importing_users'
                     );
-
-            $this->collection->createIndex(
-                ['email' => 1],
-                ['unique' => true]
-            );
         }
 
         return $this->collection;
     }
 
     /**
-     * Prepares storage.
+     * Prepares storage, adding indexes.
      */
     public function prepare()
     {
+        $this->connect()->createIndex(
+            ['email' => 1],
+            ['unique' => true]
+        );
     }
 
     /**
