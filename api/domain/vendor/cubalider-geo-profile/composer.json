@@ -1,0 +1,47 @@
+{
+    "name": "cubalider/geo-profile",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yosmany Garcia",
+            "email": "yosmanyga@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cubalider\\Geo\\": [
+                "src"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cubalider\\Geo\\": [
+                "test/features"
+            ]
+        }
+    },
+    "require": {
+        "php": ">=5.3.9",
+        "mongodb/mongodb": "~1",
+        "respect/validation": "~1"
+    },
+    "require-dev": {
+        "behat/behat": "~3",
+        "symsonte/behat-extension": "@dev",
+        "coduo/php-matcher": "~2"
+
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:yosmanyga/symsonte.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:yosmanyga/symsonte-extension.git"
+        }
+    ],
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}

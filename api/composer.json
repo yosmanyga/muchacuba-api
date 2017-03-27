@@ -53,7 +53,13 @@
                 "cli/src"
             ],
             "Cubalider\\Facebook\\": [
-                "domain/vendor/cubalider-facebook"
+                "domain/vendor/cubalider-facebook/src"
+            ],
+            "Cubalider\\Geo\\": [
+                "domain/vendor/cubalider-geo-profile/src"
+            ],
+            "Cubalider\\Navigation\\": [
+                "domain/vendor/cubalider-navigation/src"
             ]
         }
     },
