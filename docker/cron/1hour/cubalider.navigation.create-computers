@@ -1,0 +1,3 @@
+#!/bin/sh
+
+php /var/www/bin/app.php cubalider.navigation.create-computers >> /var/log/cron.log 2>&1

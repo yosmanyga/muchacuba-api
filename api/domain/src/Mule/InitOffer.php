@@ -43,7 +43,7 @@ class InitOffer
      * @di\arguments({
      *    application: "%algolia_application%",
      *    api:         "%algolia_api%",
-     *    index:       "%algolia_index%",
+     *    index:       "%algolia_mule_offer_index%",
      *    proxy:       "%proxy%"
      * })
      */
