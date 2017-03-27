@@ -432,7 +432,7 @@ class ManageOffer
     /**
      * Adds an object on algolia with given data.
      *
-     * @param string $id
+     * @param string $uniqueness
      * @param string $name
      * @param string $contact
      * @param string $address
@@ -442,7 +442,7 @@ class ManageOffer
      * @param int[]  $trips
      */
     private function indexOnAlgolia(
-        $id,
+        $uniqueness,
         $name,
         $contact,
         $address,
@@ -461,7 +461,7 @@ class ManageOffer
         $nextTrip = min($trips);
 
         $res = $index->addObject([
-            'objectID' => $id,
+            'objectID' => $uniqueness,
             'name' => $name,
             'contact' => $contact,
             'address' => $address,
