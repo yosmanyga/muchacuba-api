@@ -18,7 +18,7 @@ import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
 import Wait from '../Wait';
 
-import picture from './picture.jpg';
+import defaultPicture from './picture.jpg';
 
 firebase.initializeApp({
     apiKey: "AIzaSyClvnStM8ZWjDNjjU-CaQ5NrjC2Ttd8eTI",
@@ -43,8 +43,14 @@ export default class ManageConversations extends React.Component {
 
         this.state = {
             token: null,
+            presence: {
+                firebaseToken: null,
+                geoLat: null,
+                geoLng: null
+            },
             page: 'list', // list, invite
             contacts: null,
+            presences: null,
             conversations: null,
             conversation: null
         };
@@ -53,7 +59,9 @@ export default class ManageConversations extends React.Component {
         this._connectToServer = new ConnectToServer();
 
         this._prepareFirebase = this._prepareFirebase.bind(this);
+        this._prepareGeo = this._prepareGeo.bind(this);
         this._loadContacts = this._loadContacts.bind(this);
+        this._loadPresences = this._loadPresences.bind(this);
         this._loadConversations = this._loadConversations.bind(this);
     }
 
@@ -79,8 +87,19 @@ export default class ManageConversations extends React.Component {
             // It means that this preparation is executed just once
 
             this._prepareFirebase();
+            this._prepareGeo();
             this._loadContacts();
             this._loadConversations();
+        }
+
+        if (
+            prevState.presence !== this.state.presence
+            && this.state.presence.firebaseToken !== null
+            && this.state.presence.geoLat !== null
+            && this.state.presence.geoLng !== null
+        ) {
+            this._loadPresences();
+            this._setPresence();
         }
 
         // Open conversation set by query
@@ -153,7 +172,10 @@ export default class ManageConversations extends React.Component {
             return <Wait />;
         }
 
-        if (this.state.contacts === null || this.state.conversations === null) {
+        if (this.state.contacts === null
+            || this.state.presences === null
+            || this.state.conversations === null
+        ) {
             return <Wait layout={this.props.layout}/>;
         }
 
@@ -189,7 +211,7 @@ export default class ManageConversations extends React.Component {
                         padding: "10px"
                     }}>
                         <List>
-                            <Subheader>Vecin@s</Subheader>
+                            <Subheader>Conversaciones</Subheader>
                             {this.state.conversations.map((conversation) => {
                                 const contact = _.find(
                                     this.state.contacts,
@@ -203,22 +225,19 @@ export default class ManageConversations extends React.Component {
                                     }
                                 );
 
-                                return (
-                                    <ListItem
-                                        key={conversation.id}
-                                        primaryText={contact.name}
-                                        onTouchTap={() => {
-                                            this.setState({
-                                                conversation: conversation.id
-                                            });
-                                        }}
-                                        leftAvatar={contact.picture !== null
-                                            ? <Avatar src={contact.picture} />
-                                            : <Avatar src={picture} />
-                                        }
-                                        rightIcon={typeof conversation.fresh !== 'undefined' ? <CommunicationChatBubble /> : null}
-                                        style={{backgroundColor: this.state.conversation === conversation ? green50 : null}}
-                                    />
+                                return this._renderItem(
+                                    conversation.id,
+                                    contact.name,
+                                    contact.picture,
+                                    conversation.fresh
+                                );
+                            })}
+                            <Subheader>Vecinos</Subheader>
+                            {this.state.presences.map((presence) => {
+                                return this._renderItem(
+                                    presence.id,
+                                    presence.name,
+                                    presence.picture
                                 );
                             })}
                         </List>
@@ -286,26 +305,53 @@ export default class ManageConversations extends React.Component {
         );
     }
 
+    _renderItem(id, name, picture, fresh) {
+        return (
+            <ListItem
+                key={id}
+                primaryText={name}
+                onTouchTap={() => {
+                    this.setState({
+                        conversation: id
+                    });
+                }}
+                leftAvatar={picture !== null
+                    ? <Avatar src={picture} />
+                    : <Avatar src={defaultPicture} />
+                }
+                rightIcon={typeof fresh !== 'undefined' ? <CommunicationChatBubble /> : null}
+                style={{backgroundColor: this.state.conversation === id ? green50 : null}}
+            />
+        );
+    }
+
+    _prepareGeo() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.setState({
+                        presence: {
+                            ...this.state.presence,
+                            geoLat: position.coords.latitude,
+                            geoLng: position.coords.longitude
+                        }
+                    });
+                }
+            );
+        }
+    }
+
     _prepareFirebase() {
         this._firebaseMessaging.requestPermission()
             .then(() => {
                 this._firebaseMessaging.getToken()
                     .then((token) => {
-                        this._connectToServer
-                            .post('/chuchuchu/firebase/set-presence')
-                            .auth(this.state.token)
-                            .send({'token': token})
-                            .end((err, res) => {
-                                if (err) {
-                                    if (err.status === 401) {
-                                        this.props.onUnauthorized('');
-
-                                        return;
-                                    }
-
-                                    // TODO
-                                }
-                            });
+                        this.setState({
+                            presence: {
+                                ...this.state.presence,
+                                firebaseToken: token
+                            }
+                        });
                     })
                     .catch(function(err) {
                         console.log('An error occurred while retrieving token. ', err);
@@ -364,6 +410,24 @@ export default class ManageConversations extends React.Component {
         });
     }
 
+    _setPresence() {
+        this._connectToServer
+            .post('/chuchuchu/set-presence')
+            .auth(this.state.token)
+            .send(this.state.presence)
+            .end((err, res) => {
+                if (err) {
+                    if (err.status === 401) {
+                        this.props.onUnauthorized('');
+
+                        return;
+                    }
+
+                    // TODO
+                }
+            });
+    }
+
     _loadContacts() {
         this._connectToServer
             .get('/chuchuchu/collect-contacts')
@@ -381,6 +445,27 @@ export default class ManageConversations extends React.Component {
             });
     }
 
+    _loadPresences() {
+        this._connectToServer
+            .post('/chuchuchu/search-presences')
+            .auth(this.state.token)
+            .send({
+                geoLat: this.state.presence.geoLat,
+                geoLng: this.state.presence.geoLng,
+            })
+            .end((err, res) => {
+                if (err) {
+                    // TODO
+
+                    return;
+                }
+
+                this.setState({
+                    presences: res.body
+                });
+            });
+    }
+    
     _loadConversations() {
         this._connectToServer
             .get('/chuchuchu/collect-conversations')

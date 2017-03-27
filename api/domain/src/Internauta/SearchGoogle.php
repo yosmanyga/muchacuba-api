@@ -2,15 +2,32 @@
 
 namespace Muchacuba\Internauta;
 
+use Cubalider\Navigation\RequestPage;
 use GuzzleHttp\Client;
 
 /**
  * @di\service({
+ *     deductible: true,
  *     private: true
  * })
  */
 class SearchGoogle
 {
+    /**
+     * @var RequestPage
+     */
+    private $requestPage;
+
+    /**
+     * @param RequestPage $requestPage
+     */
+    public function __construct(
+        RequestPage $requestPage
+    )
+    {
+        $this->requestPage = $requestPage;
+    }
+
     /**
      * @param string   $key
      * @param string   $cx

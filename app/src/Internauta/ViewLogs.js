@@ -21,6 +21,7 @@ import ProcessRequests_BeginProcessing from './Log/ProcessRequests_BeginProcessi
 import ProcessRequests_Exception from './Log/ProcessRequests_Exception';
 import Revolico_ProcessRequest_NotFound from './Log/Revolico_ProcessRequest_NotFound';
 import SendEmail from './Log/SendEmail';
+import SendEmail_UnknownType from './Log/SendEmail_UnknownType';
 
 export default class ViewLogs extends React.Component {
     static propTypes = {
@@ -45,7 +46,8 @@ export default class ViewLogs extends React.Component {
             new ProcessRequests_BeginProcessing(),
             new ProcessRequests_Exception(),
             new Revolico_ProcessRequest_NotFound(),
-            new SendEmail()
+            new SendEmail(),
+            new SendEmail_UnknownType()
         ];
 
         this._connectToServer = new ConnectToServer();

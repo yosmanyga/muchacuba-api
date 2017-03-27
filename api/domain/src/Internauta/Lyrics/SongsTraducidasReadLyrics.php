@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Lyrics;
 
-use Muchacuba\Internauta\CreateClient;
+use Cubalider\Navigation\RequestPage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -14,16 +14,16 @@ use Symfony\Component\DomCrawler\Crawler;
 class SongsTraducidasReadLyrics implements ReadLyrics
 {
     /**
-     * @var CreateClient
+     * @var RequestPage
      */
-    private $createClient;
+    private $requestPage;
 
     /**
-     * @param CreateClient $createClient
+     * @param RequestPage $requestPage
      */
-    public function __construct(CreateClient $createClient)
+    public function __construct(RequestPage $requestPage)
     {
-        $this->createClient = $createClient;
+        $this->requestPage = $requestPage;
     }
 
     /**
@@ -35,9 +35,7 @@ class SongsTraducidasReadLyrics implements ReadLyrics
             throw new UnsupportedLinkException();
         }
 
-        $client = $this->createClient->create();
-
-        $crawler = $client->request('GET', $link);
+        $crawler = $this->requestPage->request($link);
 
         $author = $this->resolveAuthor($crawler);
 

@@ -71,7 +71,7 @@ class ProcessRequest implements BaseProcessRequest
         $responses = [];
         $events = [];
 
-        $amount = $this->resolveAmount($subject, 3);
+        $amount = $this->resolveAmount($subject, 3, 20);
 
         $subject = $this->cleanSubject($subject);
 
@@ -93,7 +93,15 @@ class ProcessRequest implements BaseProcessRequest
 
             foreach ($results as $result) {
                 try {
-                    $image = base64_encode(file_get_contents($result['link']));
+                    $image = base64_encode(file_get_contents(
+                        $result['link'],
+                        false,
+                        stream_context_create(array(
+                            'http' => array(
+                                'timeout' => 5
+                            )
+                        ))
+                    ));
                 }
                 // Problem downloading the image?
                 catch (\Exception $e) {
@@ -155,13 +163,14 @@ EOF;
     /**
      * @param string $subject
      * @param int    $default
+     * @param int    $max
      *
      * @return int
      */
-    private function resolveAmount($subject, $default)
+    private function resolveAmount($subject, $default, $max)
     {
-        if (preg_match("/\[([0-9])\]/", $subject, $match) === 1) {
-            return (int) $match[1];
+        if (preg_match("/\[([0-9]+)\]/", $subject, $match) === 1) {
+            return min((int) $match[1], $max);
         }
 
         return $default;

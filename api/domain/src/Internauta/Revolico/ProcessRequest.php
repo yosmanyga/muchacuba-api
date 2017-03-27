@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Revolico;
 
-use Muchacuba\Internauta\CreateClient;
+use Cubalider\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
@@ -35,15 +35,15 @@ class ProcessRequest implements BaseProcessRequest
     private $searchGoogle;
 
     /**
-     * @var CreateClient
+     * @var RequestPage
      */
-    private $createClient;
+    private $requestPage;
 
     /**
      * @param string       $googleKey
      * @param string       $googleCx
      * @param SearchGoogle $searchGoogle
-     * @param CreateClient $createClient
+     * @param RequestPage $requestPage
      *
      * @di\arguments({
      *     googleKey: '%google_key%',
@@ -54,13 +54,13 @@ class ProcessRequest implements BaseProcessRequest
         $googleKey,
         $googleCx,
         SearchGoogle $searchGoogle,
-        CreateClient $createClient
+        RequestPage $requestPage
     )
     {
         $this->googleKey = $googleKey;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
-        $this->createClient = $createClient;
+        $this->requestPage = $requestPage;
     }
 
     /**
@@ -102,10 +102,7 @@ class ProcessRequest implements BaseProcessRequest
             }
 
             foreach ($results as $result) {
-                $crawler = $this->createClient->create()->request(
-                    'GET',
-                    $result['link']
-                );
+                $crawler = $this->requestPage->request($result['link']);
 
                 // Expired ad?
                 if ($crawler->filter('.errorText')->count() != 0) {

@@ -31,7 +31,7 @@ Feature: Process lyrics request
       {
         "sender": "foo@bar.com",
         "recipient": "lyrics@muchacuba.com",
-        "subject": "Evanescence Frozen"
+        "subject": "Evanescence My Immortal"
       }
       """
     Then I should get this result:
@@ -41,8 +41,8 @@ Feature: Process lyrics request
           {
             "from": "Lyrics Muchacuba <lyrics@muchacuba.com>",
             "to": "foo@bar.com",
-            "subject": "Re: Evanescence Frozen",
-            "body": "@string@.contains('How can you see into my eyes like open doors?')",
+            "subject": "Re: Evanescence My Immortal",
+            "body": "@string@.contains('Suppressed by all my childish fears')",
             "attachments": []
           }
         ],

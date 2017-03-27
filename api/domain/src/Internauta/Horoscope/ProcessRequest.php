@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Horoscope;
 
-use Muchacuba\Internauta\CreateClient;
+use Cubalider\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Response;
@@ -35,15 +35,15 @@ class ProcessRequest implements BaseProcessRequest
     private $searchGoogle;
 
     /**
-     * @var CreateClient
+     * @var RequestPage
      */
-    private $createClient;
+    private $requestPage;
 
     /**
      * @param string       $googleKey
      * @param string       $googleCx
      * @param SearchGoogle $searchGoogle
-     * @param CreateClient $createClient
+     * @param RequestPage $requestPage
      *
      * @di\arguments({
      *     googleKey: '%google_key%',
@@ -54,13 +54,13 @@ class ProcessRequest implements BaseProcessRequest
         $googleKey,
         $googleCx,
         SearchGoogle $searchGoogle,
-        CreateClient $createClient
+        RequestPage $requestPage
     )
     {
         $this->googleKey = $googleKey;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
-        $this->createClient = $createClient;
+        $this->requestPage = $requestPage;
     }
 
     /**
@@ -157,8 +157,7 @@ EOF;
      */
     private function readHoroscope($link)
     {
-        $crawler = $this->createClient->create()
-            ->request('GET', $link);
+        $crawler = $this->requestPage->request($link, false);
 
         $title = $crawler
             ->filter('.uvn-flex-article h1')
