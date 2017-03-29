@@ -27,7 +27,6 @@ class Log implements Persistable, \JsonSerializable
     private $date;
 
     /**
-     * Log constructor.
      * @param string $id
      * @param string $type
      * @param mixed $payload
