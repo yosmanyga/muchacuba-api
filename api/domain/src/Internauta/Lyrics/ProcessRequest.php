@@ -5,7 +5,7 @@ namespace Muchacuba\Internauta\Lyrics;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
-use Muchacuba\Internauta\SearchDuckDuckGo;
+use Muchacuba\Internauta\SearchGoogle;
 
 /**
  * @di\service({
@@ -26,9 +26,9 @@ class ProcessRequest
     private $googleCx;
 
     /**
-     * @var SearchDuckDuckGo
+     * @var SearchGoogle
      */
-    private $searchDuckDuckGo;
+    private $searchGoogle;
 
     /**
      * @var DelegateReadLyrics
@@ -38,7 +38,7 @@ class ProcessRequest
     /**
      * @param string             $googleKey
      * @param string             $googleCx
-     * @param SearchDuckDuckGo       $searchDuckDuckGo
+     * @param SearchGoogle       $searchGoogle
      * @param DelegateReadLyrics $delegateReadLyrics
      *
      * @di\arguments({
@@ -49,13 +49,13 @@ class ProcessRequest
     public function __construct(
         $googleKey,
         $googleCx,
-        SearchDuckDuckGo $searchDuckDuckGo,
+        SearchGoogle $searchGoogle,
         DelegateReadLyrics $delegateReadLyrics
     )
     {
         $this->googleKey = $googleKey;
         $this->googleCx = $googleCx;
-        $this->searchDuckDuckGo = $searchDuckDuckGo;
+        $this->searchGoogle = $searchGoogle;
         $this->delegateReadLyrics = $delegateReadLyrics;
     }
 
@@ -72,7 +72,9 @@ class ProcessRequest
         $responses = [];
         $events = [];
 
-        $results = $this->searchDuckDuckGo->search(
+        $results = $this->searchGoogle->search(
+            $this->googleKey,
+            $this->googleCx,
             sprintf('%s %s', $prefix, $subject)
         );
 
