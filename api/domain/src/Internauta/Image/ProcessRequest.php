@@ -91,6 +91,9 @@ class ProcessRequest implements BaseProcessRequest
                 break;
             }
 
+            // Results could be lower than requested amount
+            $amount = min($amount, count($results));
+
             foreach ($results as $result) {
                 try {
                     $image = base64_encode(file_get_contents(
