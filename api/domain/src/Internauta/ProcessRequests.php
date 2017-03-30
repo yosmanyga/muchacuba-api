@@ -51,17 +51,15 @@ class ProcessRequests
     }
 
     /**
+     * @return int
      */
     public function process()
     {
         /** @var Request[] $requests */
         $requests = $this->manageStorage->connect()->find();
 
+        $i = 0;
         foreach ($requests as $request) {
-            if (is_null($request)) {
-                return;
-            }
-
             /** @var Event[] $events */
             $events = [];
 
@@ -128,7 +126,11 @@ class ProcessRequests
                     $event->getDate()
                 );
             }
+
+            $i++;
         }
+
+        return $i;
     }
 
     /**

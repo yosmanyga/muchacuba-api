@@ -38,10 +38,13 @@ class ProcessRequests
      */
     public function process()
     {
-        try {
-            $this->processRequests->process();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $c = $this->processRequests->process();
+
+        return $this->server->resolveOutput()->outln(sprintf(
+            '%s %s %s',
+            date('H:m:s'),
+            $c,
+            $c == 1 ? 'request' : 'requests')
+        );
     }
 }
