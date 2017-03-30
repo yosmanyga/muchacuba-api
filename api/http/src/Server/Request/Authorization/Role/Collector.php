@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Server\Request\Authorization\Role;
 
+use Cubalider\Privilege\NonExistentProfileException;
 use Cubalider\Privilege\PickProfile;
 use Symsonte\Http\Server\Request\Authorization\Role\Collector as BaseCollector;
 
@@ -36,7 +37,14 @@ class Collector implements BaseCollector
      */
     public function collect($uniqueness)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
+        try {
+            $profile = $this->pickProfile->pick($uniqueness);
+        } catch (NonExistentProfileException $e) {
+            // If it doesn't have a profile, it means that the user is new
+            // and this call was done by init-profile
+
+            return ['user'];
+        }
 
         return $profile->getRoles();
     }

@@ -1,174 +1,28 @@
-/* global FB */
-
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
+import * as firebase from 'firebase';
 import History from 'history/createHashHistory';
-import QueryString from 'query-string';
-import LocalStorage from 'local-storage';
+// import QueryString from 'query-string';
 import AppBar from 'material-ui/AppBar';
 import CircularProgress from 'material-ui/CircularProgress';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
-import Button from './Button';
 import ConnectToServer from './ConnectToServer';
 import ResolveElement from './ResolveElement';
 import DocumentTitle from 'react-document-title';
 
-// import MuleFront from './Mule/Front';
-import ChuchuchuFront from './Chuchuchu/Front';
+import MuleFront from './Mule/Front';
+// import ChuchuchuFront from './Chuchuchu/Front';
 import InternautaFront from './Internauta/Front';
 
-class ManageAuthentication {
-    constructor() {
-        this._connectToServer = new ConnectToServer();
-    }
-
-    under(onSuccess, onFailure) {
-        const token = LocalStorage.get('token');
-
-        if (token) {
-            onSuccess(token);
-
-            return;
-        }
-
-        this._init(() => {
-            FB.getLoginStatus((response) => {
-                this._process(response, onSuccess, onFailure);
-            });
-        });
-    }
-
-    front(onSuccess, onFailure) {
-        this._init(() => {
-            FB.login((response) => {
-                this._process(response, onSuccess, onFailure);
-            });
-        });
-    }
-
-    _init(finish) {
-        if (document.getElementById('facebook-jssdk')) {
-            finish();
-
-            return;
-        }
-
-        ((d, s, id) => {
-            const element = d.getElementsByTagName(s)[0];
-            const fjs = element;
-            let js = element;
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = '//connect.facebook.net/es_ES/all.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'facebook-jssdk');
-
-        let fbRoot = document.getElementById('fb-root');
-        if (!fbRoot) {
-            fbRoot = document.createElement('div');
-            fbRoot.id = 'fb-root';
-            document.body.appendChild(fbRoot);
-        }
-
-        window.fbAsyncInit = () => {
-            window.FB.init({
-                appId: '837622639692718',
-                cookie: false,
-                xfbml: false,
-                version: 'v2.8'
-            });
-
-            finish();
-        };
-    }
-
-    _process(response, onSuccess, onFailure) {
-        switch(response.status) {
-            case 'connected':
-                this._authenticate(
-                    response,
-                    (token) => {
-                        LocalStorage.set('token', token);
-
-                        onSuccess(token);
-                    },
-                    onFailure
-                );
-
-                break;
-            case 'not_authorized':
-                onFailure();
-
-                break;
-            case 'unknown':
-                onFailure();
-
-                break;
-            default:
-                onFailure();
-        }
-    }
-
-    _authenticate(response, onSuccess, onFailure) {
-        this._connectToServer
-            .get('/authenticate/' + response.authResponse.accessToken)
-            .send()
-            .end((err, res) => {
-                if (err) {
-                    onFailure();
-
-                    return;
-                }
-
-                onSuccess(res.body.token);
-
-                // // Get some personal data
-                // FB.api('/me', (response) => {
-                // });
-            });
-    }
-}
-
-class Login extends React.Component {
-    static propTypes = {
-        back: React.PropTypes.string,
-        onFrontAuth: React.PropTypes.func.isRequired,
-        onNavigate: React.PropTypes.func.isRequired,
-    };
-
-    render() {
-        return (
-            <Paper
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding: '10px',
-                }}
-                zDepth={0}
-            >
-                <Button
-                    label="Entrar"
-                    labelAfterTouchTap="Entrando..."
-                    icon="account_box"
-                    onTouchTap={(finish) => {
-                        this.props.onFrontAuth(
-                            () => {
-                                finish();
-
-                                this.props.onNavigate(this.props.back);
-                            },
-                            finish
-                        )
-                    }}
-                />
-            </Paper>
-        );
-    }
-}
+firebase.initializeApp({
+    apiKey: "AIzaSyClvnStM8ZWjDNjjU-CaQ5NrjC2Ttd8eTI",
+    authDomain: "chuchuchu-2bb11.firebaseapp.com",
+    databaseURL: "https://chuchuchu-2bb11.firebaseio.com",
+    storageBucket: "chuchuchu-2bb11.appspot.com",
+    messagingSenderId: "1003585501404"
+});
 
 class Layout extends React.Component {
     static propTypes = {
@@ -220,11 +74,6 @@ export default class Front extends React.Component {
 
         this.state = {
             location: null,
-            authentication: {
-                authenticating: false,
-                authenticated: false,
-                token: null
-            },
             notification: {
                 message: null,
                 finish: null
@@ -232,13 +81,11 @@ export default class Front extends React.Component {
         };
 
         this._connectToServer = new ConnectToServer();
-        this._manageAuthentication = new ManageAuthentication();
         this._resolveElement = new ResolveElement();
         this._history = new History();
 
-        this._handleUnderAuth = this._handleUnderAuth.bind(this);
+        this._handleBackAuth = this._handleBackAuth.bind(this);
         this._handleFrontAuth = this._handleFrontAuth.bind(this);
-        this._handleUnauthorized = this._handleUnauthorized.bind(this);
         this._handleNavigate = this._handleNavigate.bind(this);
         this._handleNotify = this._handleNotify.bind(this);
     }
@@ -250,6 +97,14 @@ export default class Front extends React.Component {
             this.setState({
                 location: location
             });
+        });
+
+        /* Authentication */
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+
+            }
         });
 
         this.setState({
@@ -276,61 +131,48 @@ export default class Front extends React.Component {
             />
         );
 
-        const query = QueryString.parse(this.state.location.search);
+        //const query = QueryString.parse(this.state.location.search);
 
         return (
             <MuiThemeProvider>
                 {this._resolveElement.resolve(
                     this.state.location.pathname,
                     [
-                        /*
                         {
                             'url': '/mule',
                             'element': <MuleFront
                                 url={this.state.location.pathname.replace('/mule', '')}
                                 layout={layout}
-                                authentication={this.state.authentication}
-                                onUnderAuth={(onSuccess, backUrl) => {
-                                    this._handleUnderAuth(onSuccess, '/mule' + backUrl);
-                                }}
-                                onUnauthorized={(url) => this._handleNavigate('/login?back=/mule' + url)}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
                                 onNavigate={(url) => this._handleNavigate('/mule' + url)}
                                 onNotify={this._handleNotify}
                             />,
                             'def': true
                         },
-                        */
+                        /*
                         {
                             'url': '/chuchuchu',
                             'element': <ChuchuchuFront
                                 url={this.state.location.pathname.replace('/chuchuchu', '')}
                                 query={query}
                                 layout={layout}
-                                onUnderAuth={this._handleUnderAuth}
-                                onUnauthorized={(url) => this._handleUnauthorized('/chuchuchu' + url)}
+                                onBackAuth={this._handleBackAuth}
                                 onNavigate={(url) => this._handleNavigate('/chuchuchu' + url)}
                                 onNotify={this._handleNotify}
                             />
                         },
+                        */
                         {
                             'url': '/internauta',
                             'element': <InternautaFront
                                 url={this.state.location.pathname.replace('/internauta', '')}
-                                query={query}
                                 layout={layout}
-                                onUnderAuth={this._handleUnderAuth}
-                                onUnauthorized={(url) => this._handleUnauthorized('/internauta' + url)}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
                                 onNavigate={(url) => this._handleNavigate('/internauta' + url)}
                                 onNotify={this._handleNotify}
                             />,
-                        },
-                        {
-                            'url': '/login',
-                            'element': <Login
-                                back={typeof query.back !== 'undefined' ? query.back : ''}
-                                onFrontAuth={this._handleFrontAuth}
-                                onNavigate={this._handleNavigate}
-                            />
                         }
                     ]
                 )}
@@ -338,22 +180,52 @@ export default class Front extends React.Component {
         );
     }
 
-    _handleUnderAuth(onSuccess, onFailure) {
-        this._manageAuthentication.under(
-            onSuccess,
-            onFailure
-        );
+    _handleBackAuth(onSuccess, onError) {
+        firebase.auth().getRedirectResult()
+            .then((result) => {
+                if (result.credential) {
+                    firebase.auth().currentUser.getToken(true).then((token) => {
+                        this._connectToServer
+                            .post('/facebook/init-profile')
+                            .auth(token)
+                            .send({
+                                facebook: {
+                                    id: result.user.providerData[0].uid,
+                                    name: typeof result.user.providerData[0].displayName !== 'undefined'
+                                        ? result.user.providerData[0].displayName
+                                        : null,
+                                    email: typeof result.user.providerData[0].email !== 'undefined'
+                                        ? result.user.providerData[0].email
+                                        : null,
+                                    picture: typeof result.user.providerData[0].photoURL !== 'undefined'
+                                        ? result.user.providerData[0].photoURL
+                                        : null
+                                }
+                            })
+                            .end((err, res) => {
+                                if (err) {
+                                    // TODO
+
+                                    return;
+                                }
+                                onSuccess(token);
+                            });
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                } else {
+                    onSuccess('null')
+                }
+            })
+            .catch((error) => {
+                onError(error)
+            });
     }
 
-    _handleFrontAuth(onSuccess, onFailure) {
-        this._manageAuthentication.front(
-            onSuccess,
-            onFailure
+    _handleFrontAuth() {
+        firebase.auth().signInWithRedirect(
+            new firebase.auth.FacebookAuthProvider()
         );
-    }
-
-    _handleUnauthorized(backUrl) {
-        this._handleNavigate('/login?back=' + backUrl);
     }
 
     _handleNavigate(url) {

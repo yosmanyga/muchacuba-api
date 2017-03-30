@@ -31,15 +31,20 @@ import Button from '../Button';
 export default class ListMyOffers extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        authentication: React.PropTypes.object.isRequired,
+        // (onSuccess(token), onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
+        // (message, finish)
         onNotify: React.PropTypes.func.isRequired,
-        onUnauthorized: React.PropTypes.func.isRequired
     };
+
 
     constructor(props) {
         super(props);
 
         this.state = {
+            token: null,
             offer: null,
             error: {
                 field: null,
@@ -57,29 +62,41 @@ export default class ListMyOffers extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.authentication.authenticating === false) {
-            this._pickOffer(this.props.authentication);
-        }
+        this.props.onBackAuth(
+            (token) => {
+                if (token === 'null') {
+                    this.props.onFrontAuth();
+
+                    return;
+                }
+
+                this.setState({
+                    token: token
+                });
+            },
+            () => {
+                this.props.onFrontAuth();
+            }
+        );
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.authentication.authenticated === true) {
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            this.state.token !== null
+            && this.state.offer === null
+        ) {
             this._pickOffer();
-        } else {
-            this.props.onUnauthorized('');
         }
     }
 
     _pickOffer() {
         this._connectToServer
             .get('/mule/me/pick-offer')
-            .auth(this.props.authentication.token)
+            .auth(this.state.token)
             .end((err, res) => {
                 if (err) {
                     if (err.status === 401) {
-                        this.props.onUnauthorized('');
-
-                        return
+                        return;
                     }
 
                     if (err.status === 404) {
@@ -186,7 +203,7 @@ export default class ListMyOffers extends React.Component {
     _handleSave(finish) {
         this._connectToServer
             .post(typeof this.state.offer.id === "undefined" ? '/mule/me/create-offer' : '/mule/me/update-offer')
-            .auth(this.props.authentication.token)
+            .auth(this.state.token)
             .send(this.state.offer)
             .end((err, res) => {
                 if (res.body.error) {
@@ -761,5 +778,3 @@ class Trips extends React.Component {
         });
     }
 }
-
-

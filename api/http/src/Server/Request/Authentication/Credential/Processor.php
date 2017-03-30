@@ -6,8 +6,10 @@ use Symsonte\Http\Server\Request\Authentication\Credential\InvalidDataException;
 use Symsonte\Http\Server\Request\Authentication\Credential\Processor as BaseCredentialProcessor;
 use Symsonte\Http\Server\Request\Authentication\Credential\AuthorizationResolver;
 use Symsonte\Http\Server\Request\Authentication\Credential\UnresolvableException;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\ValidationData;
+use Firebase\Auth\Token\Exception\ExpiredToken;
+use Firebase\Auth\Token\Exception\InvalidToken;
+use Firebase\Auth\Token\Exception\IssuedInTheFuture;
+use Firebase\Auth\Token\Verifier;
 
 /**
  * @di\service({
@@ -22,17 +24,25 @@ class Processor implements BaseCredentialProcessor
     private $authorizationResolver;
 
     /**
+     * @var string
+     */
+    private $projectId;
+
+    /**
      * @param AuthorizationResolver  $authorizationResolver
      *
      * @di\arguments({
-     *     authorizationResolver: '@symsonte.http.server.request.authentication.credential.authorization_resolver'
+     *     authorizationResolver: '@symsonte.http.server.request.authentication.credential.authorization_resolver',
+     *     projectId:             '%firebase_project_id%'
      * })
      */
     function __construct(
-        AuthorizationResolver $authorizationResolver
+        AuthorizationResolver $authorizationResolver,
+        $projectId
     )
     {
         $this->authorizationResolver = $authorizationResolver;
+        $this->projectId = $projectId;
     }
 
     /**
@@ -47,16 +57,18 @@ class Processor implements BaseCredentialProcessor
             throw $e;
         }
 
-        $token = (new Parser())->parse($credential->getToken());
-        $data = new ValidationData();
-        $data->setIssuer('http://muchacuba.com');
-        $data->setAudience('http://muchacuba.com');
-        $data->setId('mUch@cub417');
+        $verifier = new Verifier($this->projectId);
 
-        if ($token->validate($data) === false) {
-            throw new InvalidDataException();
+        try {
+            $verifiedIdToken = $verifier->verifyIdToken($credential->getToken());
+
+            return $verifiedIdToken->getClaim('sub');
+        } catch (ExpiredToken $e) {
+            throw new InvalidDataException(null, null, $e);
+        } catch (IssuedInTheFuture $e) {
+            throw new InvalidDataException(null, null, $e);
+        } catch (InvalidToken $e) {
+            throw new InvalidDataException(null, null, $e);
         }
-
-        return $token->getClaim('uid');
     }
 }

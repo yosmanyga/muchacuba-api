@@ -10,12 +10,17 @@ import ViewLogs from './ViewLogs';
 export default class ListLogs extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
+        // (onSuccess(token), onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
 
         this.state = {
+            token: null,
             logs: null
         };
 
@@ -25,12 +30,37 @@ export default class ListLogs extends React.Component {
     }
 
     componentDidMount() {
-        this._collectLogs();
+        this.props.onBackAuth(
+            (token) => {
+                if (token === 'null') {
+                    this.props.onFrontAuth();
+
+                    return;
+                }
+
+                this.setState({
+                    token: token
+                });
+            },
+            () => {
+                this.props.onFrontAuth();
+            }
+        );
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            this.state.token !== null
+            && this.state.logs === null
+        ) {
+            this._collectLogs();
+        }
     }
 
     _collectLogs() {
         this._connectToServer
             .get('/internauta/collect-logs')
+            .auth(this.state.token)
             .end((err, res) => {
                 if (err) {
                     return;
@@ -45,7 +75,10 @@ export default class ListLogs extends React.Component {
     render() {
         let body = null;
 
-        if (this.state.logs === null) {
+        if (
+            this.state.token === null
+            || this.state.logs === null
+        ) {
             body = <CircularProgress size={20} style={{marginTop: "10px"}}/>;
         } else {
             let tree = [];

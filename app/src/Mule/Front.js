@@ -20,9 +20,11 @@ export default class Front extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
         layout: React.PropTypes.element.isRequired,
-        authentication: React.PropTypes.object.isRequired,
-        onLogin: React.PropTypes.func.isRequired,
-        onUnauthorized: React.PropTypes.func.isRequired,
+        // (onSuccess, onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
+        // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
         onNotify: React.PropTypes.func.isRequired
@@ -38,8 +40,8 @@ export default class Front extends React.Component {
         const layout = <Layout
             url={this.props.url}
             layout={this.props.layout}
-            authentication={this.props.authentication}
-            onLogin={this.props.onLogin}
+            onBackAuth={this.props.onBackAuth}
+            onFrontAuth={this.props.onFrontAuth}
             onNavigate={this.props.onNavigate}
             onNotify={this.props.onNotify}
         />;
@@ -48,21 +50,21 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/find-offers',
+                    'url': '/list-my-offers',
+                    'element': <ListMyOffers
+                        layout={layout}
+                        onBackAuth={this.props.onBackAuth}
+                        onFrontAuth={this.props.onFrontAuth}
+                        onNotify={this.props.onNotify}
+                    />
+                },
+                {
+                    'url': '/',
                     'element': <FindOffers
                         layout={layout}
                         onNotify={this.props.onNotify}
                     />,
                     'def': true
-                },
-                {
-                    'url': '/list-my-offers',
-                    'element': <ListMyOffers
-                        layout={layout}
-                        authentication={this.props.authentication}
-                        onNotify={this.props.onNotify}
-                        onUnauthorized={(url) => {this.props.onUnauthorized('/list-my-offers' + url)}}
-                    />
                 }
             ]
         );
@@ -73,10 +75,13 @@ class Layout extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
         layout: React.PropTypes.element.isRequired,
-        authentication: React.PropTypes.object,
-        onLogin: React.PropTypes.func.isRequired,
+        // (onSuccess, onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
+        // (url)
         onNavigate: React.PropTypes.func.isRequired,
-        // (notification) => {}
+        // (message, finish)
         onNotify: React.PropTypes.func.isRequired,
         style: React.PropTypes.object
     };
@@ -121,8 +126,7 @@ class Layout extends React.Component {
                     >
                         <LoginMenuItem
                             url={this.props.url}
-                            authentication={this.props.authentication}
-                            onLogin={this.props.onLogin}
+                            onBackAuth={this.props.onBackAuth}
                             onNavigate={this.props.onNavigate}
                         />
                         <MenuItem
@@ -285,42 +289,50 @@ class FeedbackDialog extends React.Component {
 class LoginMenuItem extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
-        authentication: React.PropTypes.object,
-        onLogin: React.PropTypes.func.isRequired,
-        onNavigate: React.PropTypes.func.isRequired
+        // (onSuccess, onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // (url)
+        onNavigate: React.PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
 
         this.state = {
-            busy: false
+            token: null
         };
     }
 
+    componentDidMount() {
+        this.props.onBackAuth(
+            (token) => {
+                this.setState({
+                    token: token
+                });
+            },
+            () => {
+                // Do nothing
+            }
+        );
+    }
+
     render() {
-        if (this.props.authentication.authenticated === false) {
+        if (this.state.token === null) {
             return (
                 <MenuItem
-                    primaryText={!this.state.busy ? "Entrar" : "Entrando..."}
+                    primaryText="Entrando..."
+                    leftIcon={<FontIcon className="material-icons">account_box</FontIcon>}
+                />
+            );
+        }
+
+        if (this.state.token === 'null') {
+            return (
+                <MenuItem
+                    primaryText="Entrar"
                     leftIcon={<FontIcon className="material-icons">account_box</FontIcon>}
                     onTouchTap={() => {
-                        this.setState({
-                            busy: true
-                        }, () => {
-                            this.props.onLogin(
-                                () => {
-                                    this.setState({
-                                        busy: false
-                                    }, this.props.onNavigate('/list-my-offers'));
-                                },
-                                () => {
-                                    this.setState({
-                                        busy: false
-                                    });
-                                }
-                            );
-                        });
+                        this.props.onNavigate('/list-my-offers')
                     }}
                 />
             );

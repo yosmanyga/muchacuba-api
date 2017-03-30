@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as firebase from 'firebase';
 import Avatar from 'material-ui/Avatar';
 import CircularProgress from 'material-ui/CircularProgress';
 import Divider from 'material-ui/Divider';
@@ -20,20 +19,12 @@ import Wait from '../Wait';
 
 import defaultPicture from './picture.jpg';
 
-firebase.initializeApp({
-    apiKey: "AIzaSyClvnStM8ZWjDNjjU-CaQ5NrjC2Ttd8eTI",
-    authDomain: "chuchuchu-2bb11.firebaseapp.com",
-    databaseURL: "https://chuchuchu-2bb11.firebaseio.com",
-    storageBucket: "chuchuchu-2bb11.appspot.com",
-    messagingSenderId: "1003585501404"
-});
-
 export default class ManageConversations extends React.Component {
     static propTypes = {
         query: React.PropTypes.object.isRequired,
         layout: React.PropTypes.element.isRequired,
         // (onSuccess, onFailure)
-        onUnderAuth: React.PropTypes.func.isRequired,
+        onBackAuth: React.PropTypes.func.isRequired,
         // (backUrl)
         onUnauthorized: React.PropTypes.func.isRequired,
     };
@@ -56,6 +47,7 @@ export default class ManageConversations extends React.Component {
         };
 
         this._firebaseMessaging = firebase.messaging();
+        this._firebaseDatabase = firebase.database();
         this._connectToServer = new ConnectToServer();
 
         this._prepareFirebase = this._prepareFirebase.bind(this);
@@ -66,7 +58,7 @@ export default class ManageConversations extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onUnderAuth(
+        this.props.onBackAuth(
             (token) => {
                 this.setState({token: token})
             },

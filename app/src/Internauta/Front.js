@@ -10,12 +10,11 @@ import ListLogs from './ListLogs';
 export default class Front extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
-        query: React.PropTypes.object.isRequired,
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess, backUrl)
-        onUnderAuth: React.PropTypes.func.isRequired,
-        // (backUrl)
-        onUnauthorized: React.PropTypes.func.isRequired,
+        // (onSuccess, onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
         // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
@@ -48,6 +47,8 @@ export default class Front extends React.Component {
                     'url': '/list-logs',
                     'element': <ListLogs
                         layout={layout}
+                        onBackAuth={this.props.onBackAuth}
+                        onFrontAuth={this.props.onFrontAuth}
                     />
                 },
             ]

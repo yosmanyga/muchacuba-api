@@ -11,6 +11,7 @@ fb_app_id: '837622639692718'
 fb_app_secret: 'd544fc93cad437addc2930a8f09d834c'
 fb_default_graph_version: 'v2.2'
 firebase_api_key: ''
+firebase_project_id: ''
 # Internauta
 mysql_host: ''
 mysql_db: ''
