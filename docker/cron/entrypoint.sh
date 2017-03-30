@@ -7,6 +7,6 @@ chmod +x /etc/periodic/1min/*
 chmod +x /etc/periodic/1hour/*
 
 echo "* * * * * run-parts /etc/periodic/1min" | crontab -
-echo "0 * * * * run-parts /etc/periodic/1hour" | crontab -
+(crontab -l; echo "0 * * * * run-parts /etc/periodic/1hour") | crontab -
 
 exec crond -f
