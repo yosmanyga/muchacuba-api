@@ -2,6 +2,8 @@
 
 namespace Muchacuba\Internauta\Lyrics;
 
+use Muchacuba\Internauta\UnsupportedRequestException;
+use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
@@ -10,10 +12,10 @@ use Muchacuba\Internauta\SearchGoogle;
 /**
  * @di\service({
  *     deductible: true,
- *     private: true
+ *     tags: [{name: 'internauta.process_request', key: 'lyrics'}]
  * })
  */
-class ProcessRequest
+class ProcessRequest implements BaseProcessRequest
 {
     /**
      * @var string
@@ -60,22 +62,30 @@ class ProcessRequest
     }
 
     /**
-     * @param string $prefix
-     * @param string $sender
-     * @param string $recipient
-     * @param string $subject
-     *
-     * @return ProcessResult
+     * {@inheritdoc}
      */
-    public function process($prefix, $sender, $recipient, $subject)
+    public function process($sender, $recipient, $subject, $body)
     {
+        if (!in_array(
+            $recipient,
+            [
+                'letras@muchacuba.com',
+                'letra@muchacuba.com',
+                'lyrics@muchacuba.com',
+                'lyric@muchacuba.com',
+                'letter@muchacuba.com'
+            ]
+        )) {
+            throw new UnsupportedRequestException();
+        }
+
         $responses = [];
         $events = [];
 
         $results = $this->searchGoogle->search(
             $this->googleKey,
             $this->googleCx,
-            sprintf('%s %s', $prefix, $subject)
+            $subject
         );
 
         foreach ($results as $result) {
@@ -148,5 +158,16 @@ class ProcessRequest
         );
 
         return new ProcessResult($responses, $events);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function help()
+    {
+        return <<<EOF
+Escribe a letras@muchacuba.com para recibir letras de canciones.
+En el asunto escribe el artista, título o parte de la letra.
+EOF;
     }
 }
