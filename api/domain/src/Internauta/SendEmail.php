@@ -113,7 +113,7 @@ class SendEmail
                     "%s\n\n%s\n%s\n",
                     $body,
                     "Si quieres enviar dudas, críticas o sugerencias escríbenos a equipo@muchacuba.com",
-                    "Y para conocer cómo usar todos los servicios escribe a ayuda@muchacuba.com"
+                    "Para conocer cómo usar todos los servicios envía un correo en blanco a ayuda@muchacuba.com"
                 )
             ],
             ['attachment' => $attachments]
