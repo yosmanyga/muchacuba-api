@@ -14,6 +14,7 @@ import Image_ProcessRequest_Invalid from './Log/Image_ProcessRequest_Invalid';
 import Lyrics_ProcessRequest_Exception from './Log/Lyrics_ProcessRequest_Exception';
 import Lyrics_ProcessRequest_HtmlIncluded from './Log/Lyrics_ProcessRequest_HtmlIncluded';
 import Lyrics_ProcessRequest_NotFound from './Log/Lyrics_ProcessRequest_NotFound';
+import Lyrics_ProcessRequest_QuestionableParsing from './Log/Lyrics_ProcessRequest_QuestionableParsing';
 import Lyrics_ProcessRequest_UnsupportedLink from './Log/Lyrics_ProcessRequest_UnsupportedLink';
 import Lyrics_ProcessRequest_UnsupportedLinks from './Log/Lyrics_ProcessRequest_UnsupportedLinks';
 import Mailgun_PushRequest from './Log/Mailgun_PushRequest';
@@ -40,6 +41,7 @@ export default class ViewLogs extends React.Component {
             new Lyrics_ProcessRequest_Exception(),
             new Lyrics_ProcessRequest_HtmlIncluded(),
             new Lyrics_ProcessRequest_NotFound(),
+            new Lyrics_ProcessRequest_QuestionableParsing(),
             new Lyrics_ProcessRequest_UnsupportedLink(),
             new Lyrics_ProcessRequest_UnsupportedLinks(),
             new Mailgun_PushRequest(),

@@ -92,6 +92,20 @@ class ProcessRequest implements BaseProcessRequest
             try {
                 list($author, $title, $lyrics) = $this->delegateReadLyrics->read($result['link']);
 
+                $str = $author . $title;
+                if (
+                    strpos($str, 'Lyrics') !== false
+                    || strpos($str, 'Letra') !== false
+                ) {
+                    $events[] = new Event(
+                        $this,
+                        'QuestionableParsing',
+                        [
+                            'link' => $result['link']
+                        ]
+                    );
+                }
+
                 break;
             } catch (UnsupportedLinkException $e) {
                 $events[] = new Event(
