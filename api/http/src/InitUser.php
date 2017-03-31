@@ -2,13 +2,13 @@
 
 namespace Muchacuba\Http;
 
-use Muchacuba\InitProfile as DomainInitProfile;
+use Muchacuba\InitUser as DomainInitUser;
 use Symsonte\Http\Server;
 
 /**
  * @di\controller({deductible: true})
  */
-class InitProfile
+class InitUser
 {
     /**
      * @var Server
@@ -16,31 +16,31 @@ class InitProfile
     private $server;
 
     /**
-     * @var DomainInitProfile
+     * @var DomainInitUser
      */
-    private $initProfile;
+    private $initUser;
 
     /**
-     * @param Server            $server
-     * @param DomainInitProfile $initProfile
+     * @param Server         $server
+     * @param DomainInitUser $initUser
      */
-    public function __construct(Server $server, DomainInitProfile $initProfile)
+    public function __construct(Server $server, DomainInitUser $initUser)
     {
         $this->server = $server;
-        $this->initProfile = $initProfile;
+        $this->initUser = $initUser;
     }
 
     /**
      * @param string $uniqueness
      *
-     * @http\resolution({method: "POST", uri: "/facebook/init-profile"})
+     * @http\resolution({method: "POST", uri: "/init-user"})
      * @http\authorization({roles: ["user"]})
      */
     public function init($uniqueness)
     {
         $post = $this->server->resolveBody();
 
-        $this->initProfile->init(
+        $this->initUser->init(
             $uniqueness,
             $post['facebook']
         );

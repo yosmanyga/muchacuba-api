@@ -7,13 +7,14 @@ use Cubalider\Unique\CreateUniqueness;
 use Cubalider\Internet\CreateProfile as CreateInternetProfile;
 use Cubalider\Facebook\CreateProfile as CreateFacebookProfile;
 use Cubalider\Privilege\CreateProfile as CreatePrivilegeProfile;
+use Cubalider\Geo\CreateProfile as CreateGeoProfile;
 
 /**
  * @di\service({
  *     deductible: true
  * })
  */
-class InitProfile
+class InitUser
 {
     /**
      * @var CreateUniqueness
@@ -36,22 +37,30 @@ class InitProfile
     private $createPrivilegeProfile;
 
     /**
+     * @var CreateGeoProfile
+     */
+    private $createGeoProfile;
+
+    /**
      * @param CreateUniqueness       $createUniqueness
      * @param CreateInternetProfile  $createInternetProfile
      * @param CreateFacebookProfile  $createFacebookProfile
      * @param CreatePrivilegeProfile $createPrivilegeProfile
+     * @param CreateGeoProfile       $createGeoProfile
      */
     public function __construct(
         CreateUniqueness $createUniqueness,
         CreateInternetProfile $createInternetProfile,
         CreateFacebookProfile $createFacebookProfile,
-        CreatePrivilegeProfile $createPrivilegeProfile
+        CreatePrivilegeProfile $createPrivilegeProfile,
+        CreateGeoProfile $createGeoProfile
     )
     {
         $this->createUniqueness = $createUniqueness;
         $this->createInternetProfile = $createInternetProfile;
         $this->createFacebookProfile = $createFacebookProfile;
         $this->createPrivilegeProfile = $createPrivilegeProfile;
+        $this->createGeoProfile = $createGeoProfile;
     }
 
     /**
@@ -89,6 +98,12 @@ class InitProfile
         $this->createPrivilegeProfile->create(
             $uniqueness,
             ['user']
+        );
+
+        $this->createGeoProfile->create(
+            $uniqueness,
+            null,
+            null
         );
     }
 }

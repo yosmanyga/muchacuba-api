@@ -12,6 +12,11 @@ class User implements \JsonSerializable
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $email;
 
     /**
@@ -20,15 +25,30 @@ class User implements \JsonSerializable
     private $mobile;
 
     /**
+     * @var string
+     */
+    private $picture;
+
+    /**
      * @param string $id
+     * @param string $name
      * @param string $email
      * @param string $mobile
+     * @param string $picture
      */
-    public function __construct($id, $email, $mobile)
+    public function __construct(
+        $id,
+        $name,
+        $email,
+        $mobile,
+        $picture
+    )
     {
         $this->id = $id;
+        $this->name = $name;
         $this->email = $email;
         $this->mobile = $mobile;
+        $this->picture = $picture;
     }
 
     /**
@@ -37,6 +57,14 @@ class User implements \JsonSerializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -58,12 +86,22 @@ class User implements \JsonSerializable
     /**
      * @return string
      */
+    public function getPicture(): string
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @return string
+     */
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'email' => $this->email,
             'mobile' => $this->mobile,
+            'picture' => $this->picture
         ];
     }
 }
