@@ -38,6 +38,13 @@ class CreateComputers
      */
     public function create()
     {
-        $this->createComputers->create();
+        $c = $this->createComputers->create();
+
+        return $this->server->resolveOutput()->outln(sprintf(
+                '%s %s %s',
+                date('H:m:s'),
+                $c,
+                $c == 1 ? 'computer' : 'computers')
+        );
     }
 }

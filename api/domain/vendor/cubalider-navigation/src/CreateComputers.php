@@ -45,12 +45,15 @@ class CreateComputers
 
     /**
      * @param int $amount
+     *
+     * @return int
      */
     public function create($amount = 100)
     {
         $proxies = $this->resolveProxies->resolve($amount);
         $agents = $this->resolveAgents->resolve();
 
+        $c = 0;
         foreach ($proxies as $proxy) {
             try {
                 $this->manageStorage->connect()->insertOne(
@@ -62,6 +65,8 @@ class CreateComputers
                         $agents[rand(0, count($agents) - 1)]
                     )
                 );
+
+                $c++;
             } catch (BulkWriteException $e) {
                 if ($e->getCode() == 'E11000') {
                     if (strpos($e->getMessage(), 'ip_1_port_1') !== false) {
@@ -72,5 +77,7 @@ class CreateComputers
                 throw $e;
             }
         }
+
+        return $c;
     }
 }
