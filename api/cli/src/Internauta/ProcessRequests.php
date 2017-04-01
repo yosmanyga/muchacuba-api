@@ -40,11 +40,11 @@ class ProcessRequests
     {
         $c = $this->processRequests->process();
 
-        return $this->server->resolveOutput()->outln(sprintf(
-            '%s %s %s',
-            date('H:m:s'),
-            $c,
-            $c == 1 ? 'request' : 'requests')
-        );
+//        return $this->server->resolveOutput()->outln(sprintf(
+//            '%s %s %s',
+//            date('H:m:s'),
+//            $c,
+//            $c == 1 ? 'request' : 'requests')
+//        );
     }
 }
