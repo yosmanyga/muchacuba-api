@@ -35,6 +35,11 @@ class MetrolyricsReadLyrics implements ReadLyrics
             throw new UnsupportedLinkException();
         }
 
+        // Is artist page?
+        if (strpos($link, '-lyrics.html') !== false) {
+            throw new UnsupportedLinkException();
+        }
+
         $crawler = $this->requestPage->request($link);
 
         $author = $this->resolveAuthor($crawler);
