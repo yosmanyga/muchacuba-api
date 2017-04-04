@@ -20,6 +20,7 @@ class LyricsProcessRequestException extends React.Component {
                     showExpandableButton={true}
                 />
                 <CardText expandable={true}>
+                    <p><strong>Exception</strong>: {this.props.log.payload.exception}</p>
                 </CardText>
             </Card>
         );
