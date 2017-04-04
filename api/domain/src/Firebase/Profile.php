@@ -1,6 +1,6 @@
 <?php
 
-namespace Muchacuba\Chuchuchu\Firebase;
+namespace Muchacuba\Firebase;
 
 use MongoDB\BSON\Persistable;
 

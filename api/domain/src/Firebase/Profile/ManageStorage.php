@@ -1,6 +1,6 @@
 <?php
 
-namespace Muchacuba\Chuchuchu\Firebase\Profile;
+namespace Muchacuba\Firebase\Profile;
 
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -69,7 +69,7 @@ class ManageStorage
                 ))
                     ->selectCollection(
                         $this->db,
-                        'chuchuchu_firebase_profiles'
+                        'firebase_profiles'
                     );
         }
 

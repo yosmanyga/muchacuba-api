@@ -1,15 +1,15 @@
 <?php
 
-namespace Muchacuba\Chuchuchu\Firebase;
+namespace Muchacuba\Firebase;
 
-use Muchacuba\Chuchuchu\Firebase\Profile\ManageStorage;
+use Muchacuba\Firebase\Profile\ManageStorage;
 
 /**
  * @di\service({
  *     deductible: true
  * })
  */
-class PickProfile
+class UpdateProfile
 {
     /**
      * @var ManageStorage
@@ -27,17 +27,17 @@ class PickProfile
 
     /**
      * @param string $uniqueness
-     *
-     * @return Profile
+     * @param string $token
      */
-    public function pick($uniqueness)
-    {
-        /** @var Profile $profile */
-        $profile = $this->manageStorage->connect()
-            ->findOne([
-                '_id' => $uniqueness
-            ]);
-
-        return $profile;
+    public function update(
+        $uniqueness,
+        $token
+    ) {
+        $this->manageStorage->connect()->updateOne(
+            ['_id' => $uniqueness],
+            [
+                '$set' => ['token' => $token]
+            ]
+        );
     }
 }

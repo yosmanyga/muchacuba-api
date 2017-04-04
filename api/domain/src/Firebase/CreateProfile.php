@@ -1,8 +1,8 @@
 <?php
 
-namespace Muchacuba\Chuchuchu\Firebase;
+namespace Muchacuba\Firebase;
 
-use Muchacuba\Chuchuchu\Firebase\Profile\ManageStorage;
+use Muchacuba\Firebase\Profile\ManageStorage;
 
 /**
  * @di\service({
