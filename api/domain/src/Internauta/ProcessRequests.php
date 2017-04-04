@@ -74,7 +74,7 @@ class ProcessRequests
             try {
                 $processResult = $this->processRequest->process(
                     $request->getFrom(),
-                    $request->getTo(),
+                    strtolower($request->getTo()),
                     $request->getSubject(),
                     $request->getBody()
                 );
