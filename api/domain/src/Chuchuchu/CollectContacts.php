@@ -2,11 +2,8 @@
 
 namespace Muchacuba\Chuchuchu;
 
-use Cubalider\Internet\Profile as InternetProfile;
-use Cubalider\Internet\Profile\ManageStorage as InternetManageStorage;
-use Cubalider\Facebook\Profile as FacebookProfile;
-use Cubalider\Facebook\Profile\ManageStorage as FacebookManageStorage;
 use Muchacuba\Chuchuchu\Profile\ManageStorage as ChuchuchuManageStorage;
+use Muchacuba\User;
 
 /**
  * @di\service({
@@ -20,15 +17,7 @@ class CollectContacts
      */
     private $chuchuchuManageStorage;
 
-    /**
-     * @var FacebookManageStorage
-     */
-    private $facebookManageStorage;
 
-    /**
-     * @var InternetManageStorage
-     */
-    private $internetManageStorage;
 
     /**
      * @param ChuchuchuManageStorage $chuchuchuManageStorage
@@ -49,7 +38,7 @@ class CollectContacts
     /**
      * @param string $uniqueness
      *
-     * @return Contact[]
+     * @return User[]
      */
     public function collect($uniqueness)
     {
@@ -59,6 +48,7 @@ class CollectContacts
                 '_id' => $uniqueness
             ]);
 
+        /** @var User[] $contacts */
         $contacts = [];
 
         // Populate contacts using internet profile
@@ -68,27 +58,19 @@ class CollectContacts
             '_id' => ['$in' => $profile->getContacts()]
         ]);
         foreach ($internetProfiles as $internetProfile) {
-            $contacts[$internetProfile->getUniqueness()] = new Contact(
+            $contacts[$internetProfile->getUniqueness()] = new User(
                 $internetProfile->getUniqueness(),
+                null,
                 $internetProfile->getEmail(),
+                null,
                 null
             );
         }
 
         // Override with facebook profile
 
-        /** @var FacebookProfile[] $facebookProfiles */
-        $facebookProfiles = $this->facebookManageStorage->connect()->find([
-            '_id' => ['$in' => $profile->getContacts()]
-        ]);
-        foreach ($facebookProfiles as $facebookProfile) {
-            $contacts[$facebookProfile->getUniqueness()] = new Contact(
-                $facebookProfile->getUniqueness(),
-                $facebookProfile->getName(),
-                $facebookProfile->getPicture()
-            );
-        }
 
-        return array_values($contacts);
+
+
     }
 }

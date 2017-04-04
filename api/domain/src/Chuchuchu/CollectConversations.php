@@ -30,15 +30,15 @@ class CollectConversations
     /**
      * Collects conversations on which given participant belong to.
      *
-     * @param string $participant
+     * @param string $uniqueness
      *
      * @return Conversation[]
      */
-    public function collect($participant)
+    public function collect($uniqueness)
     {
         /** @var \Traversable $conversations */
         $conversations = $this->manageConversationStorage->connect()->find([
-            'participants' => ['$in' => [$participant]]
+            'participants' => ['$in' => [$uniqueness]]
         ]);
 
         return iterator_to_array($conversations);

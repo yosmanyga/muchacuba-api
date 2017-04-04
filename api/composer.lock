@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d99f7bb780164dd83177230d85ce45bc",
+    "content-hash": "278c5c5e0e781436486408a27bc3e704",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -1026,6 +1026,70 @@
             "time": "2016-01-25T15:43:01+00:00"
         },
         {
+            "name": "kreait/firebase-php",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kreait/firebase-php.git",
+                "reference": "f429fdc53a6ba4927010c055b4a79376af5808b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/f429fdc53a6ba4927010c055b4a79376af5808b7",
+                "reference": "f429fdc53a6ba4927010c055b4a79376af5808b7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "fig/http-message-util": "^1.1",
+                "google/auth": "^0.11.0",
+                "guzzlehttp/guzzle": "^6.2.1",
+                "kreait/firebase-tokens": "^1.1.1",
+                "lcobucci/jwt": "^3.2",
+                "mtdowling/jmespath.php": "^2.3",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.0": "1.x-dev",
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\": "src/Firebase"
+                },
+                "files": [
+                    "src/Firebase.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jérôme Gamez",
+                    "homepage": "https://github.com/jeromegamez"
+                }
+            ],
+            "description": "Firebase Admin SDK",
+            "homepage": "https://github.com/kreait/firebase-php",
+            "keywords": [
+                "api",
+                "database",
+                "firebase",
+                "google",
+                "sdk"
+            ],
+            "time": "2017-03-14T21:19:27+00:00"
+        },
+        {
             "name": "kreait/firebase-tokens",
             "version": "1.4.0",
             "source": {
@@ -1075,6 +1139,48 @@
                 "token"
             ],
             "time": "2017-03-15T13:42:52+00:00"
+        },
+        {
+            "name": "ktamas77/firebase-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ktamas77/firebase-php.git",
+                "reference": "fbfeefe8437672b983a9efb340bfd0db08bfe71a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ktamas77/firebase-php/zipball/fbfeefe8437672b983a9efb340bfd0db08bfe71a",
+                "reference": "fbfeefe8437672b983a9efb340bfd0db08bfe71a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tamas Kalman",
+                    "email": "ktamas77@gmail.com"
+                }
+            ],
+            "description": "Firebase PHP Client",
+            "homepage": "https://github.com/ktamas77/firebase-php",
+            "keywords": [
+                "firebase",
+                "rest",
+                "wrapper"
+            ],
+            "time": "2016-07-29 07:56:15"
         },
         {
             "name": "lcobucci/jwt",
@@ -1313,6 +1419,61 @@
                 "psr-3"
             ],
             "time": "2017-03-13T07:08:03+00:00"
+        },
+        {
+            "name": "mtdowling/jmespath.php",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jmespath/jmespath.php.git",
+                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
+                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "bin/jp.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JmesPath\\": "src/"
+                },
+                "files": [
+                    "src/JmesPath.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Declaratively specify how to extract elements from a JSON document",
+            "keywords": [
+                "json",
+                "jsonpath"
+            ],
+            "time": "2016-12-03T22:08:25+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -4678,6 +4839,7 @@
         "cubalider/privilege-profile": 20,
         "symsonte/security-asserter": 20,
         "yosmanyga/validation": 20,
+        "ktamas77/firebase-php": 20,
         "symsonte/behat-extension": 20
     },
     "prefer-stable": true,

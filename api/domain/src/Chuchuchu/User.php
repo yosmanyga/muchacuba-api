@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Chuchuchu;
 
-class Contact implements \JsonSerializable
+class User implements \JsonSerializable
 {
     /**
      * @var string
@@ -24,7 +24,11 @@ class Contact implements \JsonSerializable
      * @param string $name
      * @param string $picture
      */
-    public function __construct($id, $name, $picture)
+    public function __construct(
+        $id,
+        $name,
+        $picture
+    )
     {
         $this->id = $id;
         $this->name = $name;
@@ -50,7 +54,7 @@ class Contact implements \JsonSerializable
     /**
      * @return string
      */
-    public function getPicture()
+    public function getPicture(): string
     {
         return $this->picture;
     }
@@ -63,7 +67,7 @@ class Contact implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'picture' => $this->picture,
+            'picture' => $this->picture
         ];
     }
 }

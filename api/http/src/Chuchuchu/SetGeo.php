@@ -1,14 +1,14 @@
 <?php
 
-namespace Muchacuba\Http\Chuchuchu\Firebase;
+namespace Muchacuba\Http\Chuchuchu;
 
-use Muchacuba\Chuchuchu\Firebase\SetPresence as DomainSetPresence;
+use Muchacuba\Chuchuchu\User\SetGeo as DomainSetGeo;
 use Symsonte\Http\Server;
 
 /**
  * @di\controller({deductible: true})
  */
-class SetPresence
+class SetGeo
 {
     /**
      * @var Server
@@ -16,25 +16,25 @@ class SetPresence
     private $server;
 
     /**
-     * @var DomainSetPresence
+     * @var DomainSetGeo
      */
-    private $setPresence;
+    private $setGeo;
 
     /**
-     * @param Server            $server
-     * @param DomainSetPresence $setPresence
+     * @param Server       $server
+     * @param DomainSetGeo $setGeo
      */
     public function __construct(
         Server $server,
-        DomainSetPresence $setPresence
+        DomainSetGeo $setGeo
     ) {
         $this->server = $server;
-        $this->setPresence = $setPresence;
+        $this->setGeo = $setGeo;
     }
 
     /**
      * @http\authorization({roles: ["user"]})
-     * @http\resolution({method: "POST", uri: "/chuchuchu/firebase/set-presence"})
+     * @http\resolution({method: "POST", uri: "/chuchuchu/set-geo"})
      *
      * @param string $uniqueness
      */
@@ -42,9 +42,10 @@ class SetPresence
     {
         $post = $this->server->resolveBody();
 
-        $this->setPresence->set(
+        $this->setGeo->set(
             $uniqueness,
-            $post['token']
+            $post['lat'],
+            $post['lng']
         );
 
         $this->server->sendResponse();
