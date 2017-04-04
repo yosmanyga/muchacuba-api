@@ -42,7 +42,7 @@ class RequestPage
      *
      * @return Crawler
      */
-    public function request($uri, $withProxy = true)
+    public function request($uri, $withProxy = false)
     {
         if ($withProxy === true) {
             $clients = $this->createClients->create(100);
