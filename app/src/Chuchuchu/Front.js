@@ -11,10 +11,10 @@ export default class Front extends React.Component {
         url: React.PropTypes.string.isRequired,
         query: React.PropTypes.object.isRequired,
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess, backUrl)
-        onUnderAuth: React.PropTypes.func.isRequired,
-        // (backUrl)
-        onUnauthorized: React.PropTypes.func.isRequired,
+        // (onSuccess, onError)
+        onBackAuth: React.PropTypes.func.isRequired,
+        // ()
+        onFrontAuth: React.PropTypes.func.isRequired,
         // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
@@ -41,8 +41,9 @@ export default class Front extends React.Component {
                     'element': <ManageConversations
                         query={this.props.query}
                         layout={layout}
-                        onUnderAuth={(onSuccess, onFailure) => {this.props.onUnderAuth(onSuccess, onFailure)}}
-                        onUnauthorized={(backUrl) => {this.props.onUnauthorized('/' + backUrl)}}
+                        onBackAuth={this.props.onBackAuth}
+                        onFrontAuth={this.props.onFrontAuth}
+                        onNotify={this.props.onNotify}
                     />,
                     'def': true
                 },
@@ -67,6 +68,7 @@ class Layout extends React.Component {
                     ...this.props.layout.props.style,
                     height: "100%"
                 }}
+                {...this.props}
             >
                 {this.props.children}
             </this.props.layout.type>

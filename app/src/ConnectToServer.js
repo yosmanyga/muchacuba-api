@@ -5,7 +5,7 @@ export default class ConnectToServer  {
         this.base = '';
 
         if (process.env.NODE_ENV !== "production") {
-            this.debug = true;
+            this.debug = false;
         } else {
             this.debug = true;
         }

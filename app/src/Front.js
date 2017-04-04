@@ -3,7 +3,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 import * as firebase from 'firebase';
 import History from 'history/createHashHistory';
-// import QueryString from 'query-string';
+import QueryString from 'query-string';
 import AppBar from 'material-ui/AppBar';
 import CircularProgress from 'material-ui/CircularProgress';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -13,20 +13,22 @@ import ResolveElement from './ResolveElement';
 import DocumentTitle from 'react-document-title';
 
 import MuleFront from './Mule/Front';
-// import ChuchuchuFront from './Chuchuchu/Front';
+import ChuchuchuFront from './Chuchuchu/Front';
 import InternautaFront from './Internauta/Front';
 
 firebase.initializeApp({
-    apiKey: "AIzaSyClvnStM8ZWjDNjjU-CaQ5NrjC2Ttd8eTI",
-    authDomain: "chuchuchu-2bb11.firebaseapp.com",
-    databaseURL: "https://chuchuchu-2bb11.firebaseio.com",
-    storageBucket: "chuchuchu-2bb11.appspot.com",
-    messagingSenderId: "1003585501404"
+    apiKey: "AIzaSyBAU5dYUeDdS7murVEPsw4IpPEoWhKyy94",
+    authDomain: "cubalider-muchacuba.firebaseapp.com",
+    databaseURL: "https://cubalider-muchacuba.firebaseio.com",
+    projectId: "cubalider-muchacuba",
+    storageBucket: "cubalider-muchacuba.appspot.com",
+    messagingSenderId: "43324202525"
 });
 
 class Layout extends React.Component {
     static propTypes = {
         title: React.PropTypes.string,
+        bar: React.PropTypes.element,
         iconElementLeft: React.PropTypes.element,
         iconElementRight: React.PropTypes.element,
         onTitleTouchTap: React.PropTypes.func,
@@ -44,7 +46,7 @@ class Layout extends React.Component {
                     ...this.props.style,
                 }}>
                     <AppBar
-                        title={this.props.title}
+                        title={this.props.bar}
                         onTitleTouchTap={this.props.onTitleTouchTap}
                         iconElementLeft={this.props.iconElementLeft}
                         iconElementRight={this.props.iconElementRight}
@@ -91,20 +93,29 @@ export default class Front extends React.Component {
     }
 
     componentWillMount() {
-        /* Resolution */
-
-        this._history.listen((location) => {
-            this.setState({
-                location: location
-            });
-        });
-
         /* Authentication */
 
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
 
             }
+        });
+
+        // var connectedRef = firebase.database().ref(".info/connected");
+        // connectedRef.on("value", function(snap) {
+        //     if (snap.val() === true) {
+        //         alert("connected");
+        //     } else {
+        //         alert("not connected");
+        //     }
+        // });
+
+        /* Resolution */
+
+        this._history.listen((location) => {
+            this.setState({
+                location: location
+            });
         });
 
         this.setState({
@@ -124,6 +135,7 @@ export default class Front extends React.Component {
         const layout = (
             <Layout
                 title={null}
+                bar={null}
                 iconElementLeft={null}
                 iconElementRight={null}
                 onTitleTouchTap={null}
@@ -131,7 +143,7 @@ export default class Front extends React.Component {
             />
         );
 
-        //const query = QueryString.parse(this.state.location.search);
+        const query = QueryString.parse(this.state.location.search);
 
         return (
             <MuiThemeProvider>
@@ -150,7 +162,6 @@ export default class Front extends React.Component {
                             />,
                             'def': true
                         },
-                        /*
                         {
                             'url': '/chuchuchu',
                             'element': <ChuchuchuFront
@@ -158,11 +169,11 @@ export default class Front extends React.Component {
                                 query={query}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
                                 onNavigate={(url) => this._handleNavigate('/chuchuchu' + url)}
                                 onNotify={this._handleNotify}
                             />
                         },
-                        */
                         {
                             'url': '/internauta',
                             'element': <InternautaFront
@@ -186,7 +197,7 @@ export default class Front extends React.Component {
                 if (result.credential) {
                     firebase.auth().currentUser.getToken(true).then((token) => {
                         this._connectToServer
-                            .post('/facebook/init-profile')
+                            .post('/init-user')
                             .auth(token)
                             .send({
                                 facebook: {
@@ -208,6 +219,7 @@ export default class Front extends React.Component {
 
                                     return;
                                 }
+
                                 onSuccess(token);
                             });
                     }).catch((error) => {

@@ -5,9 +5,11 @@ import _objectWithoutProperties from 'babel-runtime/helpers/objectWithoutPropert
 
 export default class Button extends React.Component {
     static propTypes = {
+        layout: React.PropTypes.element,
         label: React.PropTypes.string.isRequired,
         labelAfterTouchTap: React.PropTypes.string,
         icon: React.PropTypes.string,
+        // (finish)
         onTouchTap: React.PropTypes.func
     };
 
@@ -23,29 +25,37 @@ export default class Button extends React.Component {
     }
 
     render() {
-        let props = _objectWithoutProperties(
+        const props = _objectWithoutProperties(
             this.props,
-            ["labelAfterTouchTap"]
+            ['layout', 'labelAfterTouchTap']
         );
 
-        let icon = this.props.icon
+        const icon = this.props.icon
             ? <FontIcon className="material-icons">{this.props.icon}</FontIcon>
             : null;
 
-        let label = this.state.busy && this.props.labelAfterTouchTap
+        const label = this.state.busy && this.props.labelAfterTouchTap
             ? this.props.labelAfterTouchTap
             : this.props.label;
 
-        let disabled = this.state.busy;
+        const disabled = this.state.busy;
+
+        const button = <RaisedButton
+            {...props}
+            icon={icon}
+            label={label}
+            disabled={disabled}
+            onTouchTap={this._handleTouchTap}
+        />;
+
+        if (typeof this.props.layout === 'undefined') {
+            return <button.type {...button.props}/>;
+        }
 
         return (
-            <RaisedButton
-                {...props}
-                icon={icon}
-                label={label}
-                disabled={disabled}
-                onTouchTap={this._handleTouchTap}
-            />
+            <this.props.layout.type {...this.props.layout.props}>
+                <button.type {...button.props}/>
+            </this.props.layout.type>
         );
     }
 
@@ -59,9 +69,13 @@ export default class Button extends React.Component {
         });
     }
 
-    _handleFinish() {
+    _handleFinish(externalFinish) {
         this.setState({
             busy: false
+        }, () => {
+            if (typeof externalFinish !== 'undefined') {
+                externalFinish();
+            }
         });
     }
 }
