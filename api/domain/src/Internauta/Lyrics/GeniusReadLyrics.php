@@ -84,7 +84,7 @@ class GeniusReadLyrics implements ReadLyrics
     {
         $crawler = $crawler->filter('.lyrics p');
 
-        $lyrics = $crawler->filterXPath('//a/text()')->extract(['_text']);
+        $lyrics = $crawler->filterXPath('//text()')->extract(['_text']);
         $lyrics = array_map('trim', $lyrics);
         $lyrics = implode("\n", $lyrics);
 
