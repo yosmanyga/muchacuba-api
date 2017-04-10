@@ -26,11 +26,10 @@ class ProcessICEEvent
 
     /**
      * @param string $from
-     * @param string $to
      *
      * @return string
      */
-    public function process($from, $to)
+    public function process($from)
     {
         /** @var Call $call */
         $call = $this->manageCallStorage->connect()->findOne([
@@ -41,7 +40,7 @@ class ProcessICEEvent
             return $this->prepareHangup();
         }
 
-        return $this->prepareConnect($from, $to);
+        return $this->prepareConnect($from, $call->getTo());
     }
 
     /**

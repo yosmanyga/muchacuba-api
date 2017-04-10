@@ -64,8 +64,7 @@ class ProcessEvent
         switch ($payload['event']) {
             case 'ice':
                 return $this->processICEEvent->process(
-                    $payload['cli'],
-                    $payload['to']['endpoint']
+                    $payload['cli']
                 );
 
                 break;

@@ -134,7 +134,7 @@ Feature: Manage calls
     """
     {
       "name" : "ConnectPSTN",
-      "number" : "+1213",
+      "number" : "+1011",
       "maxDuration" : 3600,
       "cli" : "+123"
     }
