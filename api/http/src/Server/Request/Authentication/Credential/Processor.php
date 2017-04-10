@@ -29,7 +29,8 @@ class Processor implements BaseCredentialProcessor
     private $projectId;
 
     /**
-     * @param AuthorizationResolver  $authorizationResolver
+     * @param AuthorizationResolver $authorizationResolver
+     * @param string                $projectId
      *
      * @di\arguments({
      *     authorizationResolver: '@symsonte.http.server.request.authentication.credential.authorization_resolver',
