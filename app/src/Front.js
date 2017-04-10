@@ -12,12 +12,13 @@ import ConnectToServer from './ConnectToServer';
 import ResolveElement from './ResolveElement';
 import DocumentTitle from 'react-document-title';
 
+import AloleiroFront from './Aloleiro/Front';
 import MuleFront from './Mule/Front';
 import ChuchuchuFront from './Chuchuchu/Front';
 import InternautaFront from './Internauta/Front';
 
 firebase.initializeApp({
-    apiKey: "AIzaSyBAU5dYUeDdS7murVEPsw4IpPEoWhKyy94",
+    apiKey: "AIzaSyApFrRpHVKRK1pvBchd0rcC_ycUa0H-5AU",
     authDomain: "cubalider-muchacuba.firebaseapp.com",
     databaseURL: "https://cubalider-muchacuba.firebaseio.com",
     projectId: "cubalider-muchacuba",
@@ -29,6 +30,7 @@ class Layout extends React.Component {
     static propTypes = {
         title: React.PropTypes.string,
         bar: React.PropTypes.element,
+        drawer: React.PropTypes.element,
         iconElementLeft: React.PropTypes.element,
         iconElementRight: React.PropTypes.element,
         onTitleTouchTap: React.PropTypes.func,
@@ -38,6 +40,14 @@ class Layout extends React.Component {
         }),
         style: React.PropTypes.object
     };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            drawer: false
+        };
+    }
 
     render() {
         return (
@@ -50,8 +60,16 @@ class Layout extends React.Component {
                         onTitleTouchTap={this.props.onTitleTouchTap}
                         iconElementLeft={this.props.iconElementLeft}
                         iconElementRight={this.props.iconElementRight}
+                        onLeftIconButtonTouchTap={() => {
+                            this.setState({drawer: true});
+                        }}
                     />
                     {this.props.children}
+                    <this.props.drawer.type
+                        docked={false}
+                        open={this.state.drawer}
+                        onRequestChange={(open) => this.setState({drawer: open})}
+                    >{this.props.drawer.props.children}</this.props.drawer.type>
                     {this.props.notification && this.props.notification.message !== null
                         ? <Snackbar
                             open={true}
@@ -150,6 +168,18 @@ export default class Front extends React.Component {
                 {this._resolveElement.resolve(
                     this.state.location.pathname,
                     [
+                        {
+                            'url': '/aloleiro',
+                            'element': <AloleiroFront
+                                url={this.state.location.pathname.replace('/aloleiro', '')}
+                                layout={layout}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
+                                onNavigate={(url) => this._handleNavigate('/aloleiro' + url)}
+                                onNotify={this._handleNotify}
+                            />,
+                            'def': true
+                        },
                         {
                             'url': '/mule',
                             'element': <MuleFront

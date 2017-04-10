@@ -16,3 +16,7 @@ default:
         - Muchacuba\Internauta\RequestContext
         - Muchacuba\Internauta\Context
         - Muchacuba\Internauta\Advertising\Context
+    aloleiro:
+      paths: [%paths.base%/features/Aloleiro]
+      contexts:
+        - Muchacuba\Aloleiro\Context

@@ -9,6 +9,7 @@ use Cubalider\Facebook\CreateProfile as CreateFacebookProfile;
 use Cubalider\Privilege\CreateProfile as CreatePrivilegeProfile;
 use Cubalider\Geo\CreateProfile as CreateGeoProfile;
 use Muchacuba\Firebase\CreateProfile as CreateFirebaseProfile;
+use Muchacuba\Aloleiro\CreateProfile as CreateAloleiroProfile;
 
 /**
  * @di\service({
@@ -48,12 +49,18 @@ class InitUser
     private $createFirebaseProfile;
 
     /**
+     * @var CreateAloleiroProfile
+     */
+    private $createAloleiroProfile;
+
+    /**
      * @param CreateUniqueness       $createUniqueness
      * @param CreateInternetProfile  $createInternetProfile
      * @param CreateFacebookProfile  $createFacebookProfile
      * @param CreatePrivilegeProfile $createPrivilegeProfile
      * @param CreateGeoProfile       $createGeoProfile
      * @param CreateFirebaseProfile  $createFirebaseProfile
+     * @param CreateAloleiroProfile  $createAloleiroProfile
      */
     public function __construct(
         CreateUniqueness $createUniqueness,
@@ -61,7 +68,8 @@ class InitUser
         CreateFacebookProfile $createFacebookProfile,
         CreatePrivilegeProfile $createPrivilegeProfile,
         CreateGeoProfile $createGeoProfile,
-        CreateFirebaseProfile $createFirebaseProfile
+        CreateFirebaseProfile $createFirebaseProfile,
+        CreateAloleiroProfile $createAloleiroProfile
     )
     {
         $this->createUniqueness = $createUniqueness;
@@ -70,6 +78,7 @@ class InitUser
         $this->createPrivilegeProfile = $createPrivilegeProfile;
         $this->createGeoProfile = $createGeoProfile;
         $this->createFirebaseProfile = $createFirebaseProfile;
+        $this->createAloleiroProfile = $createAloleiroProfile;
     }
 
     /**
@@ -118,6 +127,11 @@ class InitUser
         $this->createFirebaseProfile->create(
             $uniqueness,
             null
+        );
+
+        $this->createAloleiroProfile->create(
+            $uniqueness,
+            []
         );
     }
 }
