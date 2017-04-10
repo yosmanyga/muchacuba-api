@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Note: Dont create files containing dot(.)
+# Note: Don't create files containing dot(.)
 
-cp -R /root/1min /etc/periodic/1min
-cp -R /root/1hour /etc/periodic/1hour
+cp -R /root/cron/1min /etc/periodic/1min
+cp -R /root/cron/1hour /etc/periodic/1hour
 
 chmod +x /etc/periodic/1min/*
 chmod +x /etc/periodic/1hour/*

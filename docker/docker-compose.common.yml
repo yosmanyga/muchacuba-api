@@ -30,11 +30,11 @@ services:
     volumes:
       - ../api:/var/www
       - ./php/php.ini:/usr/local/etc/php/php.ini
-      - ./cron:/root
+      - ./cron:/root/cron
     links:
       - mongo
     working_dir: /var/www
-    entrypoint: /root/entrypoint.sh
+    entrypoint: /root/cron/entrypoint.sh
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
       PHP_XDEBUG_ENABLED: 1
