@@ -5,7 +5,7 @@ Feature: Process translation request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "traduccion@muchacuba.com",
+        "receptor": "traduccion@muchacuba.com",
         "subject": "school"
       }
       """
@@ -30,7 +30,7 @@ Feature: Process translation request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "traduccion@muchacuba.com",
+        "receptor": "traduccion@muchacuba.com",
         "subject": "escuela"
       }
       """
@@ -55,7 +55,7 @@ Feature: Process translation request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "traduccion@muchacuba.com",
+        "receptor": "traduccion@muchacuba.com",
         "subject": "escola"
       }
       """

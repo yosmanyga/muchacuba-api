@@ -5,7 +5,7 @@ Feature: Process image request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "imagenes@muchacuba.com",
+        "receptor": "imagenes@muchacuba.com",
         "subject": "windows 10"
       }
       """
@@ -44,7 +44,7 @@ Feature: Process image request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "imagenes@muchacuba.com",
+        "receptor": "imagenes@muchacuba.com",
         "subject": "windows 10 [1]"
       }
       """

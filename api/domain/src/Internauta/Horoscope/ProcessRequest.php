@@ -22,7 +22,7 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * @var string
      */
-    private $googleKey;
+    private $googleServerApi;
 
     /**
      * @var string
@@ -40,24 +40,24 @@ class ProcessRequest implements BaseProcessRequest
     private $requestPage;
 
     /**
-     * @param string       $googleKey
+     * @param string       $googleServerApi
      * @param string       $googleCx
      * @param SearchGoogle $searchGoogle
-     * @param RequestPage $requestPage
+     * @param RequestPage  $requestPage
      *
      * @di\arguments({
-     *     googleKey: '%google_key%',
-     *     googleCx:  '%google_cx_horoscope%'
+     *     googleServerApi: '%google_server_api%',
+     *     googleCx:        '%google_cx_horoscope%'
      * })
      */
     public function __construct(
-        $googleKey,
+        $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle,
         RequestPage $requestPage
     )
     {
-        $this->googleKey = $googleKey;
+        $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
         $this->requestPage = $requestPage;
@@ -66,10 +66,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function process($sender, $receptor, $subject, $body)
     {
         if (!in_array(
-            current(explode('@', $recipient)),
+            current(explode('@', $receptor)),
             ['horoscopo', 'oroscopo', 'zodiaco', 'sodiaco']
         )) {
             throw new UnsupportedRequestException();
@@ -82,7 +82,7 @@ class ProcessRequest implements BaseProcessRequest
         $events = [];
 
         $results = $this->searchGoogle->search(
-            $this->googleKey,
+            $this->googleServerApi,
             $this->googleCx,
             sprintf(
                 'horoscopo %s %s',

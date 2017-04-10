@@ -33,14 +33,14 @@ class SendEmail
 
     /**
      * @param string        $sender
-     * @param string        $recipient
+     * @param string        $receptor
      * @param string        $subject
      * @param string        $body
      * @param string[]|null $attachments
      *
      * @return SendResult
      */
-    public function send($sender, $recipient, $subject, $body, $attachments = [])
+    public function send($sender, $receptor, $subject, $body, $attachments = [])
     {
         // TODO: Throw exception if subject, body or attachments are too big
 
@@ -96,7 +96,7 @@ class SendEmail
             '',
             [
                 'sender' => $sender,
-                'recipient' => $recipient,
+                'receptor' => $receptor,
                 'subject' => $subject,
                 'body' => $body,
                 'attachments' => $attachmentData
@@ -107,7 +107,7 @@ class SendEmail
             'muchacuba.com',
             [
                 'from' => $sender,
-                'to' => $recipient,
+                'to' => $receptor,
                 'subject' => $subject,
                 'text' => sprintf(
                     "%s\n\n%s\n%s\n",

@@ -5,7 +5,7 @@ Feature: Process horoscope request
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "horoscopo@muchacuba.com",
+        "receptor": "horoscopo@muchacuba.com",
         "subject": "sagitario"
       }
       """

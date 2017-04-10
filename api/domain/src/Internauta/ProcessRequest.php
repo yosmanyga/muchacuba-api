@@ -6,7 +6,7 @@ interface ProcessRequest
 {
     /**
      * @param string $sender
-     * @param string $recipient
+     * @param string $receptor
      * @param string $subject
      * @param string $body
      *
@@ -14,7 +14,7 @@ interface ProcessRequest
      *
      * @throws UnsupportedRequestException
      */
-    public function process($sender, $recipient, $subject, $body);
+    public function process($sender, $receptor, $subject, $body);
 
     /**
      * @return string

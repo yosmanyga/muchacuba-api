@@ -37,18 +37,18 @@ class PushRequest
 
     /**
      * @param string $sender
-     * @param string $recipient
+     * @param string $receptor
      * @param string $subject
      * @param string $body
      * @param array  $extra
      *
      * @return string $id
      */
-    public function push($sender, $recipient, $subject, $body, $extra)
+    public function push($sender, $receptor, $subject, $body, $extra)
     {
         $id = $this->insertRequest->insert(
             $sender,
-            $recipient,
+            $receptor,
             $subject,
             $body
         );
@@ -56,7 +56,7 @@ class PushRequest
         $payload = [
             'id' => $id,
             'sender' => $sender,
-            'recipient' => $recipient,
+            'receptor' => $receptor,
             'subject' => $subject,
             'body' => $body
         ];

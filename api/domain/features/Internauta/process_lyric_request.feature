@@ -1,11 +1,11 @@
 Feature: Process lyrics request
 
   Scenario: Process an spanish lyrics request that find lyrics
-    Given I process this spanish lyrics request:
+    Given I process this lyrics request:
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "letras@muchacuba.com",
+        "receptor": "letras@muchacuba.com",
         "subject": "Shakira Tu"
       }
       """
@@ -26,11 +26,11 @@ Feature: Process lyrics request
       """
 
   Scenario: Process an english lyrics request that find lyrics
-    Given I process this english lyrics request:
+    Given I process this lyrics request:
       """
       {
         "sender": "foo@bar.com",
-        "recipient": "lyrics@muchacuba.com",
+        "receptor": "lyrics@muchacuba.com",
         "subject": "Evanescence My Immortal"
       }
       """
@@ -39,7 +39,7 @@ Feature: Process lyrics request
       {
         "responses": [
           {
-            "from": "Lyrics Muchacuba <lyrics@muchacuba.com>",
+            "from": "Letras Muchacuba <letras@muchacuba.com>",
             "to": "foo@bar.com",
             "subject": "Re: Evanescence My Immortal",
             "body": "@string@.contains('Suppressed by all my childish fears')",

@@ -11,8 +11,7 @@ use Symsonte\Behat\ContainerAwareContext;
 use Symsonte\Service\Container;
 use Muchacuba\Internauta\Horoscope\ProcessRequest as HoroscopeProcessRequest;
 use Muchacuba\Internauta\Translation\ProcessRequest as TranslationProcessRequest;
-use Muchacuba\Internauta\Lyrics\SpanishProcessRequest as SpanishLyricsProcessRequest;
-use Muchacuba\Internauta\Lyrics\EnglishProcessRequest as EnglishLyricsProcessRequest;
+use Muchacuba\Internauta\Lyrics\ProcessRequest as LyricsProcessRequest;
 use Muchacuba\Internauta\Image\ProcessRequest as ImageProcessRequest;
 
 class RequestContext implements BaseContext, ContainerAwareContext
@@ -60,7 +59,7 @@ class RequestContext implements BaseContext, ContainerAwareContext
 
         $this->result = $processRequest->process(
             $request['sender'],
-            $request['recipient'],
+            $request['receptor'],
             $request['subject'],
             ''
         );
@@ -80,7 +79,7 @@ class RequestContext implements BaseContext, ContainerAwareContext
 
         $this->result = $processRequest->process(
             $request['sender'],
-            $request['recipient'],
+            $request['receptor'],
             $request['subject'],
             ''
         );
@@ -100,52 +99,32 @@ class RequestContext implements BaseContext, ContainerAwareContext
 
         $this->result = $processRequest->process(
             $request['sender'],
-            $request['recipient'],
+            $request['receptor'],
             $request['subject'],
             ''
         );
     }
 
     /**
-     * @Given I process this spanish lyrics request:
+     * @Given I process this lyrics request:
      *
      * @param PyStringNode $string
      */
-    public function iProcessThisSpanishLyricsRequest(PyStringNode $string)
+    public function iProcessThisLyricsRequest(PyStringNode $string)
     {
         $request = json_decode($string->getRaw(), true);
 
-        /** @var SpanishLyricsProcessRequest $processRequest */
-        $processRequest = $this->container->get('muchacuba.internauta.lyrics.spanish_process_request');
+        /** @var LyricsProcessRequest $processRequest */
+        $processRequest = $this->container->get('muchacuba.internauta.lyrics.process_request');
 
         $this->result = $processRequest->process(
             $request['sender'],
-            $request['recipient'],
+            $request['receptor'],
             $request['subject'],
             ''
         );
     }
 
-    /**
-     * @Given I process this english lyrics request:
-     *
-     * @param PyStringNode $string
-     */
-    public function iProcessThisEnglishLyricsRequest(PyStringNode $string)
-    {
-        $request = json_decode($string->getRaw(), true);
-
-        /** @var EnglishLyricsProcessRequest $processRequest */
-        $processRequest = $this->container->get('muchacuba.internauta.lyrics.english_process_request');
-
-        $this->result = $processRequest->process(
-            $request['sender'],
-            $request['recipient'],
-            $request['subject'],
-            ''
-        );
-    }
-    
     /**
      * @Then I should get this result:
      *

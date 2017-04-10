@@ -20,7 +20,7 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * @var string
      */
-    private $googleKey;
+    private $googleServerApi;
 
     /**
      * @var string
@@ -38,24 +38,24 @@ class ProcessRequest implements BaseProcessRequest
     private $delegateReadLyrics;
 
     /**
-     * @param string             $googleKey
+     * @param string             $googleServerApi
      * @param string             $googleCx
      * @param SearchGoogle       $searchGoogle
      * @param DelegateReadLyrics $delegateReadLyrics
      *
      * @di\arguments({
-     *     googleKey: '%google_key%',
-     *     googleCx:  '%google_cx_lyrics%'
+     *     googleServerApi: '%google_server_api%',
+     *     googleCx:        '%google_cx_lyrics%'
      * })
      */
     public function __construct(
-        $googleKey,
+        $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle,
         DelegateReadLyrics $delegateReadLyrics
     )
     {
-        $this->googleKey = $googleKey;
+        $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
         $this->delegateReadLyrics = $delegateReadLyrics;
@@ -64,10 +64,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function process($sender, $receptor, $subject, $body)
     {
         if (!in_array(
-            $recipient,
+            $receptor,
             [
                 'letras@muchacuba.com',
                 'letra@muchacuba.com',
@@ -83,7 +83,7 @@ class ProcessRequest implements BaseProcessRequest
         $events = [];
 
         $results = $this->searchGoogle->search(
-            $this->googleKey,
+            $this->googleServerApi,
             $this->googleCx,
             $subject
         );
@@ -165,7 +165,7 @@ class ProcessRequest implements BaseProcessRequest
         }
 
         $responses[] = new Response(
-            $recipient,
+            "Letras Muchacuba <letras@muchacuba.com>",
             $sender,
             sprintf('Re: %s', $subject),
             $body

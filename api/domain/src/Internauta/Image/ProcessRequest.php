@@ -20,7 +20,7 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * @var string
      */
-    private $googleKey;
+    private $googleServerApi;
 
     /**
      * @var string
@@ -33,22 +33,22 @@ class ProcessRequest implements BaseProcessRequest
     private $searchGoogle;
 
     /**
-     * @param string       $googleKey
+     * @param string       $googleServerApi
      * @param string       $googleCx
      * @param SearchGoogle $searchGoogle
      *
      * @di\arguments({
-     *     googleKey: '%google_key%',
-     *     googleCx:  '%google_cx_images%'
+     *     googleServerApi: '%google_server_api%',
+     *     googleCx:        '%google_cx_images%'
      * })
      */
     public function __construct(
-        $googleKey,
+        $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle
     )
     {
-        $this->googleKey = $googleKey;
+        $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
     }
@@ -56,10 +56,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function process($sender, $receptor, $subject, $body)
     {
         if (!in_array(
-            current(explode('@', $recipient)),
+            current(explode('@', $receptor)),
             ['imagenes', 'imagen', 'images', 'image']
         )) {
             throw new UnsupportedRequestException();
@@ -79,7 +79,7 @@ class ProcessRequest implements BaseProcessRequest
         $start = 1;
         while ($c < $amount) {
             $results = $this->searchGoogle->search(
-                $this->googleKey,
+                $this->googleServerApi,
                 $this->googleCx,
                 $subject,
                 $amount,

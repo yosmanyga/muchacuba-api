@@ -23,28 +23,28 @@ class ProcessRequest implements BaseProcessRequest
     private $client;
 
     /**
-     * @param string    $googleKey
+     * @param string $googleServerApi
      *
      * @di\arguments({
-     *     googleKey: '%google_key%'
+     *     googleServerApi: '%google_server_api%'
      * })
      */
     public function __construct(
-        $googleKey
+        $googleServerApi
     )
     {
         $this->client = new TranslateClient([
-            'key' => $googleKey
+            'key' => $googleServerApi
         ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function process($sender, $receptor, $subject, $body)
     {
         if (!in_array(
-            current(explode('@', $recipient)),
+            current(explode('@', $receptor)),
             ['traduccion', 'traducir', 'traduce', 'translation', 'translate']
         )) {
             throw new UnsupportedRequestException();
