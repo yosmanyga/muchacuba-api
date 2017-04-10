@@ -7,6 +7,7 @@ import ResolveElement from '../ResolveElement';
 
 import ListPhones from './ListPhones';
 import ListCalls from './ListCalls';
+import ListEvents from './ListEvents';
 
 export default class Front extends React.Component {
     static propTypes = {
@@ -59,6 +60,15 @@ export default class Front extends React.Component {
                         onFrontAuth={this.props.onFrontAuth}
                         onNotify={this.props.onNotify}
                     />
+                },
+                {
+                    'url': '/list-events',
+                    'element': <ListEvents
+                        layout={layout}
+                        onBackAuth={this.props.onBackAuth}
+                        onFrontAuth={this.props.onFrontAuth}
+                        onNotify={this.props.onNotify}
+                    />
                 }
             ]
         );
@@ -80,16 +90,25 @@ class Layout extends React.Component {
                 drawer={
                     <Drawer>
                         <MenuItem
+                            key="list-calls"
                             onTouchTap={() => {this.props.onNavigate('/list-calls')}}
                             leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
                         >
                             Llamadas
                         </MenuItem>
                         <MenuItem
+                            key="list-phones"
                             onTouchTap={() => {this.props.onNavigate('/list-phones')}}
                             leftIcon={<FontIcon className="material-icons">picture_in_picture</FontIcon>}
                         >
                             Cabinas
+                        </MenuItem>
+                        <MenuItem
+                            key="list-events"
+                            onTouchTap={() => {this.props.onNavigate('/list-events')}}
+                            leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
+                        >
+                            Eventos
                         </MenuItem>
                     </Drawer>
                 }

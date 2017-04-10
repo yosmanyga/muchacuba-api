@@ -1,5 +1,3 @@
-/* global google */
-
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -35,13 +33,6 @@ export default class ListPhones extends React.Component {
 
         this._collectPhones = this._collectPhones.bind(this);
     }
-/*
-    componentDidMount() {
-        this.setState({
-            token: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjRhOTk0OTMyZjM4NDAwZDc5NTMwYzQ5N2RkYjE1MzcyNGFkZWUzMjYifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY3ViYWxpZGVyLW11Y2hhY3ViYSIsIm5hbWUiOiJPcGVyYSBVc2VyIiwicGljdHVyZSI6Imh0dHBzOi8vc2NvbnRlbnQueHguZmJjZG4ubmV0L3YvdDEuMC0xL3MxMDB4MTAwLzEwMzU0Njg2XzEwMTUwMDA0NTUyODAxODU2XzIyMDM2NzUwMTEwNjE1MzQ1NV9uLmpwZz9vaD03MDljZTQ1MGQ5YjBiNGI4ZjM5Yjk3YTNiYjk5ZTE0NyZvZT01OTY1REE3MyIsImF1ZCI6ImN1YmFsaWRlci1tdWNoYWN1YmEiLCJhdXRoX3RpbWUiOjE0OTE4MDUyNDUsInVzZXJfaWQiOiI2c2ZoT3Bva3U5UHoxclBJSEFzYUJRN0N6S28xIiwic3ViIjoiNnNmaE9wb2t1OVB6MXJQSUhBc2FCUTdDektvMSIsImlhdCI6MTQ5MTgwNTI0NSwiZXhwIjoxNDkxODA4ODQ1LCJlbWFpbCI6Im9wZXJhX2xwYmlpY3RfdXNlckB0ZmJudy5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZmFjZWJvb2suY29tIjpbIjEwNzQ3MTE1OTc5Mjg4MCJdLCJlbWFpbCI6WyJvcGVyYV9scGJpaWN0X3VzZXJAdGZibncubmV0Il19LCJzaWduX2luX3Byb3ZpZGVyIjoiZmFjZWJvb2suY29tIn19.dmI_t7pI1rMbkviSE58qvnf3zrn0X_cBSpJkWyHr_axvrcU3yh9dAKhvZ7P7_QOlZPbeQ3KHN6xwYxUHyjk2_t_zAFUnV4LBO_mb8W0vzopA1uERU__s2pEeodo0XpK0bDt_PkLPWteyvXnNtbpGnTC7nGWB1c8fqPXn5bi3kAMfaheGHTi6VCDnutVvSJWPUydfGg1gSMjcqbiuTXBsJ6NQCsK5gF9thaL24113sXKnT7KfF8dfmfjKyHZ7CGZVcEPcNkferZd3eqa8C_DvTAipQDsU7WxAM67MgCUmDp65gRYxhwVkzqsMfQjaDmDBW0v75AXF4Xt8ylV2i6_ImA"
-        });
-    }
-*/
 
     componentDidMount() {
         this.props.onBackAuth(
@@ -140,7 +131,7 @@ export default class ListPhones extends React.Component {
                             })}
                         </TableBody>
                     </Table>
-                    : [<p>No hay cabinas</p>]
+                    : <p>No hay cabinas</p>
                 }
                 {this.state.add === true
                     ? <AddDialog

@@ -1,5 +1,3 @@
-/* global google */
-
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -160,7 +158,7 @@ export default class ListCalls extends React.Component {
                             })}
                         </TableBody>
                     </Table>
-                    : [<p>No hay llamadas</p>]
+                    : <p>No hay llamadas</p>
                 }
                 {this.state.add === true
                     ? <AddDialog
