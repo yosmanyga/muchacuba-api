@@ -41,7 +41,7 @@ class Collector implements BaseCollector
             $profile = $this->pickProfile->pick($uniqueness);
         } catch (NonExistentProfileException $e) {
             // If it doesn't have a profile, it means that the user is new
-            // and this call was done by init-profile
+            // and this call was done by init-user
 
             return ['user'];
         }
