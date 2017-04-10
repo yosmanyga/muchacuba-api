@@ -145,6 +145,7 @@ Feature: Manage calls
     """
     {
       "event": "ice",
+      "callid": "1",
       "cli": "+123",
       "to": {
         "endpoint": "+1213"
