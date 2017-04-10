@@ -65,11 +65,14 @@ class Layout extends React.Component {
                         }}
                     />
                     {this.props.children}
-                    <this.props.drawer.type
-                        docked={false}
-                        open={this.state.drawer}
-                        onRequestChange={(open) => this.setState({drawer: open})}
-                    >{this.props.drawer.props.children}</this.props.drawer.type>
+                    {typeof this.props.drawer !== 'undefined'
+                        ? <this.props.drawer.type
+                            docked={false}
+                            open={this.state.drawer}
+                            onRequestChange={(open) => this.setState({drawer: open})}
+                        >{this.props.drawer.props.children}</this.props.drawer.type>
+                        : null
+                    }
                     {this.props.notification && this.props.notification.message !== null
                         ? <Snackbar
                             open={true}
