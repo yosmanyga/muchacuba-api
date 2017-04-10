@@ -26,7 +26,8 @@
         "monolog/monolog": "^1.22",
         "php-http/curl-client": "^1.7",
         "symsonte/security-asserter": "dev-master",
-        "yosmanyga/validation": "@dev"
+        "yosmanyga/validation": "@dev",
+        "kreait/firebase-tokens": "^1.5"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",
