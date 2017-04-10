@@ -27,25 +27,25 @@ class PickConversation
 
     /**
      * @param string $id
-     * @param array  $recipients
+     * @param array  $receptors
      *
      * @return Conversation
      *
      * @throws NonExistentConversationException
      */
-    public function pick($id = null, array $recipients = null)
+    public function pick($id = null, array $receptors = null)
     {
         $criteria = [];
         if (!is_null($id)) {
             $criteria[] = ['_id' => $id];
         }
 
-        if (!is_null($recipients)) {
+        if (!is_null($receptors)) {
             $criteria = array_merge(
                 $criteria,
-                array_map(function($recipient) {
-                    return ['participants' => ['$in' => [$recipient]]];
-                }, $recipients)
+                array_map(function($receptor) {
+                    return ['participants' => ['$in' => [$receptor]]];
+                }, $receptors)
             );
         }
 

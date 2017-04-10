@@ -11,7 +11,7 @@ use Cubalider\Facebook\Profile\ManageStorage as FacebookManageStorage;
  *     private: true
  * })
  */
-class EnrichParticipants
+class EnrichUsers
 {
     /**
      * @var FacebookManageStorage
@@ -27,23 +27,23 @@ class EnrichParticipants
     }
 
     /**
-     * @param string[] $participants
+     * @param string[] $users
      *
      * @return User[]
      *
      * @throws UnauthorizedException
      */
-    public function enrich($participants)
+    public function enrich($users)
     {
         /** @var FacebookProfile[] $facebookProfiles */
         $facebookProfiles = $this->facebookManageStorage->connect()->find([
-            '_id' => ['$in' => $participants]
+            '_id' => ['$in' => $users]
         ]);
         
-        $participants = [];
+        $users = [];
         
         foreach ($facebookProfiles as $facebookProfile) {
-            $participants[$facebookProfile->getUniqueness()] = new User(
+            $users[$facebookProfile->getUniqueness()] = new User(
                 $facebookProfile->getUniqueness(),
                 $facebookProfile->getName(),
                 $facebookProfile->getPicture()
@@ -52,6 +52,6 @@ class EnrichParticipants
 
         // Need array_values to return non-associative array
         // Otherwise it's converted to an object by json
-        return array_values($participants);
+        return array_values($users);
     }
 }

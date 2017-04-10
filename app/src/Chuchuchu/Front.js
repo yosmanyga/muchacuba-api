@@ -2,7 +2,7 @@ import React from 'react';
 
 import ResolveElement from '../ResolveElement';
 
-import ManageConversations from './ManageConversations';
+import All from './All';
 // import RegisterUser from './RegisterUser';
 // import ViewConversation from './ViewConversation';
 
@@ -38,7 +38,7 @@ export default class Front extends React.Component {
             [
                 {
                     'url': '/',
-                    'element': <ManageConversations
+                    'element': <All
                         query={this.props.query}
                         layout={layout}
                         onBackAuth={this.props.onBackAuth}

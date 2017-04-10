@@ -7,7 +7,7 @@ namespace Muchacuba\Chuchuchu;
  *     deductible: true
  * })
  */
-class CollectParticipants
+class CollectReceptors
 {
     /**
      * @var PickConversation
@@ -15,21 +15,21 @@ class CollectParticipants
     private $pickConversation;
 
     /**
-     * @var EnrichParticipants
+     * @var EnrichUsers
      */
-    private $enrichParticipants;
+    private $enrichUsers;
 
     /**
-     * @param PickConversation   $pickConversation
-     * @param EnrichParticipants $enrichParticipants
+     * @param PickConversation $pickConversation
+     * @param EnrichUsers      $enrichUsers
      */
     public function __construct(
         PickConversation $pickConversation,
-        EnrichParticipants $enrichParticipants
+        EnrichUsers $enrichUsers
     )
     {
         $this->pickConversation = $pickConversation;
-        $this->enrichParticipants = $enrichParticipants;
+        $this->enrichUsers = $enrichUsers;
     }
 
     /**
@@ -48,6 +48,13 @@ class CollectParticipants
             throw new UnauthorizedException();
         }
 
-        return $this->enrichParticipants->enrich($conversation->getParticipants());
+        $receptors = [];
+        foreach ($conversation->getParticipants() as $participant) {
+            if ($participant != $uniqueness) {
+                $receptors[] = $participant;
+            }
+        }
+
+        return $this->enrichUsers->enrich($receptors);
     }
 }

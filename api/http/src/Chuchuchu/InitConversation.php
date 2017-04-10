@@ -53,7 +53,7 @@ class InitConversation
 
         $conversation = $this->initConversation->init(
             $uniqueness,
-            $post['recipients'],
+            $post['receptors'],
             $post['messages']
         );
 

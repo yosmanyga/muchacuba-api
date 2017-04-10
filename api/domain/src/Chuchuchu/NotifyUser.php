@@ -32,28 +32,28 @@ class NotifyUser
     /**
      * @var string string
      */
-    private $apiKey;
+    private $serverKey;
 
     /**
      * @param PickConversation    $pickConversation
      * @param PickFacebookProfile $pickFacebookProfile
      * @param PickFirebaseProfile $pickFirebaseProfile
-     * @param string              $apiKey
+     * @param string              $serverKey
      *
      * @di\arguments({
-     *     apiKey: "%firebase_web_api_key%"
+     *     serverKey: "%firebase_server_key%"
      * })
      */
     public function __construct(
         PickConversation $pickConversation,
         PickFacebookProfile $pickFacebookProfile,
         PickFirebaseProfile $pickFirebaseProfile,
-        $apiKey
+        $serverKey
     ) {
         $this->pickConversation = $pickConversation;
         $this->pickFacebookProfile = $pickFacebookProfile;
         $this->pickFirebaseProfile = $pickFirebaseProfile;
-        $this->apiKey = $apiKey;
+        $this->serverKey = $serverKey;
     }
 
     /**
@@ -82,10 +82,13 @@ class NotifyUser
             'https://fcm.googleapis.com/fcm/send',
             [
                 'headers' => [
-                    'Authorization' => sprintf('key=%s', $this->apiKey)
+                    'Authorization' => sprintf('key=%s', $this->serverKey)
                 ],
                 'json' => [
                     'notification' => [
+                        // TODO
+                        // title: Chuchuchu
+                        // body:  First name: content
                         'icon' => $authorFacebookProfile->getPicture(),
                         'title' => $authorFacebookProfile->getName(),
                         'body' => $this->buildTruncatedContent($content),

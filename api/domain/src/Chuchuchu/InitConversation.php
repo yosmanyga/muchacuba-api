@@ -52,23 +52,23 @@ class InitConversation
 
     /**
      * @param string   $sender
-     * @param string[] $recipients
+     * @param string[] $receptors
      * @param array    $messages
      *
      * @return string
      */
-    public function init($sender, $recipients, $messages)
+    public function init($sender, $receptors, $messages)
     {
         try {
             $id = $this->pickConversation
-                ->pick(null, array_merge([$sender], $recipients))
+                ->pick(null, array_merge([$sender], $receptors))
                 ->getId();
         } catch (NonExistentConversationException $e) {
             $id = uniqid();
 
             $this->manageStorage->connect()->insertOne(new Conversation(
                 $id,
-                array_merge([$sender], $recipients)
+                array_merge([$sender], $receptors)
             ));
         }
 
@@ -84,11 +84,11 @@ class InitConversation
             );
         }
 
-        foreach ($recipients as $recipient) {
+        foreach ($receptors as $receptor) {
             $this->notifyUser->notify(
                 $id,
                 $sender,
-                $recipient,
+                $receptor,
                 "Tienes nuevos mensajes",
                 $date
             );
