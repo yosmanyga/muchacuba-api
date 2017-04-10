@@ -101,7 +101,7 @@ export default class ListEvents extends React.Component {
                                 return (
                                     <TableRow key={event.id}>
                                         <TableRowColumn>{event.type}</TableRowColumn>
-                                        <TableRowColumn>{JSON.stringify(event.payload, null, 4)}</TableRowColumn>
+                                        <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(event.payload, null, 4)}} /></TableRowColumn>
                                     </TableRow>
                                 );
                             })}
