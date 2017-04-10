@@ -4,11 +4,7 @@ export default class ConnectToServer  {
     constructor() {
         this.base = '';
 
-        if (process.env.NODE_ENV !== "production") {
-            this.debug = false;
-        } else {
-            this.debug = true;
-        }
+        this.debug = process.env.NODE_ENV !== "production";
     }
 
     get(url) {
