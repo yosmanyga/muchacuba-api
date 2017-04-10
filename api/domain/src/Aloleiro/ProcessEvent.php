@@ -63,21 +63,29 @@ class ProcessEvent
 
         switch ($payload['event']) {
             case 'ice':
-                return $this->processICEEvent->process(
+                $response = $this->processICEEvent->process(
                     $payload['cli']
                 );
 
                 break;
             case 'ace':
-                return $this->processACEEvent->process();
+                $response = $this->processACEEvent->process();
 
                 break;
             case 'dice':
-                return $this->processDICEEvent->process();
+                $response = $this->processDICEEvent->process();
 
                 break;
             default:
-                return null;
+                $response = null;
         }
+
+        $this->registerEvent->register(
+            $payload['callid'],
+            'response',
+            json_decode($response, true)
+        );
+
+        return $response;
     }
 }
