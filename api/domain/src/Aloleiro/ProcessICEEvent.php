@@ -50,7 +50,9 @@ class ProcessICEEvent
     {
         return <<<EOF
 {
-    "name" : "Hangup"
+    "Action": {
+        "name" : "Hangup"
+    }
 }
 EOF;
     }
@@ -65,10 +67,12 @@ EOF;
     {
         return <<<EOF
 {
-    "name" : "ConnectPSTN",
-    "number" : "{$to}",
-    "maxDuration" : 3600,
-    "cli" : "{$from}"
+    "Action": {
+        "name" : "ConnectPSTN",
+        "number" : "{$to}",
+        "maxDuration" : 3600,
+        "cli" : "{$from}"
+    }
 }
 EOF;
     }

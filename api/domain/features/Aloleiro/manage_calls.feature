@@ -133,10 +133,12 @@ Feature: Manage calls
     Then I should get the response:
     """
     {
-      "name" : "ConnectPSTN",
-      "number" : "+1011",
-      "maxDuration" : 3600,
-      "cli" : "+123"
+      "Action": {
+        "name" : "ConnectPSTN",
+        "number" : "+1011",
+        "maxDuration" : 3600,
+        "cli" : "+123"
+      }
     }
     """
 
@@ -155,6 +157,8 @@ Feature: Manage calls
     Then I should get the response:
     """
     {
-      "name" : "Hangup"
+      "Action": {
+        "name" : "Hangup"
+      }
     }
     """
