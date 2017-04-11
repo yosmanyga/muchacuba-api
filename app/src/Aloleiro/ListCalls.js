@@ -67,10 +67,16 @@ export default class ListCalls extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            prevState.token === null
-            && this.state.token !== null
+            this.state.token !== null
+            && this.state.phones === null
         ) {
             this._collectPhones();
+        }
+
+        if (
+            this.state.token !== null
+            && this.state.calls === null
+        ) {
             this._collectCalls();
         }
     }
@@ -128,9 +134,15 @@ export default class ListCalls extends React.Component {
                 <Button
                     label="Preparar llamada"
                     icon="add"
-                    fullWidth={true}
                     onTouchTap={(finish) => {
                         this.setState({add: true}, finish);
+                    }}
+                />
+                <Button
+                    label="Refrescar"
+                    icon="refresh"
+                    onTouchTap={(finish) => {
+                        this.setState({calls: null}, finish);
                     }}
                 />
                 {this.state.calls.length !== 0
@@ -202,7 +214,7 @@ export default class ListCalls extends React.Component {
         let string = (duration - remainder) / 60 + ' minutos';
 
         if (remainder !== 0) {
-            string += 'y ' + remainder + ' segundos';
+            string += ' y ' + remainder + ' segundos';
         }
 
         return string;
