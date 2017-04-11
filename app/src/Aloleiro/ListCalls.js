@@ -26,6 +26,7 @@ export default class ListCalls extends React.Component {
 
         this.state = {
             token: null,
+            phones: null,
             calls: null,
             add: null,
             remove: null
