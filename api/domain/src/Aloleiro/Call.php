@@ -49,6 +49,11 @@ class Call implements Persistable, \JsonSerializable
     private $duration;
 
     /**
+     * @var float
+     */
+    private $charge;
+
+    /**
      * @param string $id
      * @param string $uniqueness
      * @param string $callId
@@ -56,6 +61,7 @@ class Call implements Persistable, \JsonSerializable
      * @param string $to
      * @param string $status
      * @param int|null $duration
+     * @param int|null $charge
      */
     public function __construct(
         $id,
@@ -64,7 +70,8 @@ class Call implements Persistable, \JsonSerializable
         $from,
         $to,
         $status,
-        $duration = null
+        $duration = null,
+        $charge = null
     )
     {
         $this->id = $id;
@@ -74,6 +81,7 @@ class Call implements Persistable, \JsonSerializable
         $this->to = $to;
         $this->status = $status;
         $this->duration = $duration;
+        $this->charge = $charge;
     }
 
     /**
@@ -133,6 +141,14 @@ class Call implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return float
+     */
+    public function getCharge()
+    {
+        return $this->charge;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -144,7 +160,8 @@ class Call implements Persistable, \JsonSerializable
             'from' => $this->from,
             'to' => $this->to,
             'status' => $this->status,
-            'duration' => $this->duration
+            'duration' => $this->duration,
+            'charge' => $this->charge
         ];
     }
 
@@ -160,6 +177,7 @@ class Call implements Persistable, \JsonSerializable
         $this->to = $data['to'];
         $this->status = $data['status'];
         $this->duration = $data['duration'];
+        $this->charge = $data['charge'];
     }
 
     /**
@@ -173,6 +191,7 @@ class Call implements Persistable, \JsonSerializable
             'to' => $this->to,
             'status' => $this->status,
             'duration' => $this->duration,
+            'charge' => $this->charge,
         ];
     }
 }

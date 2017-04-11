@@ -142,6 +142,8 @@ export default class ListCalls extends React.Component {
                             <TableRow>
                                 <TableHeaderColumn>Desde</TableHeaderColumn>
                                 <TableHeaderColumn>Hacia</TableHeaderColumn>
+                                <TableHeaderColumn>Duración</TableHeaderColumn>
+                                <TableHeaderColumn>Precio</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
                         <TableBody displayRowCheckbox={false}>
@@ -154,6 +156,8 @@ export default class ListCalls extends React.Component {
                                             }).name}
                                         </TableRowColumn>
                                         <TableRowColumn>{call.to}</TableRowColumn>
+                                        <TableRowColumn>{call.duration}</TableRowColumn>
+                                        <TableRowColumn>{call.charge}</TableRowColumn>
                                     </TableRow>
                                 );
                             })}
