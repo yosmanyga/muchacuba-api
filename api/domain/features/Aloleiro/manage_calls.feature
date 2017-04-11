@@ -131,7 +131,7 @@ Feature: Manage calls
     Then I should get the response:
     """
     {
-      "Action": {
+      "action": {
         "name" : "ConnectPSTN",
         "number" : "+1011",
         "maxDuration" : 3600,
@@ -155,7 +155,7 @@ Feature: Manage calls
     Then I should get the response:
     """
     {
-      "Action": {
+      "action": {
         "name" : "Hangup"
       }
     }
