@@ -10,14 +10,14 @@ namespace Muchacuba\Aloleiro;
 class ProcessACEEvent
 {
     /**
-     * @return string
+     * @return array
      */
     public function process()
     {
-        return <<<EOF
-{
-    "name" : "Continue"
-}
-EOF;
+        return [
+            'Action' => [
+                'name' => 'Continue'
+            ]
+        ];
     }
 }

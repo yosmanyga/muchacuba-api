@@ -10,7 +10,7 @@ namespace Muchacuba\Aloleiro;
 class ProcessDICEEvent
 {
     /**
-     * @return null
+     * @return array
      */
     public function process()
     {

@@ -124,10 +124,8 @@ Feature: Manage calls
     """
     {
       "event": "ice",
-      "cli": "+123",
-      "to": {
-        "endpoint": "+1213"
-      }
+      "callid": "1",
+      "cli": "+123"
     }
     """
     Then I should get the response:

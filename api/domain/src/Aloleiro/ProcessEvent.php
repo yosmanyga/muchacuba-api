@@ -77,13 +77,13 @@ class ProcessEvent
 
                 break;
             default:
-                $response = null;
+                $response = [];
         }
 
         $this->registerEvent->register(
             $payload['callid'],
             'response',
-            json_decode($response, true)
+            $response
         );
 
         return $response;

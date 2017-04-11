@@ -27,7 +27,7 @@ class ProcessICEEvent
     /**
      * @param string $from
      *
-     * @return string
+     * @return array
      */
     public function process($from)
     {
@@ -48,13 +48,11 @@ class ProcessICEEvent
      */
     private function prepareHangup()
     {
-        return <<<EOF
-{
-    "Action": {
-        "name" : "Hangup"
-    }
-}
-EOF;
+        return [
+            'Action' => [
+                'name' => 'Hangup'
+            ]
+        ];
     }
 
     /**
@@ -65,15 +63,13 @@ EOF;
      */
     private function prepareConnect($from, $to)
     {
-        return <<<EOF
-{
-    "Action": {
-        "name" : "ConnectPSTN",
-        "number" : "{$to}",
-        "maxDuration" : 3600,
-        "cli" : "{$from}"
-    }
-}
-EOF;
+        return [
+            'Action' => [
+                'name' => 'ConnectPSTN',
+                'number' => $to,
+                'maxDuration' => 3600,
+                'cli' => $from
+            ]
+        ];
     }
 }

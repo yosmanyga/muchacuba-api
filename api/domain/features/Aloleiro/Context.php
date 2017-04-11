@@ -302,7 +302,7 @@ class Context implements BaseContext, ContainerAwareContext
         $matcher = (new SimpleFactory())->createMatcher();
 
         if (!$matcher->match(
-            json_decode($this->result, true),
+            json_decode(json_encode($this->result), true),
             json_decode($string->getRaw(), true)
         )) {
             throw new \Exception($matcher->getError());
