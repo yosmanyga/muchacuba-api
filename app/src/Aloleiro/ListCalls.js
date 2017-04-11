@@ -156,7 +156,7 @@ export default class ListCalls extends React.Component {
                                             }).name}
                                         </TableRowColumn>
                                         <TableRowColumn>{call.to}</TableRowColumn>
-                                        <TableRowColumn>{call.duration}</TableRowColumn>
+                                        <TableRowColumn>{this._buildDuration(call.duration)}</TableRowColumn>
                                         <TableRowColumn>{call.charge}</TableRowColumn>
                                     </TableRow>
                                 );
@@ -194,6 +194,18 @@ export default class ListCalls extends React.Component {
                 }
             </this.props.layout.type>
         );
+    }
+
+    _buildDuration(duration) {
+        const remainder = duration % 60;
+
+        let string = (duration - remainder) / 60 + ' minutos';
+
+        if (remainder !== 0) {
+            string += 'y ' + remainder + ' segundos';
+        }
+
+        return string;
     }
 }
 
