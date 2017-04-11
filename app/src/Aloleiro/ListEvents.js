@@ -92,7 +92,6 @@ export default class ListEvents extends React.Component {
                             adjustForCheckbox={false}
                         >
                             <TableRow>
-                                <TableHeaderColumn>Tipo</TableHeaderColumn>
                                 <TableHeaderColumn>Datos</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -100,7 +99,6 @@ export default class ListEvents extends React.Component {
                             {this.state.events.map((event) => {
                                 return (
                                     <TableRow key={event.id}>
-                                        <TableRowColumn>{event.type}</TableRowColumn>
                                         <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(event.payload, null, 4)}} /></TableRowColumn>
                                     </TableRow>
                                 );
