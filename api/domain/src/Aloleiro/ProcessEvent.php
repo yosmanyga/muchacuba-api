@@ -15,37 +15,37 @@ class ProcessEvent
     private $registerEvent;
 
     /**
-     * @var ProcessICEEvent
+     * @var ProcessICEvent
      */
-    private $processICEEvent;
+    private $processICEvent;
 
     /**
-     * @var ProcessACEEvent
+     * @var ProcessACEvent
      */
-    private $processACEEvent;
+    private $processACEvent;
 
     /**
-     * @var ProcessDICEEvent
+     * @var ProcessDICEvent
      */
-    private $processDICEEvent;
+    private $processDICEvent;
 
     /**
-     * @param RegisterEvent    $registerEvent
-     * @param ProcessICEEvent  $processICEEvent
-     * @param ProcessACEEvent  $processACEEvent
-     * @param ProcessDICEEvent $processDICEEvent
+     * @param RegisterEvent   $registerEvent
+     * @param ProcessICEvent  $processICEvent
+     * @param ProcessACEvent  $processACEvent
+     * @param ProcessDICEvent $processDICEvent
      */
     public function __construct(
         RegisterEvent $registerEvent,
-        ProcessICEEvent $processICEEvent,
-        ProcessACEEvent $processACEEvent,
-        ProcessDICEEvent $processDICEEvent
+        ProcessICEvent $processICEvent,
+        ProcessACEvent $processACEvent,
+        ProcessDICEvent $processDICEvent
     )
     {
         $this->registerEvent = $registerEvent;
-        $this->processICEEvent = $processICEEvent;
-        $this->processACEEvent = $processACEEvent;
-        $this->processDICEEvent = $processDICEEvent;
+        $this->processICEvent = $processICEvent;
+        $this->processACEvent = $processACEvent;
+        $this->processDICEvent = $processDICEvent;
     }
 
     /**
@@ -61,17 +61,22 @@ class ProcessEvent
 
         switch ($payload['event']) {
             case 'ice':
-                $response = $this->processICEEvent->process(
-                    $payload['cli']
+                $response = $this->processICEvent->process(
+                    $payload['cli'],
+                    $payload['callid']
                 );
 
                 break;
             case 'ace':
-                $response = $this->processACEEvent->process();
+                $response = $this->processACEvent->process(
+                    $payload['callid']
+                );
 
                 break;
             case 'dice':
-                $response = $this->processDICEEvent->process();
+                $response = $this->processDICEvent->process(
+                    $payload['callid']
+                );
 
                 break;
             default:

@@ -54,9 +54,10 @@ Feature: Manage calls
     [
       {
         "id": "@string@",
-        "uniqueness": "1",
         "from": "+123",
-        "to": "+1011"
+        "to": "+1011",
+        "status": "p",
+        "duration": null
       }
     ]
     """
@@ -90,14 +91,15 @@ Feature: Manage calls
     [
       {
         "id": "@string@",
-        "uniqueness": "1",
         "from": "+123",
-        "to": "+1011"
+        "to": "+1011",
+        "status": "p",
+        "duration": null
       }
     ]
     """
 
-  Scenario: Process ICE event
+  Scenario: Process incoming call event (ICE)
     Given there are the profiles with phones:
     """
     [
@@ -139,8 +141,21 @@ Feature: Manage calls
       }
     }
     """
+    When I collect the calls from profile "1"
+    Then I should get the calls:
+    """
+    [
+      {
+        "id": "@string@",
+        "from": "+123",
+        "to": "+1011",
+        "status": "f",
+        "duration": null
+      }
+    ]
+    """
 
-  Scenario: Process ICE event and hangup because there is no prepared call
+  Scenario: Process incoming call event that is no prepared
     When I process the event:
     """
     {
@@ -160,3 +175,66 @@ Feature: Manage calls
       }
     }
     """
+
+  Scenario: Process answered call event (ACE)
+    Given there are the profiles with phones:
+    """
+    [
+      {
+        "uniqueness": "1",
+        "phones": [
+          {
+            "number": "+123",
+            "name": "Phone 1"
+          }
+        ]
+      }
+    ]
+    """
+    And I prepare the call:
+    """
+    {
+      "uniqueness": "1",
+      "from": "+123",
+      "to": "+1011"
+    }
+    """
+    And I process the event:
+    """
+    {
+      "event": "ice",
+      "callid": "1",
+      "cli": "+123"
+    }
+    """
+    When I process the event:
+    """
+    {
+      "event": "ace",
+      "callid": "1"
+    }
+    """
+    Then I should get the response:
+    """
+    {
+      "action": {
+        "name" : "Continue"
+      }
+    }
+    """
+    When I collect the calls from profile "1"
+    Then I should get the calls:
+    """
+    [
+      {
+        "id": "@string@",
+        "from": "+123",
+        "to": "+1011",
+        "status": "a",
+        "duration": null
+      }
+    ]
+    """
+
+#  TODO
+#  Scenario: Process disconnected call event (DICE)

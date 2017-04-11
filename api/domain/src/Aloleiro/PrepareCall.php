@@ -58,8 +58,10 @@ class PrepareCall
         $this->manageCallStorage->connect()->insertOne(new Call(
             $id,
             $uniqueness,
+            null,
             $from,
-            $to
+            $to,
+            Call::STATUS_PREPARED
         ));
     }
 }
