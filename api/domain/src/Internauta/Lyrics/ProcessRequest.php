@@ -64,10 +64,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $receptor, $subject, $body)
+    public function process($sender, $recipient, $subject, $body)
     {
         if (!in_array(
-            $receptor,
+            $recipient,
             [
                 'letras@muchacuba.com',
                 'letra@muchacuba.com',

@@ -45,10 +45,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $receptor, $subject, $body)
+    public function process($sender, $recipient, $subject, $body)
     {
         if (in_array(
-            current(explode('@', $receptor)),
+            current(explode('@', $recipient)),
             ['ayuda', 'help']
         )) {
             return new ProcessResult([
@@ -63,13 +63,13 @@ class ProcessRequest implements BaseProcessRequest
 
         foreach ($this->processRequestServices as $processRequest) {
             try {
-                return $processRequest->process($sender, $receptor, $subject, $body);
+                return $processRequest->process($sender, $recipient, $subject, $body);
             } catch (UnsupportedRequestException $e) {
                 continue;
             }
         }
 
-        return $this->fallbackProcessRequest->process($sender, $receptor, $subject, $body);
+        return $this->fallbackProcessRequest->process($sender, $recipient, $subject, $body);
     }
 
     /**

@@ -66,10 +66,10 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $receptor, $subject, $body)
+    public function process($sender, $recipient, $subject, $body)
     {
         if (!in_array(
-            current(explode('@', $receptor)),
+            current(explode('@', $recipient)),
             ['revolico', 'rebolico', 'anuncios', 'anuncio']
         )) {
             throw new UnsupportedRequestException();

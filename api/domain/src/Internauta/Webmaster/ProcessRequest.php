@@ -16,7 +16,7 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $receptor, $subject, $body)
+    public function process($sender, $recipient, $subject, $body)
     {
         return new ProcessResult(
             [
@@ -24,7 +24,7 @@ class ProcessRequest implements BaseProcessRequest
                     'Equipo Muchacuba <equipo@muchacuba.com>',
                     'yosmanyga@gmail.com',
                     'Fw:',
-                    sprintf("Sender: %s\nReceptor: %s\nSubject: %s\nBody: %s", $sender, $receptor, $subject, $body)
+                    sprintf("Sender: %s\nRecipient: %s\nSubject: %s\nBody: %s", $sender, $recipient, $subject, $body)
                 )
             ],
             []
