@@ -27,16 +27,12 @@ class RegisterEvent
     }
 
     /**
-     * @param string $call
-     * @param string $type
      * @param array  $payload
      */
-    public function register($call, $type, $payload)
+    public function register($payload)
     {
         $this->manageStorage->connect()->insertOne(new Event(
             uniqid(),
-            $call,
-            $type,
             $payload
         ));
     }

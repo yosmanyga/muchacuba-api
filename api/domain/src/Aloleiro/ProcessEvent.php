@@ -56,8 +56,6 @@ class ProcessEvent
     public function process($payload)
     {
         $this->registerEvent->register(
-            $payload['callid'],
-            'ice',
             $payload
         );
 
@@ -81,8 +79,6 @@ class ProcessEvent
         }
 
         $this->registerEvent->register(
-            $payload['callid'],
-            'response',
             $response
         );
 
