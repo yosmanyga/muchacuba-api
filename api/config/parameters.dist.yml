@@ -23,3 +23,6 @@ google_cx_revolico: ''
 google_cx_lyrics: ''
 google_cx_horoscope: ''
 algolia_user_index: 'dev_users'
+# Aloleiro
+sinch_app_key: ''
+sinch_app_secret: ''

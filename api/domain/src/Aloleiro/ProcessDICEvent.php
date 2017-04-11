@@ -19,11 +19,34 @@ class ProcessDICEvent
     private $manageStorage;
 
     /**
-     * @param ManageStorage $manageStorage
+     * @var string
      */
-    public function __construct(ManageStorage $manageStorage)
+    private $sinchAppKey;
+
+    /**
+     * @var string
+     */
+    private $sinchAppSecret;
+
+    /**
+     * @param ManageStorage $manageStorage
+     * @param string        $sinchAppKey
+     * @param string        $sinchAppSecret
+     *
+     * @di\arguments({
+     *     sinchAppKey:    "%sinch_app_key%",
+     *     sinchAppSecret: "%sinch_app_secret%"
+     * })
+     */
+    public function __construct(
+        ManageStorage $manageStorage,
+        $sinchAppKey,
+        $sinchAppSecret
+    )
     {
         $this->manageStorage = $manageStorage;
+        $this->sinchAppKey = $sinchAppKey;
+        $this->sinchAppSecret = $sinchAppSecret;
     }
 
     /**
@@ -57,8 +80,8 @@ class ProcessDICEvent
                         'basic %s',
                         base64_encode(sprintf(
                             'application\%s:%s',
-                            'ba0f59a1-6c76-43bb-9727-b7b9d14424ab',
-                            'YvuKqKsj3UCd72MykFfS9A=='
+                            $this->sinchAppKey,
+                            $this->sinchAppSecret
                         ))
                     )
                 ]]
