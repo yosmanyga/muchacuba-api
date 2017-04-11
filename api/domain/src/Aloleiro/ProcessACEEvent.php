@@ -15,7 +15,7 @@ class ProcessACEEvent
     public function process()
     {
         return [
-            'Action' => [
+            'action' => [
                 'name' => 'Continue'
             ]
         ];

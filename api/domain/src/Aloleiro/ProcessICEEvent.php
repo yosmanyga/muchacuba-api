@@ -49,7 +49,7 @@ class ProcessICEEvent
     private function prepareHangup()
     {
         return [
-            'Action' => [
+            'action' => [
                 'name' => 'Hangup'
             ]
         ];
@@ -64,7 +64,7 @@ class ProcessICEEvent
     private function prepareConnect($from, $to)
     {
         return [
-            'Action' => [
+            'action' => [
                 'name' => 'ConnectPSTN',
                 'number' => $to,
                 'maxDuration' => 3600,
