@@ -44,7 +44,7 @@ class ProcessICEEvent
     }
 
     /**
-     * @return string
+     * @return array
      */
     private function prepareHangup()
     {
@@ -59,7 +59,7 @@ class ProcessICEEvent
      * @param string $from
      * @param string $to
      *
-     * @return string
+     * @return array
      */
     private function prepareConnect($from, $to)
     {
