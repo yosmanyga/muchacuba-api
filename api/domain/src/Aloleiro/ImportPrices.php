@@ -32,11 +32,16 @@ class ImportPrices
      */
     public function import()
     {
+        $this->manageStorage->purge();
+
         $prices = $this->loadPrices();
 
         $favorites = [
             'Brasil', 'Canada', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
-            'República Dominicana'
+            'República Dominicana', 'Ecuador', 'El Salvador', 'France',
+            'Alemania', 'Guatemala', 'Honduras', 'Italia', 'Mexico', 'Nicaragua',
+            'Paraguay', 'Peru', 'Puerto Rico', 'España', 'Estados Unidos',
+            'Uruguay'
         ];
 
         $translations = $this->loadCountryTranslations();
