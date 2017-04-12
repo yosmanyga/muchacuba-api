@@ -1,11 +1,14 @@
 version: '2'
 services:
-  bind:
+  dns:
     image: sameersbn/bind:9.9.5-20161106
+    container_name: muchacuba_dns
     ports:
       - "53:53/udp"
       - "53:53/tcp"
       - "10000:10000/tcp"
     volumes:
       - ./bind:/data
+    environment:
+      - WEBMIN_ENABLED=false
     restart: always
