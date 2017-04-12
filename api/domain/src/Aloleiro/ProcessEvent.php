@@ -59,28 +59,39 @@ class ProcessEvent
             $payload
         );
 
-        switch ($payload['event']) {
-            case 'ice':
-                $response = $this->processICEvent->process(
-                    $payload['cli'],
-                    $payload['callid']
-                );
+        try {
+            switch ($payload['event']) {
+                case 'ice':
+                    $response = $this->processICEvent->process(
+                        $payload['cli'],
+                        $payload['callid']
+                    );
 
-                break;
-            case 'ace':
-                $response = $this->processACEvent->process(
-                    $payload['callid']
-                );
+                    break;
+                case 'ace':
+                    $response = $this->processACEvent->process(
+                        $payload['callid']
+                    );
 
-                break;
-            case 'dice':
-                $response = $this->processDICEvent->process(
-                    $payload['callid']
-                );
+                    break;
+                case 'dice':
+                    $response = $this->processDICEvent->process(
+                        $payload['callid']
+                    );
 
-                break;
-            default:
-                $response = [];
+                    break;
+                default:
+                    $response = [];
+            }
+        } catch (\Exception $e) {
+            $this->registerEvent->register([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return null;
         }
 
         $this->registerEvent->register(
