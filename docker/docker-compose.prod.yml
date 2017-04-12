@@ -1,14 +1,18 @@
 version: '2'
 services:
-  dns:
-    image: sameersbn/bind:9.9.5-20161106
-    container_name: muchacuba_dns
-    ports:
-      - "53:53/udp"
-      - "53:53/tcp"
-      - "10000:10000/tcp"
+  cron:
+    image: cubalider/php
+    container_name: muchacuba_cron
     volumes:
-      - ./bind:/data
+      - ../api:/var/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./cron:/root/cron
+    links:
+      - mongo
+    working_dir: /var/www
+    entrypoint: /root/cron/entrypoint.sh
     environment:
-      - WEBMIN_ENABLED=false
+      PHP_IDE_CONFIG: "serverName=docker"
+      PHP_XDEBUG_ENABLED: 1
+      XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.18.0.1"
     restart: always
