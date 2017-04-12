@@ -27,7 +27,8 @@
         "php-http/curl-client": "^1.7",
         "symsonte/security-asserter": "dev-master",
         "yosmanyga/validation": "@dev",
-        "kreait/firebase-tokens": "^1.5"
+        "kreait/firebase-tokens": "^1.5",
+        "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",

@@ -5,9 +5,10 @@ import MenuItem from 'material-ui/MenuItem';
 
 import ResolveElement from '../ResolveElement';
 
-import ListPhones from './ListPhones';
 import ListCalls from './ListCalls';
 import ListEvents from './ListEvents';
+import ListPhones from './ListPhones';
+import ListPrices from './ListPrices';
 
 export default class Front extends React.Component {
     static propTypes = {
@@ -69,6 +70,15 @@ export default class Front extends React.Component {
                         onFrontAuth={this.props.onFrontAuth}
                         onNotify={this.props.onNotify}
                     />
+                },
+                {
+                    'url': '/list-prices',
+                    'element': <ListPrices
+                        layout={layout}
+                        onBackAuth={this.props.onBackAuth}
+                        onFrontAuth={this.props.onFrontAuth}
+                        onNotify={this.props.onNotify}
+                    />
                 }
             ]
         );
@@ -109,6 +119,13 @@ class Layout extends React.Component {
                             leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
                         >
                             Eventos
+                        </MenuItem>
+                        <MenuItem
+                            key="list-prices"
+                            onTouchTap={() => {this.props.onNavigate('/list-prices')}}
+                            leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                        >
+                            Precios
                         </MenuItem>
                     </Drawer>
                 }
