@@ -27,11 +27,19 @@ class CollectPrices
     }
 
     /**
+     * @param bool $favorites
+     *
      * @return Price[]
      */
-    public function collect()
+    public function collect($favorites = false)
     {
-        $prices = $this->manageStorage->connect()->find();
+        $criteria = [];
+
+        if ($favorites == true) {
+            $criteria['favorite'] = true;
+        }
+
+        $prices = $this->manageStorage->connect()->find($criteria);
 
         return iterator_to_array($prices);
     }

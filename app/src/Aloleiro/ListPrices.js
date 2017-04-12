@@ -2,6 +2,7 @@ import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
 
+import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
 import Wait from '../Wait';
 
@@ -89,16 +90,23 @@ export default class ListPrices extends React.Component {
             >
                 {this.state.prices.length !== 0
                     ? [
-                        <Checkbox
-                            label="Solo los favoritos"
-                            checked={this.state.favorites}
-                            onTouchTap={() => {
-                                this.setState({
-                                    favorites: !this.state.favorites
-                                })
-                            }}
-                        />,
-                        <Table>
+                        <div key="top" style={{display: "flex"}}>
+                            <div style={{width: "200px"}}><Checkbox
+                                label="Solo los favoritos"
+                                checked={this.state.favorites}
+                                onTouchTap={() => {
+                                    this.setState({
+                                        favorites: !this.state.favorites
+                                    })
+                                }}
+                            /></div>
+                            <Button
+                                label="Descargar favoritos"
+                                icon="file_download"
+                                href="/aloleiro/download-prices"
+                            />
+                        </div>,
+                        <Table key="table">
                             <TableHeader
                                 displaySelectAll={false}
                                 adjustForCheckbox={false}
@@ -114,7 +122,7 @@ export default class ListPrices extends React.Component {
                             <TableBody displayRowCheckbox={false}>
                                 {this.state.prices.map((price) => {
                                     if (this.state.favorites && price.favorite === false) {
-                                        return;
+                                        return null;
                                     }
 
                                     return (
