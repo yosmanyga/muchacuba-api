@@ -45,7 +45,10 @@ export default class Button extends React.Component {
             icon={icon}
             label={label}
             disabled={disabled}
-            onTouchTap={this._handleTouchTap}
+            onTouchTap={typeof this.props.onTouchTap !== 'undefined'
+                ? this._handleTouchTap
+                : null
+            }
         />;
 
         if (typeof this.props.layout === 'undefined') {
