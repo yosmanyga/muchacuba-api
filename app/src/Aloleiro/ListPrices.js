@@ -1,11 +1,8 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 
 import ConnectToServer from '../ConnectToServer';
-import Button from '../Button';
 import Wait from '../Wait';
 
 export default class ListPrices extends React.Component {
@@ -24,7 +21,8 @@ export default class ListPrices extends React.Component {
 
         this.state = {
             token: null,
-            prices: null
+            prices: null,
+            favorites: true
         };
 
         this._connectToServer = new ConnectToServer();
@@ -90,33 +88,48 @@ export default class ListPrices extends React.Component {
                 {...this.props.layout.props}
             >
                 {this.state.prices.length !== 0
-                    ? <Table>
-                        <TableHeader
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}
-                        >
-                            <TableRow>
-                                <TableHeaderColumn>País</TableHeaderColumn>
-                                <TableHeaderColumn>Prefijo</TableHeaderColumn>
-                                <TableHeaderColumn>Type</TableHeaderColumn>
-                                <TableHeaderColumn>Código</TableHeaderColumn>
-                                <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody displayRowCheckbox={false}>
-                            {this.state.prices.map((price) => {
-                                return (
-                                    <TableRow key={price.id}>
-                                        <TableRowColumn>{price.country}</TableRowColumn>
-                                        <TableRowColumn>{price.prefix}</TableRowColumn>
-                                        <TableRowColumn>{price.type}</TableRowColumn>
-                                        <TableRowColumn>{price.code}</TableRowColumn>
-                                        <TableRowColumn>{price.value}</TableRowColumn>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    ? [
+                        <Checkbox
+                            label="Solo los favoritos"
+                            checked={this.state.favorites}
+                            onTouchTap={() => {
+                                this.setState({
+                                    favorites: !this.state.favorites
+                                })
+                            }}
+                        />,
+                        <Table>
+                            <TableHeader
+                                displaySelectAll={false}
+                                adjustForCheckbox={false}
+                            >
+                                <TableRow>
+                                    <TableHeaderColumn>País</TableHeaderColumn>
+                                    <TableHeaderColumn>Prefijo</TableHeaderColumn>
+                                    <TableHeaderColumn>Tipo</TableHeaderColumn>
+                                    <TableHeaderColumn>Código</TableHeaderColumn>
+                                    <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody displayRowCheckbox={false}>
+                                {this.state.prices.map((price) => {
+                                    if (this.state.favorites && price.favorite === false) {
+                                        return;
+                                    }
+
+                                    return (
+                                        <TableRow key={price.id}>
+                                            <TableRowColumn>{price.country}</TableRowColumn>
+                                            <TableRowColumn>{price.prefix}</TableRowColumn>
+                                            <TableRowColumn>{price.type}</TableRowColumn>
+                                            <TableRowColumn>{price.code}</TableRowColumn>
+                                            <TableRowColumn>{price.value}</TableRowColumn>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    ]
                     : <p>No hay precios</p>
                 }
             </this.props.layout.type>
