@@ -37,17 +37,22 @@ class ImportPrices
         $prices = $this->loadPrices();
 
         $favorites = [
-            'Brasil', 'Canada', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
-            'República Dominicana', 'Ecuador', 'El Salvador', 'France',
-            'Alemania', 'Guatemala', 'Honduras', 'Italia', 'Mexico', 'Nicaragua',
-            'Paraguay', 'Peru', 'Puerto Rico', 'España', 'Estados Unidos',
-            'Uruguay'
+            'Brasil', 'Canada', 'Chile', 'China', 'Colombia', 'Costa Rica',
+            'Cuba', 'República Dominicana', 'Ecuador', 'El Salvador', 'France',
+            'Alemania', 'Guatemala', 'Honduras', 'Italia', 'Mexico',
+            'Nicaragua', 'Líbano', 'Libia', 'Paraguay', 'Peru', 'Puerto Rico',
+            'España', 'Estados Unidos', 'Siria', 'Uruguay'
         ];
 
         $translations = $this->loadCountryTranslations();
 
         foreach ($prices as $price) {
             $price['country'] = $this->translateCountry($price['country'], $translations);
+            $price['type'] = str_replace(
+                ['Fixed', 'Mobile', 'Other'],
+                ['Fijo', 'Móvil', 'Otro'],
+                $price['type']
+            );
 
             $this->manageStorage->connect()->insertOne(new Price(
                 uniqid(),
@@ -87,10 +92,10 @@ class ImportPrices
 
                 $prices[] = [
                     'country' => $rowIterator->seek('A')->current()->getValue(),
-                    'prefix' => $rowIterator->seek('B')->current()->getValue(),
-                    'type' => $rowIterator->seek('C')->current()->getValue(),
-                    'code' => $rowIterator->seek('D')->current()->getValue(),
-                    'value' => $rowIterator->seek('E')->current()->getValue(),
+                    'prefix' => '', // Prefix was deleted from excel on April 12, 2017
+                    'type' => $rowIterator->seek('B')->current()->getValue(),
+                    'code' => $rowIterator->seek('C')->current()->getValue(),
+                    'value' => $rowIterator->seek('D')->current()->getValue(),
                 ];
             }
         }
@@ -130,6 +135,10 @@ class ImportPrices
             if ($translation['country'] == $country) {
                 return $translation['translation'];
             }
+        }
+
+        if ($country == 'Syrian Arab Republic') {
+            return 'Siria';
         }
 
         return $country;

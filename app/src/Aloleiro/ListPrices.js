@@ -113,7 +113,6 @@ export default class ListPrices extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>País</TableHeaderColumn>
-                                    <TableHeaderColumn>Prefijo</TableHeaderColumn>
                                     <TableHeaderColumn>Tipo</TableHeaderColumn>
                                     <TableHeaderColumn>Código</TableHeaderColumn>
                                     <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
@@ -128,7 +127,6 @@ export default class ListPrices extends React.Component {
                                     return (
                                         <TableRow key={price.id}>
                                             <TableRowColumn>{price.country}</TableRowColumn>
-                                            <TableRowColumn>{price.prefix}</TableRowColumn>
                                             <TableRowColumn>{price.type}</TableRowColumn>
                                             <TableRowColumn>{price.code}</TableRowColumn>
                                             <TableRowColumn>{price.value}</TableRowColumn>
