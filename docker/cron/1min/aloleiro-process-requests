@@ -1,0 +1,3 @@
+#!/bin/sh
+
+php /var/www/bin/app.php aloleiro.process-requests >> /var/log/cron.log 2>&1

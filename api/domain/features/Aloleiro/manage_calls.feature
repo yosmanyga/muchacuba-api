@@ -57,7 +57,8 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "status": "p",
-        "duration": null
+        "duration": null,
+        "charge": null
       }
     ]
     """
@@ -94,7 +95,8 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "status": "p",
-        "duration": null
+        "duration": null,
+        "charge": null
       }
     ]
     """
@@ -130,7 +132,7 @@ Feature: Manage calls
       "cli": "+123"
     }
     """
-    Then I should get the response:
+    Then I should send the response:
     """
     {
       "action": {
@@ -150,7 +152,35 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "status": "f",
-        "duration": null
+        "duration": null,
+        "charge": null
+      }
+    ]
+    """
+    When I collect the events
+    Then I should get the events:
+    """
+    [
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ice",
+          "callid": "1",
+          "cli": "+123"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name": "ConnectPSTN",
+            "number": "+1011",
+            "maxDuration": 3600,
+            "cli": "+123"
+          }
+        }
       }
     ]
     """
@@ -161,19 +191,40 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
-      "to": {
-        "endpoint": "+1213"
-      }
+      "cli": "+123"
     }
     """
-    Then I should get the response:
+    Then I should send the response:
     """
     {
       "action": {
         "name" : "Hangup"
       }
     }
+    """
+    When I collect the events
+    Then I should get the events:
+    """
+    [
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ice",
+          "callid": "1",
+          "cli": "+123"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name": "Hangup"
+          }
+        }
+      }
+    ]
     """
 
   Scenario: Process answered call event (ACE)
@@ -214,7 +265,7 @@ Feature: Manage calls
       "callid": "1"
     }
     """
-    Then I should get the response:
+    Then I should send the response:
     """
     {
       "action": {
@@ -231,10 +282,175 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "status": "a",
-        "duration": null
+        "duration": null,
+        "charge": null
+      }
+    ]
+    """
+    When I collect the events
+    Then I should get the events:
+    """
+    [
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ice",
+          "callid": "1",
+          "cli": "+123"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name" : "ConnectPSTN",
+            "number" : "+1011",
+            "maxDuration" : 3600,
+            "cli" : "+123"
+          }
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ace",
+          "callid": "1"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name": "Continue"
+          }
+        }
       }
     ]
     """
 
-#  TODO
-#  Scenario: Process disconnected call event (DICE)
+  @this
+  Scenario: Process disconnected call event (DICE)
+    Given there are the profiles with phones:
+    """
+    [
+      {
+        "uniqueness": "1",
+        "phones": [
+          {
+            "number": "+123",
+            "name": "Phone 1"
+          }
+        ]
+      }
+    ]
+    """
+    And I prepare the call:
+    """
+    {
+      "uniqueness": "1",
+      "from": "+123",
+      "to": "+1011"
+    }
+    """
+    And I process the event:
+    """
+    {
+      "event": "ice",
+      "callid": "1",
+      "cli": "+123"
+    }
+    """
+    And I process the event:
+    """
+    {
+      "event": "ace",
+      "callid": "1"
+    }
+    """
+    When I process the event:
+    """
+    {
+      "event": "dice",
+      "callid": "1"
+    }
+    """
+    Then I should send no response
+    When I collect the calls from profile "1"
+    Then I should get the calls:
+    """
+    [
+      {
+        "id": "@string@",
+        "from": "+123",
+        "to": "+1011",
+        "status": "a",
+        "duration": null,
+        "charge": null
+      }
+    ]
+    """
+    When I collect the events
+    Then I should get the events:
+    """
+    [
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ice",
+          "callid": "1",
+          "cli": "+123"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name" : "ConnectPSTN",
+            "number" : "+1011",
+            "maxDuration" : 3600,
+            "cli" : "+123"
+          }
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "ace",
+          "callid": "1"
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "response-to-sinch",
+        "payload": {
+          "action": {
+            "name": "Continue"
+          }
+        }
+      },
+      {
+        "id": "@string@",
+        "type": "sinch-event",
+        "payload": {
+          "event": "dice",
+          "callid": "1"
+        }
+      }
+    ]
+    """
+    When I collect the requests
+    Then I should get the requests:
+    """
+    [
+      {
+        "callId": "1"
+      }
+    ]
+    """

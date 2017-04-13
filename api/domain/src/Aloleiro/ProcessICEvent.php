@@ -80,7 +80,7 @@ class ProcessICEvent
                 'name' => 'ConnectPSTN',
                 'number' => $call->getTo(),
                 'maxDuration' => 3600,
-                //'cli' => $call->getFrom()
+                'cli' => $call->getFrom()
             ]
         ];
     }

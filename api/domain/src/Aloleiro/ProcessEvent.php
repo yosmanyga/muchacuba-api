@@ -55,9 +55,9 @@ class ProcessEvent
      */
     public function process($payload)
     {
-        $this->registerEvent->register(
-            $payload
-        );
+        $this->registerEvent->register('sinch-event', $payload);
+
+        $response = null;
 
         try {
             switch ($payload['event']) {
@@ -75,16 +75,16 @@ class ProcessEvent
 
                     break;
                 case 'dice':
-                    $response = $this->processDICEvent->process(
+                    $this->processDICEvent->process(
                         $payload['callid']
                     );
 
                     break;
                 default:
-                    $response = [];
+                    throw new \Exception(sprintf("Event '%s' not supported", $payload['event']));
             }
         } catch (\Exception $e) {
-            $this->registerEvent->register([
+            $this->registerEvent->register('exception', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'file' => $e->getFile(),
@@ -94,9 +94,12 @@ class ProcessEvent
             return null;
         }
 
-        $this->registerEvent->register(
-            $response
-        );
+        if ($response != null) {
+            $this->registerEvent->register(
+                'response-to-sinch',
+                $response
+            );
+        }
 
         return $response;
     }

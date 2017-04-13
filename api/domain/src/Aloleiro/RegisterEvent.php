@@ -6,7 +6,8 @@ use Muchacuba\Aloleiro\Event\ManageStorage as ManageStorage;
 
 /**
  * @di\service({
- *     deductible: true
+ *     deductible: true,
+ *     private: true
  * })
  */
 class RegisterEvent
@@ -27,12 +28,14 @@ class RegisterEvent
     }
 
     /**
+     * @param string $type
      * @param array  $payload
      */
-    public function register($payload)
+    public function register($type, $payload)
     {
         $this->manageStorage->connect()->insertOne(new Event(
             uniqid(),
+            $type,
             $payload
         ));
     }

@@ -51,6 +51,14 @@ class Context implements BaseContext, ContainerAwareContext
         /** @var ManageStorage $manageStorage */
         $manageStorage = $this->container->get('muchacuba.aloleiro.call.manage_storage');
         $manageStorage->purge();
+
+        /** @var ManageStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.event.manage_storage');
+        $manageStorage->purge();
+
+        /** @var ManageStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.request.manage_storage');
+        $manageStorage->purge();
     }
 
     /**
@@ -238,6 +246,28 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
+     * @When I collect the events
+     */
+    public function iCollectTheEvents()
+    {
+        /** @var CollectEvents $collectEvents */
+        $collectEvents = $this->container->get('muchacuba.aloleiro.collect_events');
+
+        $this->result = $collectEvents->collect();
+    }
+
+    /**
+     * @When I collect the requests
+     */
+    public function iCollectTheRequests()
+    {
+        /** @var CollectRequests $collectRequests */
+        $collectRequests = $this->container->get('muchacuba.aloleiro.collect_requests');
+
+        $this->result = $collectRequests->collect();
+    }
+    
+    /**
      * @When I process the event:
      *
      * @param PyStringNode $string
@@ -291,13 +321,65 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get the response:
+     * @Then I should send the response:
      *
      * @param PyStringNode $string
      *
      * @throws \Exception
      */
-    public function iShouldGetTheResponse(PyStringNode $string)
+    public function iShouldSendTheResponse(PyStringNode $string)
+    {
+        $matcher = (new SimpleFactory())->createMatcher();
+
+        if (!$matcher->match(
+            json_decode(json_encode($this->result), true),
+            json_decode($string->getRaw(), true)
+        )) {
+            throw new \Exception($matcher->getError());
+        }
+    }
+
+    /**
+     * @Then I should send no response
+     *
+     * @throws \Exception
+     */
+    public function iShouldSendNoResponse()
+    {
+        $matcher = (new SimpleFactory())->createMatcher();
+
+        if ($this->result != null) {
+            throw new \Exception($matcher->getError());
+        }
+    }
+
+    /**
+     * @Then I should get the events:
+     *
+     * @param PyStringNode $string
+     *
+     * @throws \Exception
+     */
+    public function iShouldGetTheEvents(PyStringNode $string)
+    {
+        $matcher = (new SimpleFactory())->createMatcher();
+
+        if (!$matcher->match(
+            json_decode(json_encode($this->result), true),
+            json_decode($string->getRaw(), true)
+        )) {
+            throw new \Exception($matcher->getError());
+        }
+    }
+
+    /**
+     * @Then I should get the requests:
+     *
+     * @param PyStringNode $string
+     *
+     * @throws \Exception
+     */
+    public function iShouldGetTheRequests(PyStringNode $string)
     {
         $matcher = (new SimpleFactory())->createMatcher();
 

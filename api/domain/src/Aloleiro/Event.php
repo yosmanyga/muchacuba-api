@@ -12,19 +12,27 @@ class Event implements Persistable, \JsonSerializable
     private $id;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @var array
      */
     private $payload;
 
     /**
      * @param string $id
+     * @param string $type
      * @param array  $payload
      */
     public function __construct(
         $id,
+        $type,
         array $payload
     ) {
         $this->id = $id;
+        $this->type = $type;
         $this->payload = $payload;
     }
 
@@ -34,6 +42,14 @@ class Event implements Persistable, \JsonSerializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -51,6 +67,7 @@ class Event implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
+            'type' => $this->type,
             'payload' => $this->payload
         ];
     }
@@ -61,6 +78,7 @@ class Event implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
+        $this->type = $data['type'];
         $this->payload = $data['payload'];
     }
 
@@ -71,6 +89,7 @@ class Event implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
+            'type' => $this->type,
             'payload' => $this->payload,
         ];
     }
