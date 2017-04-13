@@ -27,10 +27,11 @@ class ProcessICEvent
     /**
      * @param string $from
      * @param string $callId
+     * @param string $bridge
      *
      * @return array
      */
-    public function process($from, $callId)
+    public function process($from, $callId, $bridge)
     {
         /** @var Call $call */
         $call = $this->manageStorage->connect()->findOne([
@@ -42,7 +43,7 @@ class ProcessICEvent
             return $this->prepareHangup();
         }
 
-        return $this->prepareConnect($call, $callId);
+        return $this->prepareConnect($call, $callId, $bridge);
     }
 
     /**
@@ -60,10 +61,11 @@ class ProcessICEvent
     /**
      * @param Call   $call
      * @param string $callId
+     * @param string $bridge
      *
      * @return array
      */
-    private function prepareConnect(Call $call, $callId)
+    private function prepareConnect(Call $call, $callId, $bridge)
     {
         $this->manageStorage->connect()->updateOne(
             [
@@ -80,7 +82,7 @@ class ProcessICEvent
                 'name' => 'ConnectPSTN',
                 'number' => $call->getTo(),
                 'maxDuration' => 3600,
-                'cli' => $call->getFrom()
+                'cli' => $bridge //$call->getFrom()
             ]
         ];
     }

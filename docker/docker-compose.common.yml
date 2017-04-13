@@ -30,14 +30,14 @@ services:
     volumes:
       - ../api/var/db:/data/db
     restart: always
-  mysql:
-    image: mysql:5.7.17
-    container_name: muchacuba_mysql
-    volumes:
-      - ../api/var/db_mysql:/var/lib/mysql
-      - ./mysql:/etc/mysql/conf.d
-    environment:
-      MYSQL_ROOT_PASSWORD: root
+#  mysql:
+#    image: mysql:5.7.17
+#    container_name: muchacuba_mysql
+#    volumes:
+#      - ../api/var/db_mysql:/var/lib/mysql
+#      - ./mysql:/etc/mysql/conf.d
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
 
 networks:
   default:

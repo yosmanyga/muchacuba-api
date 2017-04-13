@@ -3,12 +3,12 @@
 namespace Muchacuba\Cli\Aloleiro;
 
 use Symsonte\Cli\Server;
-use Muchacuba\Aloleiro\ProcessRequest as DomainProcessRequest;
+use Muchacuba\Aloleiro\ProcessRequests as DomainProcessRequests;
 
 /**
  * @di\command({deductible: true})
  */
-class ProcessRequest
+class ProcessRequests
 {
     /**
      * @var Server
@@ -16,28 +16,28 @@ class ProcessRequest
     private $server;
 
     /**
-     * @var DomainProcessRequest
+     * @var DomainProcessRequests
      */
-    private $processRequest;
+    private $processRequests;
 
     /**
      * @param Server               $server
-     * @param DomainProcessRequest $processRequest
+     * @param DomainProcessRequests $processRequests
      */
     public function __construct(
         Server $server,
-        DomainProcessRequest $processRequest
+        DomainProcessRequests $processRequests
     )
     {
         $this->server = $server;
-        $this->processRequest = $processRequest;
+        $this->processRequests = $processRequests;
     }
 
     /**
-     * @cli\resolution({command: "aloleiro.process-request"})
+     * @cli\resolution({command: "aloleiro.process-requests"})
      */
     public function process()
     {
-        $this->processRequest->process();
+        $this->processRequests->process();
     }
 }

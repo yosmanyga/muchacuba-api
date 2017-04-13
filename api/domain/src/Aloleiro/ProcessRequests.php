@@ -13,7 +13,7 @@ use Muchacuba\Aloleiro\Request\ManageStorage as ManageRequestStorage;
  *     deductible: true
  * })
  */
-class ProcessRequest
+class ProcessRequests
 {
     /**
      * @var ManageRequestStorage

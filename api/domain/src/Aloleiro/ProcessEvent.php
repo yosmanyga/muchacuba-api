@@ -64,7 +64,8 @@ class ProcessEvent
                 case 'ice':
                     $response = $this->processICEvent->process(
                         $payload['cli'],
-                        $payload['callid']
+                        $payload['callid'],
+                        $payload['to']['endpoint']
                     );
 
                     break;
