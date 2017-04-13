@@ -113,7 +113,7 @@ class ProcessRequests
 
             /** @var DeleteResult $result */
             $result = $this->manageRequestStorage->connect()->deleteOne([
-                'callId' => $request->getCallId()
+                '_id' => $request->getCallId()
             ]);
 
             if ($result->getDeletedCount() == 0) {
