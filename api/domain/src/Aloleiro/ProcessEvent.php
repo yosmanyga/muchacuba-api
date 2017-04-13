@@ -10,9 +10,9 @@ namespace Muchacuba\Aloleiro;
 class ProcessEvent
 {
     /**
-     * @var RegisterEvent
+     * @var RegisterLog
      */
-    private $registerEvent;
+    private $registerLog;
 
     /**
      * @var ProcessICEvent
@@ -30,19 +30,19 @@ class ProcessEvent
     private $processDICEvent;
 
     /**
-     * @param RegisterEvent   $registerEvent
+     * @param RegisterLog   $registerLog
      * @param ProcessICEvent  $processICEvent
      * @param ProcessACEvent  $processACEvent
      * @param ProcessDICEvent $processDICEvent
      */
     public function __construct(
-        RegisterEvent $registerEvent,
+        RegisterLog $registerLog,
         ProcessICEvent $processICEvent,
         ProcessACEvent $processACEvent,
         ProcessDICEvent $processDICEvent
     )
     {
-        $this->registerEvent = $registerEvent;
+        $this->registerLog = $registerLog;
         $this->processICEvent = $processICEvent;
         $this->processACEvent = $processACEvent;
         $this->processDICEvent = $processDICEvent;
@@ -55,7 +55,7 @@ class ProcessEvent
      */
     public function process($payload)
     {
-        $this->registerEvent->register('sinch-event', $payload);
+        $this->registerLog->register('sinch-event', $payload);
 
         $response = null;
 
@@ -84,7 +84,7 @@ class ProcessEvent
                     throw new \Exception(sprintf("Event '%s' not supported", $payload['event']));
             }
         } catch (\Exception $e) {
-            $this->registerEvent->register('exception', [
+            $this->registerLog->register('exception', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'file' => $e->getFile(),
@@ -95,7 +95,7 @@ class ProcessEvent
         }
 
         if ($response != null) {
-            $this->registerEvent->register(
+            $this->registerLog->register(
                 'response-to-sinch',
                 $response
             );

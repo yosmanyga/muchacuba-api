@@ -4,7 +4,7 @@ namespace Muchacuba\Aloleiro;
 
 use MongoDB\BSON\Persistable;
 
-class Event implements Persistable, \JsonSerializable
+class Log implements Persistable, \JsonSerializable
 {
     /**
      * @var string

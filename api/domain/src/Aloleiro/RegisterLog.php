@@ -10,7 +10,7 @@ use Muchacuba\Aloleiro\Event\ManageStorage as ManageStorage;
  *     private: true
  * })
  */
-class RegisterEvent
+class RegisterLog
 {
     /**
      * @var ManageStorage
@@ -33,7 +33,7 @@ class RegisterEvent
      */
     public function register($type, $payload)
     {
-        $this->manageStorage->connect()->insertOne(new Event(
+        $this->manageStorage->connect()->insertOne(new Log(
             uniqid(),
             $type,
             $payload
