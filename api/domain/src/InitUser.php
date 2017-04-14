@@ -7,6 +7,7 @@ use Cubalider\Unique\CreateUniqueness;
 use Cubalider\Internet\CreateProfile as CreateInternetProfile;
 use Cubalider\Facebook\CreateProfile as CreateFacebookProfile;
 use Cubalider\Privilege\CreateProfile as CreatePrivilegeProfile;
+use Cubalider\Privilege\PickProfile as PickPrivilegeProfile;
 use Cubalider\Geo\CreateProfile as CreateGeoProfile;
 use Muchacuba\Firebase\CreateProfile as CreateFirebaseProfile;
 use Muchacuba\Aloleiro\CreateProfile as CreateAloleiroProfile;
@@ -54,6 +55,11 @@ class InitUser
     private $createAloleiroProfile;
 
     /**
+     * @var PickPrivilegeProfile
+     */
+    private $pickPrivilegeProfile;
+
+    /**
      * @param CreateUniqueness       $createUniqueness
      * @param CreateInternetProfile  $createInternetProfile
      * @param CreateFacebookProfile  $createFacebookProfile
@@ -61,6 +67,7 @@ class InitUser
      * @param CreateGeoProfile       $createGeoProfile
      * @param CreateFirebaseProfile  $createFirebaseProfile
      * @param CreateAloleiroProfile  $createAloleiroProfile
+     * @param PickPrivilegeProfile   $pickPrivilegeProfile
      */
     public function __construct(
         CreateUniqueness $createUniqueness,
@@ -69,7 +76,8 @@ class InitUser
         CreatePrivilegeProfile $createPrivilegeProfile,
         CreateGeoProfile $createGeoProfile,
         CreateFirebaseProfile $createFirebaseProfile,
-        CreateAloleiroProfile $createAloleiroProfile
+        CreateAloleiroProfile $createAloleiroProfile,
+        PickPrivilegeProfile $pickPrivilegeProfile
     )
     {
         $this->createUniqueness = $createUniqueness;
@@ -79,11 +87,14 @@ class InitUser
         $this->createGeoProfile = $createGeoProfile;
         $this->createFirebaseProfile = $createFirebaseProfile;
         $this->createAloleiroProfile = $createAloleiroProfile;
+        $this->pickPrivilegeProfile = $pickPrivilegeProfile;
     }
 
     /**
      * @param string $uniqueness
      * @param array  $facebook   Facebook data
+     *
+     * @return string[] The roles
      */
     public function init(
         $uniqueness,
@@ -92,46 +103,46 @@ class InitUser
     {
         try {
             $this->createUniqueness->create($uniqueness);
+
+            if (!is_null($facebook['email'])) {
+                $this->createInternetProfile->create(
+                    $uniqueness,
+                    $facebook['email']
+                );
+            }
+
+            $this->createFacebookProfile->create(
+                $uniqueness,
+                $facebook['id'],
+                $facebook['name'],
+                $facebook['email'],
+                $facebook['picture']
+            );
+
+            $this->createPrivilegeProfile->create(
+                $uniqueness,
+                ['user']
+            );
+
+            $this->createGeoProfile->create(
+                $uniqueness,
+                null,
+                null
+            );
+
+            $this->createFirebaseProfile->create(
+                $uniqueness,
+                null
+            );
+
+            $this->createAloleiroProfile->create(
+                $uniqueness,
+                []
+            );
         } catch (ExistentUniquenessException $e) {
             // Profiles already created
-
-            return;
         }
 
-        if (!is_null($facebook['email'])) {
-            $this->createInternetProfile->create(
-                $uniqueness,
-                $facebook['email']
-            );
-        }
-
-        $this->createFacebookProfile->create(
-            $uniqueness,
-            $facebook['id'],
-            $facebook['name'],
-            $facebook['email'],
-            $facebook['picture']
-        );
-
-        $this->createPrivilegeProfile->create(
-            $uniqueness,
-            ['user']
-        );
-
-        $this->createGeoProfile->create(
-            $uniqueness,
-            null,
-            null
-        );
-
-        $this->createFirebaseProfile->create(
-            $uniqueness,
-            null
-        );
-
-        $this->createAloleiroProfile->create(
-            $uniqueness,
-            []
-        );
+        return $this->pickPrivilegeProfile->pick($uniqueness)->getRoles();
     }
 }

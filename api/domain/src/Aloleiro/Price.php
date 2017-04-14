@@ -32,14 +32,14 @@ class Price implements Persistable, \JsonSerializable
     private $type;
 
     /**
-     * @var float
-     */
-    private $value;
-
-    /**
      * @var bool
      */
     private $favorite;
+
+    /**
+     * @var float
+     */
+    private $value;
 
     /**
      * @param string $id
@@ -47,8 +47,8 @@ class Price implements Persistable, \JsonSerializable
      * @param int    $prefix
      * @param int    $code
      * @param string $type
-     * @param float  $value
      * @param bool   $favorite
+     * @param float  $value
      */
     public function __construct(
         $id,
@@ -56,8 +56,8 @@ class Price implements Persistable, \JsonSerializable
         $prefix,
         $code,
         $type,
-        $value,
-        $favorite
+        $favorite,
+        $value
     )
     {
         $this->id = $id;
@@ -65,8 +65,8 @@ class Price implements Persistable, \JsonSerializable
         $this->prefix = $prefix;
         $this->code = $code;
         $this->type = $type;
-        $this->value = $value;
         $this->favorite = $favorite;
+        $this->value = $value;
     }
 
     /**
@@ -110,19 +110,19 @@ class Price implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return float
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
      * @return bool
      */
     public function isFavorite()
     {
         return $this->favorite;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -136,8 +136,8 @@ class Price implements Persistable, \JsonSerializable
             'prefix' => $this->prefix,
             'code' => $this->code,
             'type' => $this->type,
-            'value' => $this->value,
             'favorite' => $this->favorite,
+            'value' => $this->value,
         ];
     }
 
@@ -151,8 +151,8 @@ class Price implements Persistable, \JsonSerializable
         $this->prefix = $data['prefix'];
         $this->code = $data['code'];
         $this->type = $data['type'];
-        $this->value = $data['value'];
         $this->favorite = $data['favorite'];
+        $this->value = $data['value'];
     }
 
     /**
@@ -166,8 +166,8 @@ class Price implements Persistable, \JsonSerializable
             'prefix' => $this->prefix,
             'code' => $this->code,
             'type' => $this->type,
-            'value' => $this->value,
             'favorite' => $this->favorite,
+            'value' => $this->value,
         ];
     }
 }

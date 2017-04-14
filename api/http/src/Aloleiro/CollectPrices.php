@@ -33,12 +33,14 @@ class CollectPrices
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["admin", "seller", "operator"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/collect-prices"})
+     *
+     * @param string $uniqueness
      */
-    public function search()
+    public function collect($uniqueness)
     {
-        $prices = $this->collectPrices->collect();
+        $prices = $this->collectPrices->collect($uniqueness);
 
         $this->server->sendResponse($prices);
     }

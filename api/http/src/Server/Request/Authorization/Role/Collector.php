@@ -43,7 +43,7 @@ class Collector implements BaseCollector
             // If it doesn't have a profile, it means that the user is new
             // and this call was done by init-user
 
-            return ['user'];
+            return [];
         }
 
         return $profile->getRoles();

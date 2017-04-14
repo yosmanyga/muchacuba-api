@@ -253,7 +253,7 @@ export default class Front extends React.Component {
                                     return;
                                 }
 
-                                onSuccess(token);
+                                onSuccess(token, res.body.roles);
                             });
                     }).catch((error) => {
                         console.log(error);

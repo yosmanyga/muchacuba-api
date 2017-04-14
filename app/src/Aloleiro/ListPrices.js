@@ -1,6 +1,7 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
+import _ from 'lodash';
 
 import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
@@ -9,7 +10,7 @@ import Wait from '../Wait';
 export default class ListPrices extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess(token), onError)
+        // (onSuccess(token, roles), onError)
         onBackAuth: React.PropTypes.func.isRequired,
         // ()
         onFrontAuth: React.PropTypes.func.isRequired,
@@ -22,6 +23,7 @@ export default class ListPrices extends React.Component {
 
         this.state = {
             token: null,
+            roles: null,
             prices: null,
             favorites: true
         };
@@ -29,11 +31,14 @@ export default class ListPrices extends React.Component {
         this._connectToServer = new ConnectToServer();
 
         this._collectPrices = this._collectPrices.bind(this);
+        this._renderTableAsAdmin = this._renderTableAsAdmin.bind(this);
+        this._renderTableAsSeller = this._renderTableAsSeller.bind(this);
+        this._renderTableAsOperator = this._renderTableAsOperator.bind(this);
     }
 
     componentDidMount() {
         this.props.onBackAuth(
-            (token) => {
+            (token, roles) => {
                 if (token === 'null') {
                     this.props.onFrontAuth();
 
@@ -41,7 +46,8 @@ export default class ListPrices extends React.Component {
                 }
 
                 this.setState({
-                    token: token
+                    token: token,
+                    roles: roles
                 });
             },
             () => {
@@ -106,39 +112,123 @@ export default class ListPrices extends React.Component {
                                 href="/aloleiro/download-prices"
                             />
                         </div>,
-                        <Table key="table">
-                            <TableHeader
-                                displaySelectAll={false}
-                                adjustForCheckbox={false}
-                            >
-                                <TableRow>
-                                    <TableHeaderColumn>País</TableHeaderColumn>
-                                    <TableHeaderColumn>Tipo</TableHeaderColumn>
-                                    <TableHeaderColumn>Código</TableHeaderColumn>
-                                    <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody displayRowCheckbox={false}>
-                                {this.state.prices.map((price) => {
-                                    if (this.state.favorites && price.favorite === false) {
-                                        return null;
-                                    }
-
-                                    return (
-                                        <TableRow key={price.id}>
-                                            <TableRowColumn>{price.country}</TableRowColumn>
-                                            <TableRowColumn>{price.type}</TableRowColumn>
-                                            <TableRowColumn>{price.code}</TableRowColumn>
-                                            <TableRowColumn>{price.value}</TableRowColumn>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
+                        _.includes(this.state.roles, 'admin')
+                            ? this._renderTableAsAdmin()
+                            : _.includes(this.state.roles, 'seller')
+                            ? this._renderTableAsSeller()
+                            : _.includes(this.state.roles, 'operator')
+                            ? this._renderTableAsOperator()
+                            : null
                     ]
                     : <p>No hay precios</p>
                 }
             </this.props.layout.type>
+        );
+    }
+
+    _renderTableAsAdmin() {
+        return (
+            <Table key="table">
+                <TableHeader
+                    displaySelectAll={false}
+                    adjustForCheckbox={false}
+                >
+                    <TableRow>
+                        <TableHeaderColumn>País</TableHeaderColumn>
+                        <TableHeaderColumn>Tipo</TableHeaderColumn>
+                        <TableHeaderColumn>Código</TableHeaderColumn>
+                        <TableHeaderColumn>Precio de compra</TableHeaderColumn>
+                        <TableHeaderColumn>Precio de venta</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                    {this.state.prices.map((price) => {
+                        if (this.state.favorites && price.favorite === false) {
+                            return null;
+                        }
+
+                        return (
+                            <TableRow key={price.id}>
+                                <TableRowColumn>{price.country}</TableRowColumn>
+                                <TableRowColumn>{price.type}</TableRowColumn>
+                                <TableRowColumn>{price.code}</TableRowColumn>
+                                <TableRowColumn>{price.purchaseValue} USD</TableRowColumn>
+                                <TableRowColumn>{price.saleValue} USD</TableRowColumn>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        );
+    }
+
+    _renderTableAsSeller() {
+        return (
+            <Table key="table">
+                <TableHeader
+                    displaySelectAll={false}
+                    adjustForCheckbox={false}
+                >
+                    <TableRow>
+                        <TableHeaderColumn>País</TableHeaderColumn>
+                        <TableHeaderColumn>Tipo</TableHeaderColumn>
+                        <TableHeaderColumn>Código</TableHeaderColumn>
+                        <TableHeaderColumn>Precio de compra</TableHeaderColumn>
+                        <TableHeaderColumn>Precio de venta</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                    {this.state.prices.map((price) => {
+                        if (this.state.favorites && price.favorite === false) {
+                            return null;
+                        }
+
+                        return (
+                            <TableRow key={price.id}>
+                                <TableRowColumn>{price.country}</TableRowColumn>
+                                <TableRowColumn>{price.type}</TableRowColumn>
+                                <TableRowColumn>{price.code}</TableRowColumn>
+                                <TableRowColumn>{price.purchaseValue} Bf</TableRowColumn>
+                                <TableRowColumn>{price.saleValue} Bf</TableRowColumn>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        );
+    }
+
+    _renderTableAsOperator() {
+        return (
+            <Table key="table">
+                <TableHeader
+                    displaySelectAll={false}
+                    adjustForCheckbox={false}
+                >
+                    <TableRow>
+                        <TableHeaderColumn>País</TableHeaderColumn>
+                        <TableHeaderColumn>Tipo</TableHeaderColumn>
+                        <TableHeaderColumn>Código</TableHeaderColumn>
+                        <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
+                    </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                    {this.state.prices.map((price) => {
+                        if (this.state.favorites && price.favorite === false) {
+                            return null;
+                        }
+
+                        return (
+                            <TableRow key={price.id}>
+                                <TableRowColumn>{price.country}</TableRowColumn>
+                                <TableRowColumn>{price.type}</TableRowColumn>
+                                <TableRowColumn>{price.code}</TableRowColumn>
+                                <TableRowColumn>{price.saleValue} Bf</TableRowColumn>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
         );
     }
 }

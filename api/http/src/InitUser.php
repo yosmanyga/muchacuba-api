@@ -34,17 +34,17 @@ class InitUser
      * @param string $uniqueness
      *
      * @http\resolution({method: "POST", uri: "/init-user"})
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: []})
      */
     public function init($uniqueness)
     {
         $post = $this->server->resolveBody();
 
-        $this->initUser->init(
+        $roles = $this->initUser->init(
             $uniqueness,
             $post['facebook']
         );
 
-        $this->server->sendResponse();
+        $this->server->sendResponse(['roles' => $roles]);
     }
 }

@@ -65,6 +65,7 @@ class Processor implements BaseCredentialProcessor
 
             return $verifiedIdToken->getClaim('sub');
         } catch (ExpiredToken $e) {
+            // TODO: Handle expired token
             throw new InvalidDataException(null, null, $e);
         } catch (IssuedInTheFuture $e) {
             throw new InvalidDataException(null, null, $e);

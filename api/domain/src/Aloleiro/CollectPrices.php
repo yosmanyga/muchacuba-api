@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Muchacuba\Aloleiro\Price\ManageStorage;
+use Cubalider\Privilege\PickProfile as PickPrivilegeProfile;
 
 /**
  * @di\service({
@@ -12,35 +12,64 @@ use Muchacuba\Aloleiro\Price\ManageStorage;
 class CollectPrices
 {
     /**
-     * @var ManageStorage
+     * @var PickPrivilegeProfile
      */
-    private $manageStorage;
+    private $pickPrivilegeProfile;
 
     /**
-     * @param ManageStorage $manageStorage
+     * @var CollectPricesAsAdmin
+     */
+    private $collectPricesAsAdmin;
+
+    /**
+     * @var CollectPricesAsSeller
+     */
+    private $collectPricesAsSeller;
+
+    /**
+     * @var CollectPricesAsOperator
+     */
+    private $collectPricesAsOperator;
+
+    /**
+     * @param PickPrivilegeProfile    $pickPrivilegeProfile
+     * @param CollectPricesAsAdmin    $collectPricesAsAdmin
+     * @param CollectPricesAsSeller   $collectPricesAsSeller
+     * @param CollectPricesAsOperator $collectPricesAsOperator
      */
     public function __construct(
-        ManageStorage $manageStorage
+        PickPrivilegeProfile $pickPrivilegeProfile,
+        CollectPricesAsAdmin $collectPricesAsAdmin,
+        CollectPricesAsSeller $collectPricesAsSeller,
+        CollectPricesAsOperator $collectPricesAsOperator
     )
     {
-        $this->manageStorage = $manageStorage;
+        $this->pickPrivilegeProfile = $pickPrivilegeProfile;
+        $this->collectPricesAsAdmin = $collectPricesAsAdmin;
+        $this->collectPricesAsSeller = $collectPricesAsSeller;
+        $this->collectPricesAsOperator = $collectPricesAsOperator;
     }
 
     /**
-     * @param bool $favorites
+     * @param string $uniqueness
+     * @param bool   $favorites
      *
-     * @return Price[]
+     * @return PriceAsAdmin[]|PriceAsSeller[]|PriceAsOperator[]
+     *
+     * @throws \Exception
      */
-    public function collect($favorites = false)
+    public function collect($uniqueness, $favorites = true)
     {
-        $criteria = [];
+        $profile = $this->pickPrivilegeProfile->pick($uniqueness);
 
-        if ($favorites == true) {
-            $criteria['favorite'] = true;
+        if (in_array('admin', $profile->getRoles())) {
+            return $this->collectPricesAsAdmin->collect($favorites);
+        } elseif (in_array('seller', $profile->getRoles())) {
+            return $this->collectPricesAsSeller->collect($uniqueness, $favorites);
+        } elseif (in_array('operator', $profile->getRoles())) {
+            return $this->collectPricesAsOperator->collect($uniqueness, $favorites);
         }
 
-        $prices = $this->manageStorage->connect()->find($criteria);
-
-        return iterator_to_array($prices);
+        throw new \Exception();
     }
 }

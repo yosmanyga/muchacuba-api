@@ -38,6 +38,7 @@ class CreateProfile
         try {
             $this->manageStorage->connect()->insertOne(new Profile(
                 $uniqueness,
+                15,
                 $phones
             ));
         } catch (BulkWriteException $e) {

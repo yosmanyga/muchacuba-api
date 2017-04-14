@@ -12,19 +12,27 @@ class Profile implements Persistable, \JsonSerializable
     private $uniqueness;
 
     /**
+     * @var int
+     */
+    private $profitFactor;
+
+    /**
      * @var string[]
      */
     private $phones;
 
     /**
      * @param string   $uniqueness
+     * @param int      $profitFactor
      * @param string[] $phones
      */
     public function __construct(
         $uniqueness,
+        $profitFactor,
         array $phones = []
     ) {
         $this->uniqueness = $uniqueness;
+        $this->profitFactor = $profitFactor;
         $this->phones = $phones;
     }
 
@@ -34,6 +42,14 @@ class Profile implements Persistable, \JsonSerializable
     public function getUniqueness()
     {
         return $this->uniqueness;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProfitFactor(): int
+    {
+        return $this->profitFactor;
     }
 
     /**
@@ -51,6 +67,7 @@ class Profile implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->uniqueness,
+            'profitFactor' => $this->profitFactor,
             'phones' => $this->phones
         ];
     }
@@ -61,6 +78,7 @@ class Profile implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->uniqueness = $data['_id'];
+        $this->profitFactor = $data['profitFactor'];
         $this->phones = $data['phones'];
     }
 
@@ -71,6 +89,7 @@ class Profile implements Persistable, \JsonSerializable
     {
         return [
             'uniqueness' => $this->uniqueness,
+            'profitFactor' => $this->profitFactor,
             'phones' => $this->phones,
         ];
     }
