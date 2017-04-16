@@ -9,6 +9,7 @@ import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
 
 import Horoscope_ProcessRequest from './Log/Horoscope_ProcessRequest';
+import Horoscope_ProcessRequest_NotFound from './Log/Horoscope_ProcessRequest_NotFound';
 import Image_ProcessRequest_Heavy from './Log/Image_ProcessRequest_Heavy';
 import Image_ProcessRequest_Invalid from './Log/Image_ProcessRequest_Invalid';
 import Lyrics_ProcessRequest_Exception from './Log/Lyrics_ProcessRequest_Exception';
@@ -36,6 +37,7 @@ export default class ViewLogs extends React.Component {
 
         this._components = [
             new Horoscope_ProcessRequest(),
+            new Horoscope_ProcessRequest_NotFound(),
             new Image_ProcessRequest_Heavy(),
             new Image_ProcessRequest_Invalid(),
             new Lyrics_ProcessRequest_Exception(),
