@@ -73,6 +73,7 @@ export default class ListLogs extends React.Component {
                             adjustForCheckbox={false}
                         >
                             <TableRow>
+                                <TableHeaderColumn>Tipo</TableHeaderColumn>
                                 <TableHeaderColumn>Datos</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -80,6 +81,7 @@ export default class ListLogs extends React.Component {
                             {this.state.logs.map((log) => {
                                 return (
                                     <TableRow key={log.id}>
+                                        <TableRowColumn>log.type</TableRowColumn>
                                         <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(log.payload, null, 4)}} /></TableRowColumn>
                                     </TableRow>
                                 );
