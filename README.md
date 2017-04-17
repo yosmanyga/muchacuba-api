@@ -27,3 +27,8 @@ php bin/app.php internauta.process-requests
 php bin/app.php internauta.importing.cubamessenger.import-users
 php bin/app.php internauta.count-users
 php bin/app.php internauta.insert-email
+
+# Aloleiro
+
+php bin/app.php aloleiro.create-business 15 0.0
+php bin/app.php aloleiro.promote-user uniqueness business role

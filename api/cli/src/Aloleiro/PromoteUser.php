@@ -1,9 +1,9 @@
 <?php
 
-namespace Muchacuba\Cli;
+namespace Muchacuba\Cli\Aloleiro;
 
 use Symsonte\Cli\Server;
-use Muchacuba\PromoteUser as DomainPromoteUser;
+use Muchacuba\Aloleiro\PromoteUser as DomainPromoteUser;
 
 /**
  * @di\command({deductible: true})
@@ -34,7 +34,7 @@ class PromoteUser
     }
 
     /**
-     * @cli\resolution({command: "promote-user"})
+     * @cli\resolution({command: "aloleiro.promote-user"})
      */
     public function promote()
     {
@@ -42,7 +42,8 @@ class PromoteUser
 
         $this->promoteUser->promote(
             $input->get('2'),
-            $input->get('3')
+            $input->get('3'),
+            $input->get('4')
         );
 
         $this->server->resolveOutput()->outln('Success');
