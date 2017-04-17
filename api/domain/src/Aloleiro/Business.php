@@ -12,28 +12,36 @@ class Business implements Persistable, \JsonSerializable
     private $id;
 
     /**
-     * @var int
-     */
-    private $profitFactor;
-
-    /**
      * @var float
      */
     private $balance;
 
     /**
+     * @var int
+     */
+    private $profitPercent;
+
+    /**
+     * @var float
+     */
+    private $currencyExchange;
+
+    /**
      * @param string $id
-     * @param int    $profitFactor
      * @param float  $balance
+     * @param int    $profitPercent
+     * @param int    $currencyExchange
      */
     public function __construct(
         $id,
-        $profitFactor,
-        $balance
+        $balance,
+        $profitPercent,
+        $currencyExchange
     ) {
         $this->id = $id;
-        $this->profitFactor = $profitFactor;
         $this->balance = $balance;
+        $this->profitPercent = $profitPercent;
+        $this->currencyExchange = $currencyExchange;
     }
 
     /**
@@ -45,19 +53,27 @@ class Business implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return int
-     */
-    public function getProfitFactor()
-    {
-        return $this->profitFactor;
-    }
-
-    /**
      * @return float
      */
     public function getBalance()
     {
         return $this->balance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProfitPercent()
+    {
+        return $this->profitPercent;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCurrencyExchange()
+    {
+        return $this->currencyExchange;
     }
 
     /**
@@ -67,8 +83,9 @@ class Business implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'profitFactor' => $this->profitFactor,
             'balance' => $this->balance,
+            'profitPercent' => $this->profitPercent,
+            'currencyExchange' => $this->currencyExchange,
         ];
     }
 
@@ -78,8 +95,9 @@ class Business implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->profitFactor = $data['profitFactor'];
         $this->balance = $data['balance'];
+        $this->profitPercent = $data['profitPercent'];
+        $this->currencyExchange = $data['currencyExchange'];
     }
 
     /**
@@ -89,8 +107,9 @@ class Business implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'profitFactor' => $this->profitFactor,
             'balance' => $this->balance,
+            'profitPercent' => $this->profitPercent,
+            'currencyExchange' => $this->currencyExchange,
         ];
     }
 }

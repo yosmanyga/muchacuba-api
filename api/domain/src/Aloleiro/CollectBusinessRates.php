@@ -25,31 +25,19 @@ class CollectBusinessRates
     private $collectSystemRates;
 
     /**
-     * @var float
-     */
-    private $currencyExchange;
-
-    /**
      * @param PickProfile        $pickProfile
      * @param PickBusiness       $pickBusiness
      * @param CollectSystemRates $collectSystemRates
-     * @param float              $currencyExchange
-     *
-     * @di\arguments({
-     *     currencyExchange: "%currency_exchange%"
-     * })
      */
     public function __construct(
         PickProfile $pickProfile,
         PickBusiness $pickBusiness,
-        CollectSystemRates $collectSystemRates,
-        $currencyExchange
+        CollectSystemRates $collectSystemRates
     )
     {
         $this->pickProfile = $pickProfile;
         $this->pickBusiness = $pickBusiness;
         $this->collectSystemRates = $collectSystemRates;
-        $this->currencyExchange = $currencyExchange;
     }
 
     /**
@@ -70,14 +58,14 @@ class CollectBusinessRates
         $businessRates = [];
         foreach ($rates as $i => $rate) {
             // Currency exchange
-            $purchase = $rate->getSale() * $this->currencyExchange;
+            $purchase = $rate->getSale() * $business->getCurrencyExchange();
             // Round
             $purchase = round($purchase);
 
             // Purchase
             $sale = $purchase;
             // Plus profit
-            $sale += $purchase * $business->getProfitFactor() / 100;
+            $sale += $purchase * $business->getProfitPercent() / 100;
             // Round
             $sale = round($sale);
 

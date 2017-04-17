@@ -81,8 +81,9 @@ class Context implements BaseContext, ContainerAwareContext
         $createBusiness = $this->container->get('muchacuba.aloleiro.create_business');
 
         $createBusiness->create(
-            $item['profitFactor'],
             $item['balance'],
+            $item['profitPercent'],
+            $item['currencyExchange'],
             $id
         );
     }

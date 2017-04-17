@@ -27,20 +27,26 @@ class CreateBusiness
     }
 
     /**
-     * @param int         $profitFactor
      * @param float       $balance
+     * @param int         $profitPercent
+     * @param float       $currencyExchange
      * @param string|null $id
      *
      * @return string
      */
-    public function create($profitFactor, $balance = 0.0, $id = null)
+    public function create(
+        $balance = 0.0,
+        $profitPercent,
+        $currencyExchange,
+        $id = null)
     {
         $id = $id ?: uniqid();
 
         $this->manageStorage->connect()->insertOne(new Business(
             $id,
-            $profitFactor,
-            $balance
+            $balance,
+            $profitPercent,
+            $currencyExchange
         ));
 
         return $id;

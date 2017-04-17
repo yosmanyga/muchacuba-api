@@ -4,8 +4,9 @@ Feature: Manage calls
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -47,8 +48,9 @@ Feature: Manage calls
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -197,8 +199,9 @@ Feature: Manage calls
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -320,8 +323,9 @@ Feature: Manage calls
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:

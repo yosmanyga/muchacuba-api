@@ -4,8 +4,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -39,8 +40,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -72,15 +74,17 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     Given there is the business "b2":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -119,8 +123,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -162,8 +167,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -187,15 +193,17 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     Given there is the business "b2":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -234,8 +242,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -284,8 +293,9 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -308,15 +318,17 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     Given there is the business "b2":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:
@@ -354,15 +366,17 @@ Feature: Manage phones
     Given there is the business "b1":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     Given there is the business "b2":
     """
     {
-      "profitFactor": "15",
-      "balance": "0.0"
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
     }
     """
     And there is the profile:

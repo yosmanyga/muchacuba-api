@@ -24,26 +24,26 @@ class CollectSystemRates
     /**
      * @var int
      */
-    private $profitFactor;
+    private $profitPercent;
 
     /**
      * @param ManageStorage    $manageStorage
      * @param CollectCountries $collectCountries
-     * @param int              $profitFactor
+     * @param int              $profitPercent
      *
      * @di\arguments({
-     *     profitFactor: "%profit_factor%"
+     *     profitPercent: "%profit_percent%"
      * })
      */
     public function __construct(
         ManageStorage $manageStorage,
         CollectCountries $collectCountries,
-        $profitFactor
+        $profitPercent
     )
     {
         $this->manageStorage = $manageStorage;
         $this->collectCountries = $collectCountries;
-        $this->profitFactor = $profitFactor;
+        $this->profitPercent = $profitPercent;
     }
 
     /**
@@ -104,7 +104,7 @@ class CollectSystemRates
             // Purchase
             $sale = $rate->getValue();
             // Plus profit
-            $sale += $sale * $this->profitFactor / 100;
+            $sale += $sale * $this->profitPercent / 100;
             // Sale can't be less than 0.1
             $sale = max($sale, 0.1);
             // Round

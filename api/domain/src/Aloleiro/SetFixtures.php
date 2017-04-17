@@ -160,8 +160,9 @@ class SetFixtures
         $faker = Factory::create('es_ES');
 
         $business = $this->createBusiness->create(
+            0.0,
             rand(1, 15),
-            0.0
+            4412
         );
 
         $this->promoteUser->promote($owner, $business, 'aloleiro_owner');

@@ -31,35 +31,26 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
     /**
      * @var int
      */
-    private $profitFactor;
-
-    /**
-     * @var float
-     */
-    private $currencyExchange;
+    private $profitPercent;
 
     /**
      * @param PickBusiness      $pickBusiness
      * @param ManageCallStorage $manageCallStorage
-     * @param int               $profitFactor
-     * @param float             $currencyExchange
+     * @param int               $profitPercent
      *
      * @di\arguments({
-     *     profitFactor:     "%profit_factor%",
-     *     currencyExchange: "%currency_exchange%"
+     *     profitPercent: "%profit_percent%",
      * })
      */
     public function __construct(
         PickBusiness $pickBusiness,
         ManageCallStorage $manageCallStorage,
-        $profitFactor,
-        $currencyExchange
+        $profitPercent
     )
     {
         $this->pickBusiness = $pickBusiness;
         $this->manageCallStorage = $manageCallStorage;
-        $this->profitFactor = $profitFactor;
-        $this->currencyExchange = $currencyExchange;
+        $this->profitPercent = $profitPercent;
     }
 
     /**
@@ -77,7 +68,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         // Initial cost
         $systemPurchase = $cost;
         // Plus profit
-        $systemSale = $systemPurchase + $systemPurchase * $this->profitFactor / 100;
+        $systemSale = $systemPurchase + $systemPurchase * $this->profitPercent / 100;
         // Round
         $systemSale = round($systemSale, 4);
 
@@ -86,14 +77,14 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         // Initial purchase
         $businessPurchase = $systemSale;
         // Currency exchange
-        $businessPurchase = $businessPurchase * $this->currencyExchange;
+        $businessPurchase = $businessPurchase * $business->getCurrencyExchange();
         // Round
         $businessPurchase = round($businessPurchase);
 
         // Initial purchase
         $businessSale = $businessPurchase;
         // Plus profit
-        $businessSale = $businessSale + $businessSale * $business->getProfitFactor() / 100;
+        $businessSale = $businessSale + $businessSale * $business->getProfitPercent() / 100;
         // Round
         $businessSale = round($businessSale);
 
