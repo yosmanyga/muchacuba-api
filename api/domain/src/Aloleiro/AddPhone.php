@@ -4,7 +4,6 @@ namespace Muchacuba\Aloleiro;
 
 use MongoDB\Driver\Exception\BulkWriteException;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 
 /**
  * @di\service({
@@ -14,26 +13,26 @@ use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 class AddPhone
 {
     /**
+     * @var PickProfile
+     */
+    private $PickProfile;
+
+    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @var ManageProfileStorage
-     */
-    private $manageProfileStorage;
-
-    /**
-     * @param ManagePhoneStorage   $managePhoneStorage
-     * @param ManageProfileStorage $manageProfileStorage
+     * @param PickProfile $PickProfile
+     * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        ManagePhoneStorage $managePhoneStorage,
-        ManageProfileStorage $manageProfileStorage
+        PickProfile $PickProfile,
+        ManagePhoneStorage $managePhoneStorage
     )
     {
+        $this->pickProfile = $PickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
-        $this->manageProfileStorage = $manageProfileStorage;
     }
 
     /**
@@ -45,9 +44,12 @@ class AddPhone
      */
     public function add($uniqueness, $number, $name)
     {
+        $profile = $this->pickProfile->pick($uniqueness);
+
         try {
             $this->managePhoneStorage->connect()->insertOne(new Phone(
                 $number,
+                $profile->getBusiness(),
                 $name
             ));
         } catch (BulkWriteException $e) {
@@ -57,10 +59,5 @@ class AddPhone
 
             throw $e;
         }
-
-        $this->manageProfileStorage->connect()->updateOne(
-            ['_id' => $uniqueness],
-            ['$push' => ['phones' => $number]]
-        );
     }
 }

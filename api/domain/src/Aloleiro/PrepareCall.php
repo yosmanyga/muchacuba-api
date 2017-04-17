@@ -2,9 +2,8 @@
 
 namespace Muchacuba\Aloleiro;
 
-use MongoDB\Driver\Exception\BulkWriteException;
+use Muchacuba\Aloleiro\Call\Instance;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 
 /**
  * @di\service({
@@ -14,9 +13,9 @@ use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 class PrepareCall
 {
     /**
-     * @var ManageProfileStorage
+     * @var PickProfile
      */
-    private $manageProfileStorage;
+    private $pickProfile;
 
     /**
      * @var ManageCallStorage
@@ -24,15 +23,15 @@ class PrepareCall
     private $manageCallStorage;
 
     /**
-     * @param ManageProfileStorage $manageProfileStorage
-     * @param ManageCallStorage    $manageCallStorage
+     * @param PickProfile       $pickProfile
+     * @param ManageCallStorage $manageCallStorage
      */
     public function __construct(
-        ManageProfileStorage $manageProfileStorage,
+        PickProfile $pickProfile,
         ManageCallStorage $manageCallStorage
     )
     {
-        $this->manageProfileStorage = $manageProfileStorage;
+        $this->pickProfile = $pickProfile;
         $this->manageCallStorage = $manageCallStorage;
     }
 
@@ -43,25 +42,14 @@ class PrepareCall
      */
     public function prepare($uniqueness, $from, $to)
     {
-        /** @var Profile $profile */
-        $profile = $this->manageProfileStorage->connect()->findOne([
-            '_id' => $uniqueness,
-            'phones' => ['$in' => [$from]]
-        ]);
+        $profile = $this->pickProfile->pick($uniqueness);
     
-        if (is_null($profile)) {
-            // TODO
-        }
-
-        $id = uniqid();
-
         $this->manageCallStorage->connect()->insertOne(new Call(
-            $id,
-            $uniqueness,
-            null,
+            uniqid(),
+            $profile->getBusiness(),
             $from,
             $to,
-            Call::STATUS_PREPARED
+            []
         ));
     }
 }

@@ -54,6 +54,9 @@
                 "cli/setup",
                 "cli/src"
             ],
+            "Cubalider\\Call\\Provider\\": [
+                "domain/vendor/cubalider-call-provider/src"
+            ],
             "Cubalider\\Facebook\\": [
                 "domain/vendor/cubalider-facebook/src"
             ],

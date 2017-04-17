@@ -21,7 +21,7 @@ class ProcessRequests
     private $processRequests;
 
     /**
-     * @param Server               $server
+     * @param Server                $server
      * @param DomainProcessRequests $processRequests
      */
     public function __construct(

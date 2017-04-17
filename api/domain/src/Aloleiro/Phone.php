@@ -14,17 +14,25 @@ class Phone implements Persistable, \JsonSerializable
     /**
      * @var string
      */
+    private $business;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
-     * @param string   $number
-     * @param string   $name
+     * @param string $number
+     * @param string $business
+     * @param string $name
      */
     public function __construct(
         $number,
+        $business,
         $name
     ) {
         $this->number = $number;
+        $this->business = $business;
         $this->name = $name;
     }
 
@@ -34,6 +42,14 @@ class Phone implements Persistable, \JsonSerializable
     public function getNumber()
     {
         return $this->number;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBusiness()
+    {
+        return $this->business;
     }
 
     /**
@@ -51,6 +67,7 @@ class Phone implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->number,
+            'business' => $this->business,
             'name' => $this->name
         ];
     }
@@ -61,6 +78,7 @@ class Phone implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->number = $data['_id'];
+        $this->business = $data['business'];
         $this->name = $data['name'];
     }
 
@@ -71,6 +89,7 @@ class Phone implements Persistable, \JsonSerializable
     {
         return [
             'number' => $this->number,
+            'business' => $this->business,
             'name' => $this->name,
         ];
     }

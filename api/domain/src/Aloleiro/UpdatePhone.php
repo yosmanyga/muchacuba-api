@@ -2,10 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
-use MongoDB\DeleteResult;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
-use MongoDB\Operation\Update;
 use MongoDB\UpdateResult;
 
 /**
@@ -16,26 +13,26 @@ use MongoDB\UpdateResult;
 class UpdatePhone
 {
     /**
+     * @var PickProfile
+     */
+    private $PickProfile;
+
+    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @var ManageProfileStorage
-     */
-    private $manageProfileStorage;
-
-    /**
-     * @param ManagePhoneStorage   $managePhoneStorage
-     * @param ManageProfileStorage $manageProfileStorage
+     * @param PickProfile $PickProfile
+     * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        ManagePhoneStorage $managePhoneStorage,
-        ManageProfileStorage $manageProfileStorage
+        PickProfile $PickProfile,
+        ManagePhoneStorage $managePhoneStorage
     )
     {
+        $this->pickProfile = $PickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
-        $this->manageProfileStorage = $manageProfileStorage;
     }
 
     /**
@@ -47,23 +44,19 @@ class UpdatePhone
      */
     public function update($uniqueness, $number, $name)
     {
-        $profile = $this->manageProfileStorage->connect()->findOne([
-            '_id' => $uniqueness,
-            'phones' => ['$in' => [$number]]
-        ]);
-
-        if (is_null($profile)) {
-            throw new NonExistentPhoneException();
-        }
+        $profile = $this->pickProfile->pick($uniqueness);
 
         /** @var UpdateResult $result */
         $result = $this->managePhoneStorage->connect()->updateOne(
-            ['_id' => $number],
+            [
+                '_id' => $number,
+                'business' => $profile->getBusiness()
+            ],
             ['$set' => ['name' => $name]]
         );
 
         if ($result->getModifiedCount() === 0) {
-            // TODO: Corrupted db?
+            throw new NonExistentPhoneException();
         }
     }
 }

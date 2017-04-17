@@ -51,7 +51,7 @@ class Layout extends React.Component {
 
     render() {
         return (
-            <DocumentTitle title={this.props.title}>
+            <DocumentTitle title={typeof this.props.title === 'undefined' ? this.props.title : 'Muchacuba'}>
                 <div style={{
                     ...this.props.style,
                 }}>

@@ -4,8 +4,6 @@ namespace Muchacuba\Aloleiro;
 
 use MongoDB\DeleteResult;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
-use MongoDB\UpdateResult;
 
 /**
  * @di\service({
@@ -15,26 +13,26 @@ use MongoDB\UpdateResult;
 class RemovePhone
 {
     /**
+     * @var PickProfile
+     */
+    private $PickProfile;
+
+    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @var ManageProfileStorage
-     */
-    private $manageProfileStorage;
-
-    /**
-     * @param ManagePhoneStorage   $managePhoneStorage
-     * @param ManageProfileStorage $manageProfileStorage
+     * @param PickProfile $PickProfile
+     * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        ManagePhoneStorage $managePhoneStorage,
-        ManageProfileStorage $manageProfileStorage
+        PickProfile $PickProfile,
+        ManagePhoneStorage $managePhoneStorage
     )
     {
+        $this->pickProfile = $PickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
-        $this->manageProfileStorage = $manageProfileStorage;
     }
 
     /**
@@ -45,23 +43,16 @@ class RemovePhone
      */
     public function remove($uniqueness, $number)
     {
-        /** @var UpdateResult $result */
-        $result = $this->manageProfileStorage->connect()->updateOne(
-            ['_id' => $uniqueness],
-            ['$pull' => ['phones' => $number]]
-        );
-
-        if ($result->getModifiedCount() === 0) {
-            throw new NonExistentPhoneException();
-        }
+        $profile = $this->pickProfile->pick($uniqueness);
 
         /** @var DeleteResult $result */
         $result = $this->managePhoneStorage->connect()->deleteOne([
-            '_id' => $number
+            '_id' => $number,
+            'business' => $profile->getBusiness()
         ]);
 
         if ($result->getDeletedCount() === 0) {
-            // TODO: Corrupted db?
+            throw new NonExistentPhoneException();
         }
     }
 }

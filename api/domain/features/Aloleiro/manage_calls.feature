@@ -1,135 +1,76 @@
 Feature: Manage calls
 
-  Scenario: Collect calls
-    Given there are the profiles with phones:
-    """
-    [
-      {
-        "uniqueness": "1",
-        "phones": [
-          {
-            "number": "+123",
-            "name": "Phone 1"
-          },
-          {
-            "number": "+456",
-            "name": "Phone 2"
-          }
-        ]
-      },
-      {
-        "uniqueness": "2",
-        "phones": [
-          {
-            "number": "+789",
-            "name": "Phone 1"
-          }
-        ]
-      }
-    ]
-    """
-    And there are the calls:
-    """
-    [
-      {
-        "uniqueness": "1",
-        "from": "+123",
-        "to": "+1011"
-      },
-      {
-        "uniqueness": "2",
-        "from": "+789",
-        "to": "+1314"
-      }
-    ]
-    """
-    When I collect the calls from profile "1"
+  Scenario: Prepare call
+    Given there is the business "b1"
+    And there is the profile:
     """
     {
-      "uniqueness": "1"
+      "uniqueness": "u1",
+      "business": "b1"
     }
     """
-    Then I should get the calls:
+    And there are the phones on business that the profile "u1" belongs to:
     """
     [
       {
-        "id": "@string@",
-        "from": "+123",
-        "to": "+1011",
-        "status": "p",
-        "duration": null,
-        "charge": null
+        "number": "+123",
+        "name": "Phone 1"
       }
     ]
     """
-
-  Scenario: Prepare call
-    Given there are the profiles with phones:
-    """
-    [
-      {
-        "uniqueness": "1",
-        "phones": [
-          {
-            "number": "+123",
-            "name": "Phone 1"
-          }
-        ]
-      }
-    ]
-    """
-    When I prepare the call:
+    When I prepare the call from the profile "u1":
     """
     {
-      "uniqueness": "1",
       "from": "+123",
       "to": "+1011"
     }
     """
-    And I collect the calls from profile "1"
-    Then I should get the calls:
+    And I collect the system calls from profile "u1"
+    Then I should get the system calls:
     """
     [
       {
-        "id": "@string@",
         "from": "+123",
         "to": "+1011",
-        "status": "p",
-        "duration": null,
-        "charge": null
+        "instances": []
       }
     ]
     """
 
   Scenario: Process incoming call event (ICE)
-    Given there are the profiles with phones:
+    Given there is the business "b1"
+    And there is the profile:
+    """
+    {
+      "uniqueness": "u1",
+      "business": "b1"
+    }
+    """
+    And there are the phones on business that the profile "u1" belongs to:
     """
     [
       {
-        "uniqueness": "1",
-        "phones": [
-          {
-            "number": "+123",
-            "name": "Phone 1"
-          }
-        ]
+        "number": "+123",
+        "name": "Phone 1"
       }
     ]
     """
-    And I prepare the call:
+    When I prepare the call from the profile "u1":
     """
     {
-      "uniqueness": "1",
       "from": "+123",
       "to": "+1011"
     }
     """
-    When I process the event:
+    When I process the sinch event:
     """
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123"
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
     }
     """
     Then I should send the response:
@@ -139,59 +80,68 @@ Feature: Manage calls
         "name" : "ConnectPSTN",
         "number" : "+1011",
         "maxDuration" : 3600,
-        "cli" : "+123"
+        "cli" : "+789"
       }
     }
     """
-    When I collect the calls from profile "1"
-    Then I should get the calls:
+    And I collect the system calls from profile "u1"
+    Then I should get the system calls:
     """
     [
       {
-        "id": "@string@",
         "from": "+123",
         "to": "+1011",
-        "status": "f",
-        "duration": null,
-        "charge": null
+        "instances": [
+          {
+            "duration": null,
+            "purchase": null,
+            "sale": null
+          }
+        ]
       }
     ]
     """
-    When I collect the events
-    Then I should get the events:
+    When I collect the logs
+    Then I should get the logs:
     """
     [
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123"
-        }
+          "cli": "+123",
+          "to": {
+            "endpoint": "+789"
+          }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name": "ConnectPSTN",
             "number": "+1011",
             "maxDuration": 3600,
-            "cli": "+123"
+            "cli": "+789"
           }
-        }
+        },
+        "date": "@integer@"
       }
     ]
     """
 
   Scenario: Process incoming call event that is no prepared
-    When I process the event:
+    When I process the sinch event:
     """
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123"
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
     }
     """
     Then I should send the response:
@@ -202,63 +152,71 @@ Feature: Manage calls
       }
     }
     """
-    When I collect the events
-    Then I should get the events:
+    When I collect the logs
+    Then I should get the logs:
     """
     [
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123"
-        }
+          "cli": "+123",
+          "to": {
+            "endpoint": "+789"
+          }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name": "Hangup"
           }
-        }
+        },
+        "date": "@integer@"
       }
     ]
     """
 
   Scenario: Process answered call event (ACE)
-    Given there are the profiles with phones:
+    Given there is the business "b1"
+    And there is the profile:
+    """
+    {
+      "uniqueness": "u1",
+      "business": "b1"
+    }
+    """
+    And there are the phones on business that the profile "u1" belongs to:
     """
     [
       {
-        "uniqueness": "1",
-        "phones": [
-          {
-            "number": "+123",
-            "name": "Phone 1"
-          }
-        ]
+        "number": "+123",
+        "name": "Phone 1"
       }
     ]
     """
-    And I prepare the call:
+    When I prepare the call from the profile "u1":
     """
     {
-      "uniqueness": "1",
       "from": "+123",
       "to": "+1011"
     }
     """
-    And I process the event:
+    When I process the sinch event:
     """
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123"
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
     }
     """
-    When I process the event:
+    And I process the sinch event:
     """
     {
       "event": "ace",
@@ -273,105 +231,115 @@ Feature: Manage calls
       }
     }
     """
-    When I collect the calls from profile "1"
-    Then I should get the calls:
+    When I collect the system calls from profile "u1"
+    Then I should get the system calls:
     """
     [
       {
-        "id": "@string@",
         "from": "+123",
         "to": "+1011",
-        "status": "a",
-        "duration": null,
-        "charge": null
+        "instances": [
+          {
+            "duration": null,
+            "purchase": null,
+            "sale": null
+          }
+        ]
       }
     ]
     """
-    When I collect the events
-    Then I should get the events:
+    When I collect the logs
+    Then I should get the logs:
     """
     [
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123"
-        }
+          "cli": "+123",
+          "to": {
+            "endpoint": "+789"
+          }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name" : "ConnectPSTN",
             "number" : "+1011",
             "maxDuration" : 3600,
-            "cli" : "+123"
+            "cli" : "+789"
           }
-        }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ace",
           "callid": "1"
-        }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name": "Continue"
           }
-        }
+        },
+        "date": "@integer@"
       }
     ]
     """
 
-  @this
   Scenario: Process disconnected call event (DICE)
-    Given there are the profiles with phones:
+    Given there is the business "b1"
+    And there is the profile:
+    """
+    {
+      "uniqueness": "u1",
+      "business": "b1"
+    }
+    """
+    And there are the phones on business that the profile "u1" belongs to:
     """
     [
       {
-        "uniqueness": "1",
-        "phones": [
-          {
-            "number": "+123",
-            "name": "Phone 1"
-          }
-        ]
+        "number": "+123",
+        "name": "Phone 1"
       }
     ]
     """
-    And I prepare the call:
+    When I prepare the call from the profile "u1":
     """
     {
-      "uniqueness": "1",
       "from": "+123",
       "to": "+1011"
     }
     """
-    And I process the event:
+    And I process the sinch event:
     """
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123"
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
     }
     """
-    And I process the event:
+    And I process the sinch event:
     """
     {
       "event": "ace",
       "callid": "1"
     }
     """
-    When I process the event:
+    And I process the sinch event:
     """
     {
       "event": "dice",
@@ -379,74 +347,85 @@ Feature: Manage calls
     }
     """
     Then I should send no response
-    When I collect the calls from profile "1"
-    Then I should get the calls:
+    When I collect the system calls from profile "u1"
+    Then I should get the system calls:
     """
     [
       {
-        "id": "@string@",
         "from": "+123",
         "to": "+1011",
-        "status": "a",
-        "duration": null,
-        "charge": null
+        "instances": [
+          {
+            "duration": null,
+            "purchase": null,
+            "sale": null
+          }
+        ]
       }
     ]
     """
-    When I collect the events
-    Then I should get the events:
+    When I collect the logs
+    Then I should get the logs:
     """
     [
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123"
-        }
+          "cli": "+123",
+          "to": {
+            "endpoint": "+789"
+          }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name" : "ConnectPSTN",
             "number" : "+1011",
             "maxDuration" : 3600,
-            "cli" : "+123"
+            "cli" : "+789"
           }
-        }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "ace",
           "callid": "1"
-        }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
         "type": "response-to-sinch",
         "payload": {
           "action": {
             "name": "Continue"
           }
-        }
+        },
+        "date": "@integer@"
       },
       {
-        "id": "@string@",
-        "type": "sinch-event",
+        "type": "event-from-sinch",
         "payload": {
           "event": "dice",
           "callid": "1"
-        }
+        },
+        "date": "@integer@"
+      },
+      {
+        "type": "response-to-sinch",
+        "payload": null,
+        "date": "@integer@"
       }
     ]
     """
-    When I collect the requests
-    Then I should get the requests:
+    When I collect the sinch requests
+    Then I should get the sinch requests:
     """
     [
       {

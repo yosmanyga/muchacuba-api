@@ -14,7 +14,7 @@ class CollectPhones
     /**
      * @var PickProfile
      */
-    private $pickProfile;
+    private $PickProfile;
 
     /**
      * @var ManageStorage
@@ -22,15 +22,15 @@ class CollectPhones
     private $manageStorage;
 
     /**
-     * @param PickProfile   $pickProfile
-     * @param ManageStorage $manageStorage
+     * @param PickProfile $PickProfile
+     * @param ManageStorage       $manageStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
+        PickProfile $PickProfile,
         ManageStorage $manageStorage
     )
     {
-        $this->pickProfile = $pickProfile;
+        $this->pickProfile = $PickProfile;
         $this->manageStorage = $manageStorage;
     }
 
@@ -44,7 +44,7 @@ class CollectPhones
         $profile = $this->pickProfile->pick($uniqueness);
 
         $phones = $this->manageStorage->connect()->find([
-            '_id' => ['$in' => $profile->getPhones()]
+            'business' => $profile->getBusiness()
         ]);
 
         return iterator_to_array($phones);

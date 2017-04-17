@@ -1198,16 +1198,16 @@
         },
         {
             "name": "mailgun/mailgun-php",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailgun/mailgun-php.git",
-                "reference": "7ba99184a0bc5f18911eca510f45b1267174ebb0"
+                "reference": "5df14eb6aab16367ae75b0d1f19868e3c5bddf53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/7ba99184a0bc5f18911eca510f45b1267174ebb0",
-                "reference": "7ba99184a0bc5f18911eca510f45b1267174ebb0",
+                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/5df14eb6aab16367ae75b0d1f19868e3c5bddf53",
+                "reference": "5df14eb6aab16367ae75b0d1f19868e3c5bddf53",
                 "shasum": ""
             },
             "require": {
@@ -1241,7 +1241,7 @@
                 }
             ],
             "description": "The Mailgun SDK provides methods for all API functions.",
-            "time": "2017-04-08T09:52:19+00:00"
+            "time": "2017-04-14T09:15:08+00:00"
         },
         {
             "name": "mongodb/mongodb",

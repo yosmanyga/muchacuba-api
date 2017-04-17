@@ -26,6 +26,5 @@ algolia_user_index: 'dev_users'
 # Aloleiro
 sinch_app_key: ''
 sinch_app_secret: ''
-admin_profit_factor: '30' # Profit in percent
-seller_profit_factor: '15' # Profit in percent
+profit_factor: '30' # Profit in percent
 currency_exchange: '4412' # 1USD=4412Bf

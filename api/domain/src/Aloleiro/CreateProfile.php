@@ -29,17 +29,16 @@ class CreateProfile
 
     /**
      * @param string        $uniqueness
-     * @param string[]|null $phones
+     * @param string        $business
      *
      * @throws ExistentProfileException
      */
-    public function create($uniqueness, array $phones = [])
+    public function create($uniqueness, $business)
     {
         try {
             $this->manageStorage->connect()->insertOne(new Profile(
                 $uniqueness,
-                15,
-                $phones
+                $business
             ));
         } catch (BulkWriteException $e) {
             if ($e->getWriteResult()->getWriteErrors()[0]->getCode() == 11000) {

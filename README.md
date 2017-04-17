@@ -11,7 +11,7 @@ git clone git@bitbucket.org:cubalider/muchacuba.git muchacuba
 docker run -it --rm -v $(pwd)/app:/app -w /app --name node node:7.5.0-alpine sh
 npm install
 
-docker-compose -f docker/docker-compose.common.yml -p muchacuba up -d
+docker-compose -f docker/docker-compose.common.yml -f docker/docker-compose.prod.yml -p muchacuba up -d
 
 cd api
 

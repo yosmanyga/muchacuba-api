@@ -3,14 +3,10 @@
 namespace Muchacuba\Aloleiro;
 
 use MongoDB\BSON\Persistable;
+use Muchacuba\Aloleiro\Call\Instance;
 
 class Call implements Persistable, \JsonSerializable
 {
-    const STATUS_PREPARED = 'p';
-    const STATUS_FORWARDING = 'f';
-    const STATUS_ANSWERED = 'a';
-    const STATUS_DISCONNECTED = 'd';
-
     /**
      * @var string
      */
@@ -19,16 +15,9 @@ class Call implements Persistable, \JsonSerializable
     /**
      * @var string
      */
-    private $uniqueness;
+    private $business;
 
     /**
-     * @var string
-     */
-    private $callId;
-
-    /**
-     * The Phone
-     *
      * @var string
      */
     private $from;
@@ -39,49 +28,30 @@ class Call implements Persistable, \JsonSerializable
     private $to;
 
     /**
-     * @var string
+     * @var Instance[]
      */
-    private $status;
+    private $instances;
 
     /**
-     * @var int
-     */
-    private $duration;
-
-    /**
-     * @var float
-     */
-    private $charge;
-
-    /**
-     * @param string $id
-     * @param string $uniqueness
-     * @param string $callId
-     * @param string $from
-     * @param string $to
-     * @param string $status
-     * @param int|null $duration
-     * @param int|null $charge
+     * @param string          $id
+     * @param string          $business
+     * @param string          $from
+     * @param string          $to
+     * @param Instance[]|null $instances
      */
     public function __construct(
         $id,
-        $uniqueness,
-        $callId,
+        $business,
         $from,
         $to,
-        $status,
-        $duration = null,
-        $charge = null
+        array $instances = []
     )
     {
         $this->id = $id;
-        $this->uniqueness = $uniqueness;
-        $this->callId = $callId;
+        $this->business = $business;
         $this->from = $from;
         $this->to = $to;
-        $this->status = $status;
-        $this->duration = $duration;
-        $this->charge = $charge;
+        $this->instances = $instances;
     }
 
     /**
@@ -95,17 +65,9 @@ class Call implements Persistable, \JsonSerializable
     /**
      * @return string
      */
-    public function getUniqueness()
+    public function getBusiness()
     {
-        return $this->uniqueness;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCallId()
-    {
-        return $this->callId;
+        return $this->business;
     }
 
     /**
@@ -125,27 +87,11 @@ class Call implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return Instance[]
      */
-    public function getStatus()
+    public function getInstances()
     {
-        return $this->status;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * @return float
-     */
-    public function getCharge()
-    {
-        return $this->charge;
+        return $this->instances;
     }
 
     /**
@@ -155,13 +101,10 @@ class Call implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'uniqueness' => $this->uniqueness,
-            'callId' => $this->callId,
+            'business' => $this->business,
             'from' => $this->from,
             'to' => $this->to,
-            'status' => $this->status,
-            'duration' => $this->duration,
-            'charge' => $this->charge
+            'instances' => $this->instances
         ];
     }
 
@@ -171,13 +114,10 @@ class Call implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->uniqueness = $data['uniqueness'];
-        $this->callId = $data['callId'];
+        $this->business = $data['business'];
         $this->from = $data['from'];
         $this->to = $data['to'];
-        $this->status = $data['status'];
-        $this->duration = $data['duration'];
-        $this->charge = $data['charge'];
+        $this->instances = $data['instances'];
     }
 
     /**
@@ -189,9 +129,7 @@ class Call implements Persistable, \JsonSerializable
             'id' => $this->id,
             'from' => $this->from,
             'to' => $this->to,
-            'status' => $this->status,
-            'duration' => $this->duration,
-            'charge' => $this->charge,
+            'instances' => $this->instances,
         ];
     }
 }

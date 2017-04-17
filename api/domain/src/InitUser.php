@@ -137,7 +137,7 @@ class InitUser
 
             $this->createAloleiroProfile->create(
                 $uniqueness,
-                []
+                null
             );
         } catch (ExistentUniquenessException $e) {
             // Profiles already created

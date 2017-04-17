@@ -4,7 +4,15 @@ namespace Muchacuba\Aloleiro;
 
 use Behat\Behat\Context\Context as BaseContext;
 use Behat\Gherkin\Node\PyStringNode;
-use Muchacuba\Aloleiro\Profile\ManageStorage;
+use Cubalider\Call\Provider\CollectLogs;
+use Cubalider\Call\Provider\Sinch\CollectRequests;
+use Cubalider\Call\Provider\Sinch\ProcessEvent;
+use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
+use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
+use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
+use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
+use Cubalider\Call\Provider\Log\ManageStorage as ManageLogStorage;
+use Cubalider\Call\Provider\Sinch\Request\ManageStorage as ManageRequestStorage;
 use Coduo\PHPMatcher\Factory\SimpleFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symsonte\Behat\ContainerAwareContext;
@@ -40,73 +48,80 @@ class Context implements BaseContext, ContainerAwareContext
      */
     public function purgeStorages()
     {
-        /** @var ManageStorage $manageStorage */
+        /** @var ManageProfileStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.business.manage_storage');
+        $manageStorage->purge();
+
+        /** @var ManageBusinessStorage $manageStorage */
         $manageStorage = $this->container->get('muchacuba.aloleiro.profile.manage_storage');
         $manageStorage->purge();
 
-        /** @var ManageStorage $manageStorage */
+        /** @var ManagePhoneStorage $manageStorage */
         $manageStorage = $this->container->get('muchacuba.aloleiro.phone.manage_storage');
         $manageStorage->purge();
 
-        /** @var ManageStorage $manageStorage */
+        /** @var ManageCallStorage $manageStorage */
         $manageStorage = $this->container->get('muchacuba.aloleiro.call.manage_storage');
         $manageStorage->purge();
 
-        /** @var ManageStorage $manageStorage */
-        $manageStorage = $this->container->get('muchacuba.aloleiro.event.manage_storage');
+        /** @var ManageLogStorage $manageStorage */
+        $manageStorage = $this->container->get('cubalider.call.provider.log.manage_storage');
         $manageStorage->purge();
 
-        /** @var ManageStorage $manageStorage */
-        $manageStorage = $this->container->get('muchacuba.aloleiro.request.manage_storage');
+        /** @var ManageRequestStorage $manageStorage */
+        $manageStorage = $this->container->get('cubalider.call.provider.sinch.request.manage_storage');
         $manageStorage->purge();
     }
 
     /**
-     * @Given there are the profiles with phones:
+     * @Given there is the business ":id"
+     *
+     * @param string $id
+     */
+    public function thereIsTheBusiness($id)
+    {
+        /** @var CreateBusiness $createBusiness */
+        $createBusiness = $this->container->get('muchacuba.aloleiro.create_business');
+
+        $createBusiness->create(null, $id);
+    }
+
+    /**
+     * @Given there is the profile:
      *
      * @param PyStringNode $string
      */
-    public function thereAreTheProfilesWithPhones(PyStringNode $string)
+    public function thereIsTheProfile(PyStringNode $string)
     {
-        $items = json_decode($string->getRaw(), true);
-
+        $item = json_decode($string->getRaw(), true);
+        
         /** @var CreateProfile $createProfile */
         $createProfile = $this->container->get('muchacuba.aloleiro.create_profile');
-        /** @var AddPhone $addPhone */
-        $addPhone = $this->container->get('muchacuba.aloleiro.add_phone');
 
-        foreach ($items as $profile) {
-            $createProfile->create(
-                $profile['uniqueness']
-            );
-
-            foreach ($profile['phones'] as $phone) {
-                $addPhone->add(
-                    $profile['uniqueness'],
-                    $phone['number'],
-                    $phone['name']
-                );
-            }
-        }
+        $createProfile->create(
+            $item['uniqueness'], 
+            $item['business']
+        );
     }
 
     /**
-     * @Given there are the phones:
+     * @Given there are the phones on business that the profile ":uniqueness" belongs to:
      *
+     * @param string       $uniqueness
      * @param PyStringNode $string
      */
-    public function thereAreThePhones(PyStringNode $string)
+    public function thereAreThePhones($uniqueness, PyStringNode $string)
     {
         $items = json_decode($string->getRaw(), true);
 
         /** @var AddPhone $addPhone */
         $addPhone = $this->container->get('muchacuba.aloleiro.add_phone');
 
-        foreach ($items as $item) {
+        foreach ($items as $phone) {
             $addPhone->add(
-                $item['uniqueness'],
-                $item['number'],
-                $item['name']
+                $uniqueness,
+                $phone['number'],
+                $phone['name']
             );
         }
     }
@@ -201,11 +216,12 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Given I prepare the call:
+     * @Given I prepare the call from the profile ":uniqueness":
      *
+     * @param string       $uniqueness
      * @param PyStringNode $string
      */
-    public function iPrepareTheCall(PyStringNode $string)
+    public function iPrepareTheCall($uniqueness, PyStringNode $string)
     {
         $item = json_decode($string->getRaw(), true);
 
@@ -213,18 +229,18 @@ class Context implements BaseContext, ContainerAwareContext
         $prepareCall = $this->container->get('muchacuba.aloleiro.prepare_call');
 
         $prepareCall->prepare(
-            $item['uniqueness'],
+            $uniqueness,
             $item['from'],
             $item['to']
         );
     }
     
     /**
-     * @When I collect the phones from profile ":uniqueness"
+     * @When I collect the phones using profile ":uniqueness"
      *
      * @param string $uniqueness
      */
-    public function iCollectThePhonesFromProfile($uniqueness)
+    public function iCollectThePhonesUsingProfile($uniqueness)
     {
         /** @var CollectPhones $collectPhones */
         $collectPhones = $this->container->get('muchacuba.aloleiro.collect_phones');
@@ -233,51 +249,51 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @When I collect the calls from profile ":uniqueness"
+     * @When I collect the system calls from profile ":uniqueness"
      *
      * @param string $uniqueness
      */
-    public function iCollectTheCallsFromProfile($uniqueness)
+    public function iCollectTheSystemCallsFromProfile($uniqueness)
     {
-        /** @var CollectCalls $collectCalls */
-        $collectCalls = $this->container->get('muchacuba.aloleiro.collect_calls');
+        /** @var CollectSystemCalls $collectSystemCalls */
+        $collectSystemCalls = $this->container->get('muchacuba.aloleiro.collect_system_calls');
 
-        $this->result = $collectCalls->collect($uniqueness);
+        $this->result = $collectSystemCalls->collect($uniqueness);
     }
 
     /**
-     * @When I collect the events
+     * @When I collect the logs
      */
-    public function iCollectTheEvents()
+    public function iCollectTheLogs()
     {
-        /** @var CollectEvents $collectEvents */
-        $collectEvents = $this->container->get('muchacuba.aloleiro.collect_events');
+        /** @var CollectLogs $collectLogs */
+        $collectLogs = $this->container->get('cubalider.call.provider.collect_logs');
 
-        $this->result = $collectEvents->collect();
+        $this->result = $collectLogs->collect();
     }
 
     /**
-     * @When I collect the requests
+     * @When I collect the sinch requests
      */
     public function iCollectTheRequests()
     {
         /** @var CollectRequests $collectRequests */
-        $collectRequests = $this->container->get('muchacuba.aloleiro.collect_requests');
+        $collectRequests = $this->container->get('cubalider.call.provider.sinch.collect_requests');
 
         $this->result = $collectRequests->collect();
     }
     
     /**
-     * @When I process the event:
+     * @When I process the sinch event:
      *
      * @param PyStringNode $string
      */
-    public function iProcessTheEvent(PyStringNode $string)
+    public function iProcessTheSinchEvent(PyStringNode $string)
     {
         $payload = json_decode($string->getRaw(), true);
 
         /** @var ProcessEvent $processEvent */
-        $processEvent = $this->container->get('muchacuba.aloleiro.process_event');
+        $processEvent = $this->container->get('cubalider.call.provider.sinch.process_event');
 
         $this->result = $processEvent->process($payload);
     }
@@ -302,13 +318,13 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get the calls:
+     * @Then I should get the system calls:
      *
      * @param PyStringNode $string
      *
      * @throws \Exception
      */
-    public function iShouldGetTheCalls(PyStringNode $string)
+    public function iShouldGetTheSystemCalls(PyStringNode $string)
     {
         $matcher = (new SimpleFactory())->createMatcher();
 
@@ -354,13 +370,13 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get the events:
+     * @Then I should get the logs:
      *
      * @param PyStringNode $string
      *
      * @throws \Exception
      */
-    public function iShouldGetTheEvents(PyStringNode $string)
+    public function iShouldGetTheLogs(PyStringNode $string)
     {
         $matcher = (new SimpleFactory())->createMatcher();
 
@@ -373,13 +389,13 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get the requests:
+     * @Then I should get the sinch requests:
      *
      * @param PyStringNode $string
      *
      * @throws \Exception
      */
-    public function iShouldGetTheRequests(PyStringNode $string)
+    public function iShouldGetTheSinchRequests(PyStringNode $string)
     {
         $matcher = (new SimpleFactory())->createMatcher();
 
