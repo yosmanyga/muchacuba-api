@@ -1,6 +1,6 @@
 <?php
 
-namespace Muchacuba\Http\Provider\Aloleiro\Sinch;
+namespace Muchacuba\Http\Aloleiro\Provider\Sinch;
 
 use Cubalider\Call\Provider\Sinch\ProcessEvent as DomainProcessEvent;
 use Symsonte\Http\Server;
