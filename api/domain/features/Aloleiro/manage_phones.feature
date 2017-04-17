@@ -1,7 +1,13 @@
 Feature: Manage phones
 
   Scenario: Add a phone
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -30,7 +36,13 @@ Feature: Manage phones
     """
 
   Scenario: Try to add a phone that already exist in profile
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -57,8 +69,20 @@ Feature: Manage phones
     Then I should get an existent phone exception
 
   Scenario: Try to add a phone that already exist in another profile
-    Given there is the business "b1"
-    And there is the business "b2"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
+    Given there is the business "b2":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -92,7 +116,13 @@ Feature: Manage phones
     Then I should get an existent phone exception
 
   Scenario: Update a phone
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -129,7 +159,13 @@ Feature: Manage phones
     """
 
   Scenario: Try to update a nonexistent phone
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -148,8 +184,20 @@ Feature: Manage phones
     Then I should get a nonexistent phone exception
 
   Scenario: Try to update a phone from another profile
-    Given there is the business "b1"
-    And there is the business "b2"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
+    Given there is the business "b2":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -183,7 +231,13 @@ Feature: Manage phones
     Then I should get a nonexistent phone exception
 
   Scenario: Remove a phone
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -227,7 +281,13 @@ Feature: Manage phones
     """
 
   Scenario: Try to remove a nonexistent phone
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -245,8 +305,20 @@ Feature: Manage phones
     Then I should get a nonexistent phone exception
 
   Scenario: Try to remove a phone from another profile
-    Given there is the business "b1"
-    And there is the business "b2"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
+    Given there is the business "b2":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -279,8 +351,20 @@ Feature: Manage phones
     Then I should get a nonexistent phone exception
 
   Scenario: Collect phones
-    Given there is the business "b1"
-    And there is the business "b2"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
+    Given there is the business "b2":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {

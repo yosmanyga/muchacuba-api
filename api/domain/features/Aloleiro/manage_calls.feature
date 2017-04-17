@@ -1,7 +1,13 @@
 Feature: Manage calls
 
   Scenario: Prepare call
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -25,7 +31,7 @@ Feature: Manage calls
       "to": "+1011"
     }
     """
-    And I collect the system calls from profile "u1"
+    And I collect the system calls
     Then I should get the system calls:
     """
     [
@@ -38,7 +44,13 @@ Feature: Manage calls
     """
 
   Scenario: Process incoming call event (ICE)
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -84,7 +96,7 @@ Feature: Manage calls
       }
     }
     """
-    And I collect the system calls from profile "u1"
+    And I collect the system calls
     Then I should get the system calls:
     """
     [
@@ -95,7 +107,8 @@ Feature: Manage calls
           {
             "duration": null,
             "purchase": null,
-            "sale": null
+            "sale": null,
+            "profit": null
           }
         ]
       }
@@ -181,7 +194,13 @@ Feature: Manage calls
     """
 
   Scenario: Process answered call event (ACE)
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -231,7 +250,7 @@ Feature: Manage calls
       }
     }
     """
-    When I collect the system calls from profile "u1"
+    When I collect the system calls
     Then I should get the system calls:
     """
     [
@@ -242,7 +261,8 @@ Feature: Manage calls
           {
             "duration": null,
             "purchase": null,
-            "sale": null
+            "sale": null,
+            "profit": null
           }
         ]
       }
@@ -297,7 +317,13 @@ Feature: Manage calls
     """
 
   Scenario: Process disconnected call event (DICE)
-    Given there is the business "b1"
+    Given there is the business "b1":
+    """
+    {
+      "profitFactor": "15",
+      "balance": "0.0"
+    }
+    """
     And there is the profile:
     """
     {
@@ -343,11 +369,15 @@ Feature: Manage calls
     """
     {
       "event": "dice",
-      "callid": "1"
+      "callid": "1",
+      "duration": 30,
+      "debit": {
+        "amount": 0.1
+      }
     }
     """
     Then I should send no response
-    When I collect the system calls from profile "u1"
+    When I collect the system calls
     Then I should get the system calls:
     """
     [
@@ -356,9 +386,44 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "duration": null,
-            "purchase": null,
-            "sale": null
+            "duration": 30,
+            "purchase": 0.1,
+            "sale": 0.13,
+            "profit": 0.03
+          }
+        ]
+      }
+    ]
+    """
+    When I collect the business calls from profile "u1"
+    Then I should get the business calls:
+    """
+    [
+      {
+        "from": "+123",
+        "to": "+1011",
+        "instances": [
+          {
+            "duration": 30,
+            "purchase": 574,
+            "sale": 660,
+            "profit": 86
+          }
+        ]
+      }
+    ]
+    """
+    When I collect the client calls from profile "u1"
+    Then I should get the client calls:
+    """
+    [
+      {
+        "from": "+123",
+        "to": "+1011",
+        "instances": [
+          {
+            "duration": 30,
+            "charge": 660
           }
         ]
       }
@@ -413,7 +478,11 @@ Feature: Manage calls
         "type": "event-from-sinch",
         "payload": {
           "event": "dice",
-          "callid": "1"
+          "callid": "1",
+          "duration": 30,
+          "debit": {
+            "amount": 0.1
+          }
         },
         "date": "@integer@"
       },
@@ -421,15 +490,6 @@ Feature: Manage calls
         "type": "response-to-sinch",
         "payload": null,
         "date": "@integer@"
-      }
-    ]
-    """
-    When I collect the sinch requests
-    Then I should get the sinch requests:
-    """
-    [
-      {
-        "callId": "1"
       }
     ]
     """

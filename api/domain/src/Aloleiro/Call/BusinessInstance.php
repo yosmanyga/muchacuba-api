@@ -20,19 +20,27 @@ class BusinessInstance implements \JsonSerializable
     private $sale;
 
     /**
+     * @var float
+     */
+    private $profit;
+
+    /**
      * @param int    $duration
      * @param int    $purchase
      * @param float  $sale
+     * @param float  $profit
      */
     public function __construct(
         $duration,
         $purchase,
-        $sale
+        $sale,
+        $profit
     )
     {
         $this->duration = $duration;
         $this->purchase = $purchase;
         $this->sale = $sale;
+        $this->profit = $profit;
     }
 
     /**
@@ -58,7 +66,15 @@ class BusinessInstance implements \JsonSerializable
     {
         return $this->sale;
     }
-    
+
+    /**
+     * @return float
+     */
+    public function getProfit()
+    {
+        return $this->profit;
+    }
+
     /**
      * @return string
      */
@@ -68,6 +84,7 @@ class BusinessInstance implements \JsonSerializable
             'duration' => $this->duration,
             'purchase' => $this->purchase,
             'sale' => $this->sale,
+            'profit' => $this->profit,
         ];
     }
 }

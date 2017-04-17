@@ -48,7 +48,9 @@ class ProcessDICEvent implements ProcessEvent
 
         foreach ($this->listenDisconnectEventServices as $listenDisconnectEventService) {
             $r = $listenDisconnectEventService->listen(
-                $payload['callid']
+                $payload['callid'],
+                $payload['duration'],
+                $payload['debit']['amount']
             );
 
             if ($r instanceof Response) {

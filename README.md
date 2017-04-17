@@ -34,3 +34,4 @@ php bin/app.php aloleiro.import-countries
 php bin/app.php aloleiro.import-rates
 php bin/app.php aloleiro.create-business 15 0.0
 php bin/app.php aloleiro.promote-user uniqueness business role
+php bin/app.php aloleiro.promote-user uniqueness business role

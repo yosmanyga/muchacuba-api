@@ -29,36 +29,52 @@ class Instance implements Persistable, \JsonSerializable
     /**
      * @var float
      */
+    private $systemProfit;
+
+    /**
+     * @var float
+     */
     private $businessPurchase;
 
     /**
      * @var float
      */
     private $businessSale;
-    
+
+    /**
+     * @var float
+     */
+    private $businessProfit;
+
     /**
      * @param string     $id
      * @param int|null   $duration
      * @param int|null   $systemPurchase
      * @param float|null $systemSale
+     * @param float|null $systemProfit
      * @param int|null   $businessPurchase
      * @param float|null $businessSale
+     * @param float|null $businessProfit
      */
     public function __construct(
         $id,
         $duration = null,
         $systemPurchase = null,
         $systemSale = null,
+        $systemProfit = null,
         $businessPurchase = null,
-        $businessSale = null
+        $businessSale = null,
+        $businessProfit = null
     )
     {
         $this->id = $id;
         $this->duration = $duration;
         $this->systemPurchase = $systemPurchase;
         $this->systemSale = $systemSale;
+        $this->systemProfit = $systemProfit;
         $this->businessPurchase = $businessPurchase;
         $this->businessSale = $businessSale;
+        $this->businessProfit = $businessProfit;
     }
 
     /**
@@ -96,6 +112,14 @@ class Instance implements Persistable, \JsonSerializable
     /**
      * @return float
      */
+    public function getSystemProfit()
+    {
+        return $this->systemProfit;
+    }
+
+    /**
+     * @return float
+     */
     public function getBusinessPurchase()
     {
         return $this->businessPurchase;
@@ -108,6 +132,14 @@ class Instance implements Persistable, \JsonSerializable
     {
         return $this->businessSale;
     }
+
+    /**
+     * @return float
+     */
+    public function getBusinessProfit()
+    {
+        return $this->businessProfit;
+    }
     
     /**
      * {@inheritdoc}
@@ -115,12 +147,14 @@ class Instance implements Persistable, \JsonSerializable
     public function bsonSerialize()
     {
         return [
-            '_id' => $this->id,
+            'id' => $this->id,
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
+            'systemProfit' => $this->systemProfit,
             'businessPurchase' => $this->businessPurchase,
             'businessSale' => $this->businessSale,
+            'businessProfit' => $this->businessProfit,
         ];
     }
 
@@ -129,12 +163,14 @@ class Instance implements Persistable, \JsonSerializable
      */
     public function bsonUnserialize(array $data)
     {
-        $this->id = $data['_id'];
+        $this->id = $data['id'];
         $this->duration = $data['duration'];
         $this->systemPurchase = $data['systemPurchase'];
         $this->systemSale = $data['systemSale'];
+        $this->systemProfit = $data['systemProfit'];
         $this->businessPurchase = $data['businessPurchase'];
         $this->businessSale = $data['businessSale'];
+        $this->businessProfit = $data['businessProfit'];
     }
     
     /**
@@ -146,8 +182,10 @@ class Instance implements Persistable, \JsonSerializable
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
+            'systemProfit' => $this->systemProfit,
             'businessPurchase' => $this->businessPurchase,
             'businessSale' => $this->businessSale,
+            'businessProfit' => $this->businessProfit,
         ];
     }
 }

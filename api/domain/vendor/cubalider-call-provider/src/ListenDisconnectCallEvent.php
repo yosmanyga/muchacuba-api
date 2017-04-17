@@ -6,8 +6,10 @@ interface ListenDisconnectCallEvent
 {
     /**
      * @param string $callId
+     * @param int    $duration
+     * @param float  $cost
      *
      * @return Response|null
      */
-    public function listen($callId);
+    public function listen($callId, $duration, $cost);
 }

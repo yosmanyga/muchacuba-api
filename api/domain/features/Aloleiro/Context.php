@@ -5,14 +5,12 @@ namespace Muchacuba\Aloleiro;
 use Behat\Behat\Context\Context as BaseContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Cubalider\Call\Provider\CollectLogs;
-use Cubalider\Call\Provider\Sinch\CollectRequests;
 use Cubalider\Call\Provider\Sinch\ProcessEvent;
 use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Cubalider\Call\Provider\Log\ManageStorage as ManageLogStorage;
-use Cubalider\Call\Provider\Sinch\Request\ManageStorage as ManageRequestStorage;
 use Coduo\PHPMatcher\Factory\SimpleFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symsonte\Behat\ContainerAwareContext;
@@ -67,23 +65,26 @@ class Context implements BaseContext, ContainerAwareContext
         /** @var ManageLogStorage $manageStorage */
         $manageStorage = $this->container->get('cubalider.call.provider.log.manage_storage');
         $manageStorage->purge();
-
-        /** @var ManageRequestStorage $manageStorage */
-        $manageStorage = $this->container->get('cubalider.call.provider.sinch.request.manage_storage');
-        $manageStorage->purge();
     }
 
     /**
-     * @Given there is the business ":id"
+     * @Given there is the business ":id":
      *
-     * @param string $id
+     * @param string       $id
+     * @param PyStringNode $string
      */
-    public function thereIsTheBusiness($id)
+    public function thereIsTheBusiness($id, PyStringNode $string)
     {
+        $item = json_decode($string->getRaw(), true);
+
         /** @var CreateBusiness $createBusiness */
         $createBusiness = $this->container->get('muchacuba.aloleiro.create_business');
 
-        $createBusiness->create(null, $id);
+        $createBusiness->create(
+            $item['profitFactor'],
+            $item['balance'],
+            $id
+        );
     }
 
     /**
@@ -249,18 +250,42 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @When I collect the system calls from profile ":uniqueness"
-     *
-     * @param string $uniqueness
+     * @When I collect the system calls
      */
-    public function iCollectTheSystemCallsFromProfile($uniqueness)
+    public function iCollectTheSystemCalls()
     {
         /** @var CollectSystemCalls $collectSystemCalls */
         $collectSystemCalls = $this->container->get('muchacuba.aloleiro.collect_system_calls');
 
-        $this->result = $collectSystemCalls->collect($uniqueness);
+        $this->result = $collectSystemCalls->collect();
     }
 
+    /**
+     * @When I collect the business calls from profile ":uniqueness"
+     *
+     * @param string $uniqueness
+     */
+    public function iCollectTheBusinessCallsFromProfile($uniqueness)
+    {
+        /** @var CollectBusinessCalls $collectBusinessCalls */
+        $collectBusinessCalls = $this->container->get('muchacuba.aloleiro.collect_business_calls');
+
+        $this->result = $collectBusinessCalls->collect($uniqueness);
+    }
+
+    /**
+     * @When I collect the client calls from profile ":uniqueness"
+     *
+     * @param string $uniqueness
+     */
+    public function iCollectTheClientCallsFromProfile($uniqueness)
+    {
+        /** @var CollectClientCalls $collectClientCalls */
+        $collectClientCalls = $this->container->get('muchacuba.aloleiro.collect_client_calls');
+
+        $this->result = $collectClientCalls->collect($uniqueness);
+    }
+    
     /**
      * @When I collect the logs
      */
@@ -272,17 +297,6 @@ class Context implements BaseContext, ContainerAwareContext
         $this->result = $collectLogs->collect();
     }
 
-    /**
-     * @When I collect the sinch requests
-     */
-    public function iCollectTheRequests()
-    {
-        /** @var CollectRequests $collectRequests */
-        $collectRequests = $this->container->get('cubalider.call.provider.sinch.collect_requests');
-
-        $this->result = $collectRequests->collect();
-    }
-    
     /**
      * @When I process the sinch event:
      *
@@ -337,6 +351,44 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
+     * @Then I should get the business calls:
+     *
+     * @param PyStringNode $string
+     *
+     * @throws \Exception
+     */
+    public function iShouldGetTheBusinessCalls(PyStringNode $string)
+    {
+        $matcher = (new SimpleFactory())->createMatcher();
+
+        if (!$matcher->match(
+            json_decode(json_encode($this->result), true),
+            json_decode($string->getRaw(), true)
+        )) {
+            throw new \Exception($matcher->getError());
+        }
+    }
+
+    /**
+     * @Then I should get the client calls:
+     *
+     * @param PyStringNode $string
+     *
+     * @throws \Exception
+     */
+    public function iShouldGetTheClientCalls(PyStringNode $string)
+    {
+        $matcher = (new SimpleFactory())->createMatcher();
+
+        if (!$matcher->match(
+            json_decode(json_encode($this->result), true),
+            json_decode($string->getRaw(), true)
+        )) {
+            throw new \Exception($matcher->getError());
+        }
+    }
+    
+    /**
      * @Then I should send the response:
      *
      * @param PyStringNode $string
@@ -377,25 +429,6 @@ class Context implements BaseContext, ContainerAwareContext
      * @throws \Exception
      */
     public function iShouldGetTheLogs(PyStringNode $string)
-    {
-        $matcher = (new SimpleFactory())->createMatcher();
-
-        if (!$matcher->match(
-            json_decode(json_encode($this->result), true),
-            json_decode($string->getRaw(), true)
-        )) {
-            throw new \Exception($matcher->getError());
-        }
-    }
-
-    /**
-     * @Then I should get the sinch requests:
-     *
-     * @param PyStringNode $string
-     *
-     * @throws \Exception
-     */
-    public function iShouldGetTheSinchRequests(PyStringNode $string)
     {
         $matcher = (new SimpleFactory())->createMatcher();
 

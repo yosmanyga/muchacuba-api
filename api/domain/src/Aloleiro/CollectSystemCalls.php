@@ -43,7 +43,8 @@ class CollectSystemCalls
                 $instances[] = new SystemInstance(
                     $instance['duration'], //$instance->getDuration(),
                     $instance['systemPurchase'], //$instance->getSystemPurchase(),
-                    $instance['systemSale'] //$instance->getSystemSale()
+                    $instance['systemSale'], //$instance->getSystemSale()
+                    $instance['systemProfit'] //$instance->getSystemProfit()
                 );
             }
 
