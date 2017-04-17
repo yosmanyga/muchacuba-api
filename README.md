@@ -33,5 +33,5 @@ php bin/app.php internauta.insert-email
 php bin/app.php aloleiro.import-countries
 php bin/app.php aloleiro.import-rates
 php bin/app.php aloleiro.create-business 15 0.0
-php bin/app.php aloleiro.promote-user uniqueness business role
-php bin/app.php aloleiro.promote-user uniqueness business role
+# firefox (owner) and opera (operator) user
+php bin/app.php aloleiro.set-fixtures 1xurQe3HcVTzfZtgDXOcfe7phXJ2 6sfhOpoku9Pz1rPIHAsaBQ7CzKo1

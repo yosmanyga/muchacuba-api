@@ -118,8 +118,8 @@ export default class ListClientCalls extends React.Component {
                 <Button
                     label="Refrescar"
                     icon="refresh"
-                    onTouchTap={(finish) => {
-                        this.setState({calls: null}, finish);
+                    onTouchTap={() => {
+                        this.setState({calls: null});
                     }}
                 />
                 {this.state.calls.length !== 0
@@ -129,8 +129,12 @@ export default class ListClientCalls extends React.Component {
                             adjustForCheckbox={false}
                         >
                             <TableRow>
-                                <TableHeaderColumn>Desde</TableHeaderColumn>
-                                <TableHeaderColumn>Hacia</TableHeaderColumn>
+                                <TableHeaderColumn style={{width: "100px"}}>
+                                    Desde
+                                </TableHeaderColumn>
+                                <TableHeaderColumn style={{width: "100px"}}>
+                                    Hacia
+                                </TableHeaderColumn>
                                 <TableHeaderColumn>Llamadas</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -138,30 +142,85 @@ export default class ListClientCalls extends React.Component {
                             {this.state.calls.map((call, i) => {
                                 return (
                                     <TableRow key={i}>
-                                        <TableRowColumn>
+                                        <TableRowColumn style={{width: "100px"}}>
                                             {this.state.phones.find((phone) => {
                                                 return phone.number === call.from
                                             }).name}
                                         </TableRowColumn>
-                                        <TableRowColumn>{call.to}</TableRowColumn>
+                                        <TableRowColumn style={{width: "100px"}}>
+                                            {call.to}
+                                        </TableRowColumn>
                                         <TableRowColumn>
                                             {call.instances.length !== 0
                                                 ?
                                                     <Table>
-                                                        <TableHeader>
+                                                        <TableHeader
+                                                            displaySelectAll={false}
+                                                            adjustForCheckbox={false}
+                                                        >
                                                             <TableRow>
-                                                                <TableHeaderColumn>Duración</TableHeaderColumn>
-                                                                <TableHeaderColumn>Costo</TableHeaderColumn>
+                                                                <TableHeaderColumn
+                                                                    style={{width: "200px"}}
+                                                                >
+                                                                    Duración
+                                                                </TableHeaderColumn>
+                                                                <TableHeaderColumn
+                                                                    style={{
+                                                                        width: "100px",
+                                                                        textAlign: 'right'
+                                                                    }}
+                                                                >
+                                                                    Costo
+                                                                </TableHeaderColumn>
+                                                                <TableHeaderColumn/>
                                                             </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody displayRowCheckbox={false}>
                                                             {call.instances.map((instance, i) => {
                                                                 return (
                                                                     <TableRow key={i}>
-                                                                        <TableRowColumn>{this._buildDuration(instance.duration)}</TableRowColumn>
-                                                                        <TableRowColumn>{instance.sale} Bf</TableRowColumn>
+                                                                        <TableRowColumn
+                                                                            style={{
+                                                                                width: "200px"
+                                                                            }}
+                                                                        >
+                                                                            {this._buildDuration(instance.duration)}
+                                                                        </TableRowColumn>
+                                                                        <TableRowColumn
+                                                                            style={{
+                                                                                width: "100px",
+                                                                                textAlign: 'right'
+                                                                            }}
+                                                                        >
+                                                                            {instance.charge} Bf
+                                                                        </TableRowColumn>
+                                                                        <TableRowColumn/>
                                                                     </TableRow>
                                                                 );
                                                             })}
-                                                        </TableHeader>
+                                                            <TableRow key={i}>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        width: "200px"
+                                                                    }}
+                                                                >
+                                                                    <strong>Total</strong>
+                                                                </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        width: "100px",
+                                                                        textAlign: 'right'
+                                                                    }}
+                                                                >
+                                                                    <strong>
+                                                                        {call.instances.reduce((total, instance) => {
+                                                                            return total + instance.charge;
+                                                                        }, 0)} Bf
+                                                                    </strong>
+                                                                </TableRowColumn>
+                                                                <TableRowColumn/>
+                                                            </TableRow>
+                                                        </TableBody>
                                                     </Table>
                                                 :
                                                     null
