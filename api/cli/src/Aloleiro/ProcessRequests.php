@@ -3,7 +3,7 @@
 namespace Muchacuba\Cli\Aloleiro;
 
 use Symsonte\Cli\Server;
-use Muchacuba\Aloleiro\ProcessRequests as DomainProcessRequests;
+use Cubalider\Call\Provider\Sinch\ProcessRequests as DomainProcessRequests;
 
 /**
  * @di\command({deductible: true})
