@@ -5,7 +5,6 @@ namespace Muchacuba\Aloleiro;
 use Cubalider\Call\Provider\ListenSummaryCallEvent as BaseListenSummaryCallEvent;
 use MongoDB\UpdateResult;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
-use Muchacuba\Aloleiro\Owner\PickProfile;
 
 /**
  * @di\service({
@@ -19,9 +18,9 @@ use Muchacuba\Aloleiro\Owner\PickProfile;
 class ListenSummaryCallEvent implements BaseListenSummaryCallEvent
 {
     /**
-     * @var PickProfile
+     * @var PickBusiness
      */
-    private $pickProfile;
+    private $pickBusiness;
 
     /**
      * @var ManageCallStorage
@@ -39,7 +38,7 @@ class ListenSummaryCallEvent implements BaseListenSummaryCallEvent
     private $currencyExchange;
 
     /**
-     * @param PickProfile       $pickProfile
+     * @param PickBusiness      $pickBusiness
      * @param ManageCallStorage $manageCallStorage
      * @param int               $profitFactor
      * @param float             $currencyExchange
@@ -50,13 +49,13 @@ class ListenSummaryCallEvent implements BaseListenSummaryCallEvent
      * })
      */
     public function __construct(
-        PickProfile $pickProfile,
+        PickBusiness $pickBusiness,
         ManageCallStorage $manageCallStorage,
         $profitFactor,
         $currencyExchange
     )
     {
-        $this->pickProfile = $pickProfile;
+        $this->pickBusiness = $pickBusiness;
         $this->manageCallStorage = $manageCallStorage;
         $this->profitFactor = $profitFactor;
         $this->currencyExchange = $currencyExchange;
@@ -72,7 +71,7 @@ class ListenSummaryCallEvent implements BaseListenSummaryCallEvent
             'instances.id' => $cid
         ]);
 
-        $profile = $this->pickProfile->pick(null, $call->getBusiness());
+        $business = $this->pickBusiness->pick($call->getBusiness());
 
         // Purchase
         $systemPurchase = $cost;
@@ -84,7 +83,7 @@ class ListenSummaryCallEvent implements BaseListenSummaryCallEvent
         $businessPurchase = $systemSale;
 
         // Purchase plus profit
-        $businessSale = $businessPurchase * $profile->getProfitFactor() / 100;
+        $businessSale = $businessPurchase * $business->getProfitFactor() / 100;
 
         /** @var UpdateResult $result */
         $result = $this->manageCallStorage->connect()->updateOne(
