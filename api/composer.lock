@@ -2965,12 +2965,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yosmanyga/symsonte.git",
-                "reference": "65c4ed7ae0a08667539d19f4bad1ce818992ddbf"
+                "reference": "43a203b12d9267e486e7f5ebddf353f0ab7effb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/65c4ed7ae0a08667539d19f4bad1ce818992ddbf",
-                "reference": "65c4ed7ae0a08667539d19f4bad1ce818992ddbf",
+                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/43a203b12d9267e486e7f5ebddf353f0ab7effb5",
+                "reference": "43a203b12d9267e486e7f5ebddf353f0ab7effb5",
                 "shasum": ""
             },
             "require": {
@@ -3074,7 +3074,7 @@
                 "source": "https://github.com/yosmanyga/symsonte/tree/master",
                 "issues": "https://github.com/yosmanyga/symsonte/issues"
             },
-            "time": "2017-04-11 18:22:40"
+            "time": "2017-04-17 05:29:58"
         },
         {
             "name": "webmozart/assert",
