@@ -18,7 +18,6 @@ services:
     volumes:
       - ./php/php_dev.ini:/usr/local/etc/php/php.ini
       - ../api:/var/www/
-      - ../api/public/app_dev.php:/var/www/public/app.php
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
       PHP_XDEBUG_ENABLED: 1
