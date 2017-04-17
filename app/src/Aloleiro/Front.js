@@ -8,11 +8,14 @@ import _ from 'lodash';
 import ResolveElement from '../ResolveElement';
 import Wait from '../Wait';
 
-import ListBusinessCalls from './ListBusinessCalls';
-import ListEvents from './ListEvents';
-import ListPhones from './ListPhones';
+// Admin
+import ListLogs from './ListLogs';
 import ListSystemRates from './ListSystemRates';
+// Owner
 import ListBusinessRates from './ListBusinessRates';
+import ListPhones from './ListPhones';
+// Operator
+import ListClientCalls from './ListClientCalls';
 import ListClientRates from './ListClientRates';
 
 export default class Front extends React.Component {
@@ -74,32 +77,12 @@ export default class Front extends React.Component {
         return this._resolveElement.resolve(
             this.props.url,
             [
+                // Admin
                 {
-                    'url': '/list-phones',
-                    'element': <ListPhones
+                    'url': '/list-logs',
+                    'element': <ListLogs
                         layout={layout}
-                        onBackAuth={this.props.onBackAuth}
-                        onFrontAuth={this.props.onFrontAuth}
-                        onNotify={this.props.onNotify}
-                    />,
-                    'def': true
-                },
-                {
-                    'url': '/list-business-calls',
-                    'element': <ListBusinessCalls
-                        layout={layout}
-                        onBackAuth={this.props.onBackAuth}
-                        onFrontAuth={this.props.onFrontAuth}
-                        onNotify={this.props.onNotify}
-                    />
-                },
-                {
-                    'url': '/list-events',
-                    'element': <ListEvents
-                        layout={layout}
-                        onBackAuth={this.props.onBackAuth}
-                        onFrontAuth={this.props.onFrontAuth}
-                        onNotify={this.props.onNotify}
+                        token={this.state.token}
                     />
                 },
                 {
@@ -109,6 +92,7 @@ export default class Front extends React.Component {
                         token={this.state.token}
                     />
                 },
+                // Owner
                 {
                     'url': '/list-business-rates',
                     'element': <ListBusinessRates
@@ -117,8 +101,24 @@ export default class Front extends React.Component {
                     />
                 },
                 {
+                    'url': '/list-phones',
+                    'element': <ListPhones
+                        layout={layout}
+                        token={this.state.token}
+                    />,
+                    'def': true
+                },
+                // Operator
+                {
                     'url': '/list-client-rates',
                     'element': <ListClientRates
+                        layout={layout}
+                        token={this.state.token}
+                    />
+                },
+                {
+                    'url': '/list-client-calls',
+                    'element': <ListClientCalls
                         layout={layout}
                         token={this.state.token}
                     />
@@ -152,8 +152,8 @@ class Layout extends React.Component {
                         {_.includes(this.props.roles, 'aloleiro_operator')
                             ?
                                 <MenuItem
-                                    key="list-business-calls"
-                                    onTouchTap={() => {this.props.onNavigate('/list-business-calls')}}
+                                    key="list-client-calls"
+                                    onTouchTap={() => {this.props.onNavigate('/list-client-calls')}}
                                     leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
                                 >
                                     Llamadas
@@ -176,7 +176,7 @@ class Layout extends React.Component {
                         {_.includes(this.props.roles, 'aloleiro_owner')
                             ?
                                 <MenuItem
-                                    key="list-system-rates"
+                                    key="list-business-rates"
                                     onTouchTap={() => {
                                         this.props.onNavigate('/list-business-rates')
                                     }}
@@ -190,7 +190,7 @@ class Layout extends React.Component {
                         {_.includes(this.props.roles, 'aloleiro_operator')
                             ?
                                 <MenuItem
-                                    key="list-system-rates"
+                                    key="list-client-rates"
                                     onTouchTap={() => {
                                         this.props.onNavigate('/list-client-rates')
                                     }}
@@ -218,11 +218,11 @@ class Layout extends React.Component {
                         {_.includes(this.props.roles, 'aloleiro_admin')
                             ?
                                 <MenuItem
-                                    key="list-events"
-                                    onTouchTap={() => {this.props.onNavigate('/list-events')}}
+                                    key="list-logs"
+                                    onTouchTap={() => {this.props.onNavigate('/list-logs')}}
                                     leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
                                 >
-                                    Eventos
+                                    Logs
                                 </MenuItem>
                             :
                                 null

@@ -11,12 +11,6 @@ import Wait from '../Wait';
 export default class ListPhones extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess(token), onError)
-        onBackAuth: React.PropTypes.func.isRequired,
-        // ()
-        onFrontAuth: React.PropTypes.func.isRequired,
-        // (message, finish)
-        onNotify: React.PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -35,28 +29,15 @@ export default class ListPhones extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onBackAuth(
-            (token) => {
-                if (token === 'null') {
-                    this.props.onFrontAuth();
-
-                    return;
-                }
-
-                this.setState({
-                    token: token
-                });
-            },
-            () => {
-                this.props.onFrontAuth();
-            }
-        );
+        if (this.props.token !== null) {
+            this._collectPhones();
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            prevState.token === null
-            && this.state.token !== null
+            prevProps.token === null
+            && this.props.token !== null
         ) {
             this._collectPhones();
         }
@@ -65,7 +46,7 @@ export default class ListPhones extends React.Component {
     _collectPhones() {
         this._connectToServer
             .get('/aloleiro/collect-phones')
-            .auth(this.state.token)
+            .auth(this.props.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -138,7 +119,7 @@ export default class ListPhones extends React.Component {
                         onAdd={(phone) => {
                             this._connectToServer
                                 .post('/aloleiro/add-phone')
-                                .auth(this.state.token)
+                                .auth(this.props.token)
                                 .send(phone)
                                 .end((err, res) => {
                                     if (err) {
@@ -165,7 +146,7 @@ export default class ListPhones extends React.Component {
                         onRemove={() => {
                             this._connectToServer
                                 .post('/aloleiro/remove-phone')
-                                .auth(this.state.token)
+                                .auth(this.props.token)
                                 .send({
                                     number: this.state.remove.number
                                 })

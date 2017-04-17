@@ -13,17 +13,25 @@ use Muchacuba\Aloleiro\Call\ClientInstance;
 class CollectClientCalls
 {
     /**
+     * @var PickProfile
+     */
+    private $pickProfile;
+
+    /**
      * @var ManageStorage
      */
     private $manageStorage;
 
     /**
+     * @param PickProfile   $pickProfile
      * @param ManageStorage $manageStorage
      */
     public function __construct(
+        PickProfile $pickProfile,
         ManageStorage $manageStorage
     )
     {
+        $this->pickProfile = $pickProfile;
         $this->manageStorage = $manageStorage;
     }
 
@@ -34,9 +42,11 @@ class CollectClientCalls
      */
     public function collect($uniqueness)
     {
+        $profile = $this->pickProfile->pick($uniqueness);
+
         /** @var Call[] $calls */
         $calls = $this->manageStorage->connect()->find([
-            'uniqueness' => $uniqueness
+            'business' => $profile->getBusiness()
         ]);
 
         $clientCalls = [];

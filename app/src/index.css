@@ -1,8 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  /*font-size: 150%;*/
+  font-family: "PF Din Text Cond Pro Regular", sans-serif;
+  font-feature-settings: 'kern' 1;
+  font-size: 18px;
+  text-transform: uppercase;
 }
 
 html, body, #root {

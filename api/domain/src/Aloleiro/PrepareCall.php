@@ -2,7 +2,6 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Muchacuba\Aloleiro\Call\Instance;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 
 /**

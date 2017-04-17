@@ -3,7 +3,7 @@
 namespace Muchacuba\Http\Aloleiro;
 
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
-use Muchacuba\Aloleiro\CollectCalls as DomainCollectCalls;
+use Muchacuba\Aloleiro\CollectClientCalls as DomainCollectClientCalls;
 use Symsonte\Http\Server;
 
 /**
@@ -22,23 +22,23 @@ class PrepareCall
     private $prepareCall;
 
     /**
-     * @var DomainCollectCalls
+     * @var DomainCollectClientCalls
      */
-    private $collectCalls;
+    private $collectClientCalls;
     
     /**
-     * @param Server             $server
-     * @param DomainPrepareCall  $prepareCall
-     * @param DomainCollectCalls $collectCalls
+     * @param Server                   $server
+     * @param DomainPrepareCall        $prepareCall
+     * @param DomainCollectClientCalls $collectClientCalls
      */
     public function __construct(
         Server $server,
         DomainPrepareCall $prepareCall,
-        DomainCollectCalls $collectCalls
+        DomainCollectClientCalls $collectClientCalls
     ) {
         $this->server = $server;
         $this->prepareCall = $prepareCall;
-        $this->collectCalls = $collectCalls;
+        $this->collectClientCalls = $collectClientCalls;
     }
 
     /**
@@ -57,6 +57,8 @@ class PrepareCall
             $post['to']
         );
 
-        $this->server->sendResponse($this->collectCalls->collect($uniqueness));
+        $calls = $this->collectClientCalls->collect($uniqueness);
+
+        $this->server->sendResponse($calls);
     }
 }

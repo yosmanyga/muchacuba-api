@@ -26,7 +26,7 @@ export default class ListBusinessRates extends React.Component {
     }
 
     componentDidMount() {
-        if ( this.props.token !== null) {
+        if (this.props.token !== null) {
             this._collectBusinessRates();
         }
     }
