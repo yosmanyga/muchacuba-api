@@ -17,9 +17,6 @@ services:
   php:
     image: cubalider/php
     container_name: muchacuba_php
-    volumes:
-      - ./php/php.ini:/usr/local/etc/php/php.ini
-      - ../api:/var/www/
     links:
       - mongo
     working_dir: /var/www

@@ -5,4 +5,5 @@ var/db/*
 !var/db/.gitkeep
 var/db_mysql/*
 !var/db_mysql/.gitkeep
+/public/app.php
 /vendor/

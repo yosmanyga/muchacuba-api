@@ -1,11 +1,16 @@
 version: '2'
 services:
+  php:
+    volumes:
+      - ./php/php_prod.ini:/usr/local/etc/php/php.ini
+      - ../api:/var/www/
+      - ../api/public/app_prod.php:/var/www/public/app.php
   cron:
     image: cubalider/php
     container_name: muchacuba_cron
     volumes:
       - ../api:/var/www
-      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/php_prod.ini:/usr/local/etc/php/php.ini
       - ./cron:/root/cron
     links:
       - mongo

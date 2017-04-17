@@ -15,17 +15,21 @@ services:
     restart: always
     command: "npm start"
   php:
+    volumes:
+      - ./php/php_dev.ini:/usr/local/etc/php/php.ini
+      - ../api:/var/www/
+      - ../api/public/app_dev.php:/var/www/public/app.php
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
       PHP_XDEBUG_ENABLED: 1
       XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.18.0.1"
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.6
-    container_name: muchacuba_phpmyadmin
-    ports:
-      - 8080:80
-    links:
-      - mysql:db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    restart: always
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin:4.6
+#    container_name: muchacuba_phpmyadmin
+#    ports:
+#      - 8080:80
+#    links:
+#      - mysql:db
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#    restart: always
