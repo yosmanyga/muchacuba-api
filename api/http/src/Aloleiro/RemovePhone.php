@@ -42,7 +42,7 @@ class RemovePhone
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["aloleiro_owner"]})
      * @http\resolution({method: "POST", uri: "/aloleiro/remove-phone"})
      *
      * @param string $uniqueness

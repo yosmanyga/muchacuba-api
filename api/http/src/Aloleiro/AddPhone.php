@@ -44,7 +44,7 @@ class AddPhone
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["aloleiro_owner"]})
      * @http\resolution({method: "POST", uri: "/aloleiro/add-phone"})
      *
      * @param string $uniqueness

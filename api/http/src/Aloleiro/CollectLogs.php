@@ -33,7 +33,7 @@ class CollectLogs
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["aloleiro_admin"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/collect-logs"})
      */
     public function collect()

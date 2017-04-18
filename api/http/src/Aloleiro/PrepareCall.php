@@ -43,7 +43,7 @@ class PrepareCall
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["aloleiro_operator"]})
      * @http\resolution({method: "POST", uri: "/aloleiro/prepare-call"})
      *
      * @param string $uniqueness
