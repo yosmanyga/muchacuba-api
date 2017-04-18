@@ -34,7 +34,7 @@ class DownloadClientRates
 
     /**
      * @http\authorization({roles: ["aloleiro_operator"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/download-client-rates"})
+     * @http\resolution({method: "POST", uri: "/aloleiro/download-client-rates"})
      *
      * @param string $uniqueness
      */

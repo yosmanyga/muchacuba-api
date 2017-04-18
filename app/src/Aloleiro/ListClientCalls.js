@@ -280,7 +280,7 @@ export default class ListClientCalls extends React.Component {
 
         if (remainder !== 0) {
             string += ' y ' + remainder;
-            string += remainder === 0 ? ' segundo' : ' segundos';
+            string += remainder === 0 ? ' segundo' : ' segundo';
         }
 
         return string;

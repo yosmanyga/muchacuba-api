@@ -44,7 +44,7 @@ class PrepareClientRates
         $rates = $this->collectClientRates->collect($uniqueness, true);
         foreach ($rates as $rate) {
             $html .= sprintf(
-                '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
                 $rate->getCountry(),
                 $rate->getCode(),
                 $rate->getType(),
