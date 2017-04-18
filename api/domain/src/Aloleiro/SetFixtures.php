@@ -95,6 +95,7 @@ class SetFixtures
      */
     public function __construct(
         ManageBusinessStorage $manageBusinessStorage,
+        ManageUniquenessStorage $manageUniquenessStorage,
         ManageProfileStorage $manageProfileStorage,
         ManagePhoneStorage $managePhoneStorage,
         ManageCallStorage $manageCallStorage,
@@ -109,6 +110,7 @@ class SetFixtures
     )
     {
         $this->manageBusinessStorage = $manageBusinessStorage;
+        $this->manageUniquenessStorage = $manageUniquenessStorage;
         $this->manageProfileStorage = $manageProfileStorage;
         $this->managePhoneStorage = $managePhoneStorage;
         $this->manageCallStorage = $manageCallStorage;
