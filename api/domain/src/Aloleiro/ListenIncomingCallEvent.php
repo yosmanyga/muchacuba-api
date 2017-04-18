@@ -38,20 +38,24 @@ class ListenIncomingCallEvent implements BaseListenIncomingCallEvent
     public function listen($from, $cid)
     {
         /** @var Call $call */
-        $call = $this->manageCallStorage->connect()->findOne([
-            'from' => $from,
-            'instances' => []
-        ]);
+        $call = $this->manageCallStorage->connect()->findOne(
+            [
+                'from' => $from
+            ],
+            [
+                'sort' => [
+                    // Last prepared call
+                    '_id' => -1
+                ]
+            ]
+        );
 
         if (is_null($call)) {
             return new HangupResponse();
         }
 
         $this->manageCallStorage->connect()->updateOne(
-            [
-                'from' => $from,
-                'instances' => []
-            ],
+            ['_id' => $call->getId()],
             ['$push' => ['instances' => new Instance($cid)]]
         );
 

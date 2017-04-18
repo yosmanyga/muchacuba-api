@@ -33,7 +33,14 @@ class CollectSystemCalls
     public function collect()
     {
         /** @var Call[] $calls */
-        $calls = $this->manageStorage->connect()->find();
+        $calls = $this->manageStorage->connect()->find(
+            [],
+            [
+                'sort' => [
+                    '_id' => -1
+                ]
+            ]
+        );
 
         $systemCalls = [];
 
@@ -47,6 +54,9 @@ class CollectSystemCalls
                     $instance['systemProfit'] //$instance->getSystemProfit()
                 );
             }
+
+            // Newest first
+            $instances = array_reverse($instances);
 
             $systemCalls[] = new SystemCall(
                 $call->getFrom(),

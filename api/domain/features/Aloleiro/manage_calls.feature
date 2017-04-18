@@ -498,8 +498,122 @@ Feature: Manage calls
     ]
     """
 
-  @this
-  Scenario: Process another ICE
+  Scenario: Process two calls in same prepared call
+    Given there is the business "b1":
+    """
+    {
+      "balance": "0.0",
+      "profitPercent": "15",
+      "currencyExchange": "4412"
+    }
+    """
+    And there is the profile:
+    """
+    {
+      "uniqueness": "u1",
+      "business": "b1"
+    }
+    """
+    And there are the phones on business that the profile "u1" belongs to:
+    """
+    [
+      {
+        "number": "+123",
+        "name": "Phone 1"
+      }
+    ]
+    """
+    When I prepare the call from the profile "u1":
+    """
+    {
+      "from": "+123",
+      "to": "+1011"
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "ice",
+      "callid": "1",
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "ace",
+      "callid": "1"
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "dice",
+      "callid": "1",
+      "duration": 30,
+      "debit": {
+        "amount": 0.1
+      }
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "ice",
+      "callid": "2",
+      "cli": "+123",
+      "to": {
+        "endpoint": "+789"
+      }
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "ace",
+      "callid": "2"
+    }
+    """
+    And I process the sinch event:
+    """
+    {
+      "event": "dice",
+      "callid": "2",
+      "duration": 60,
+      "debit": {
+        "amount": 0.2
+      }
+    }
+    """
+    When I collect the system calls
+    Then I should get the system calls:
+    """
+    [
+      {
+        "from": "+123",
+        "to": "+1011",
+        "instances": [
+          {
+            "duration": 60,
+            "purchase": 0.2,
+            "sale": 0.26,
+            "profit": 0.06
+          },
+          {
+            "duration": 30,
+            "purchase": 0.1,
+            "sale": 0.13,
+            "profit": 0.03
+          }
+        ]
+      }
+    ]
+    """
+
+  Scenario: Process another different call
     Given there is the business "b1":
     """
     {
@@ -602,18 +716,6 @@ Feature: Manage calls
     [
       {
         "from": "+123",
-        "to": "+1011",
-        "instances": [
-          {
-            "duration": 30,
-            "purchase": 0.1,
-            "sale": 0.13,
-            "profit": 0.03
-          }
-        ]
-      },
-      {
-        "from": "+123",
         "to": "+2021",
         "instances": [
           {
@@ -621,6 +723,18 @@ Feature: Manage calls
             "purchase": 0.2,
             "sale": 0.26,
             "profit": 0.06
+          }
+        ]
+      },
+      {
+        "from": "+123",
+        "to": "+1011",
+        "instances": [
+          {
+            "duration": 30,
+            "purchase": 0.1,
+            "sale": 0.13,
+            "profit": 0.03
           }
         ]
       }
