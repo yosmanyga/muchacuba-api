@@ -4,6 +4,8 @@ docker-compose -f docker/docker-compose.common.yml -f docker/docker-compose.dev.
 
 # Prod
 
+## First time
+
 ssh root@muchacuba.com
 
 git clone git@bitbucket.org:cubalider/muchacuba.git muchacuba
@@ -21,6 +23,18 @@ cp api/config/parameters.dist.yml api/config/parameters.yml`
 
 chmod a+w api/var/cache
 
+## Deploy
+
+git pull --rebase
+
+cd api
+
+composer install --optimize-autoloader
+
+rm -rf var/cache/*
+
+chmod a+w var/cache
+
 # Internauta
 
 php bin/app.php internauta.process-requests
@@ -32,7 +46,6 @@ php bin/app.php internauta.insert-email
 
 php bin/app.php aloleiro.import-countries
 php bin/app.php aloleiro.import-rates
-php bin/app.php aloleiro.create-business 15 0.0
 
 ## Reset data
 1. Drop database;
@@ -42,4 +55,4 @@ php bin/app.php aloleiro.create-business 15 0.0
 php bin/app.php aloleiro.set-fixtures 1xurQe3HcVTzfZtgDXOcfe7phXJ2 6sfhOpoku9Pz1rPIHAsaBQ7CzKo1
 4. Admin
 # Yosmany (admin)
-php bin/app.php aloleiro.promote-user KnqmEoxOhxNaeB9BSnTEMV8zU1H2 58f5749a4ee2f aloleiro_admin
+php bin/app.php aloleiro.promote-user KnqmEoxOhxNaeB9BSnTEMV8zU1H2 business aloleiro_admin
