@@ -3,6 +3,7 @@
 namespace Muchacuba\Aloleiro;
 
 use MongoDB\Driver\Exception\BulkWriteException;
+use Muchacuba\Aloleiro\Phone\InvalidDataException;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 
 /**
@@ -40,10 +41,23 @@ class AddPhone
      * @param string $number
      * @param string $name
      *
+     * @throws InvalidDataException
      * @throws ExistentPhoneException
      */
     public function add($uniqueness, $number, $name)
     {
+        if (!ctype_digit($number)) {
+            throw new InvalidDataException(
+                InvalidDataException::FIELD_NUMBER
+            );
+        }
+
+        if (empty($name)) {
+            throw new InvalidDataException(
+                InvalidDataException::FIELD_NAME
+            );
+        }
+
         $profile = $this->pickProfile->pick($uniqueness);
 
         try {

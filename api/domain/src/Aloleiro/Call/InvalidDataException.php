@@ -18,7 +18,7 @@ class InvalidDataException extends \Exception
     {
         $this->field = $field;
 
-        parent::__construct(sprintf("Error on field \"%s\"", $this->field));
+        parent::__construct(sprintf("Error on field \"%s\"", $field));
     }
 
     /**

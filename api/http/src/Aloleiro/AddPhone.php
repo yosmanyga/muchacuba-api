@@ -4,6 +4,8 @@ namespace Muchacuba\Http\Aloleiro;
 
 use Muchacuba\Aloleiro\AddPhone as DomainAddPhone;
 use Muchacuba\Aloleiro\CollectPhones as DomainCollectPhones;
+use Muchacuba\Aloleiro\ExistentPhoneException;
+use Muchacuba\Aloleiro\Phone\InvalidDataException;
 use Symsonte\Http\Server;
 
 /**
@@ -51,11 +53,27 @@ class AddPhone
     {
         $post = $this->server->resolveBody();
 
-        $this->addPhone->add(
-            $uniqueness,
-            $post['number'], 
-            $post['name']
-        );
+        try {
+            $this->addPhone->add(
+                $uniqueness,
+                $post['number'],
+                $post['name']
+            );
+        } catch (InvalidDataException $e) {
+            $this->server->sendResponse([
+                'field' => $e->getField(),
+                'type' => 'invalid'
+            ], 422);
+
+            return;
+        } catch (ExistentPhoneException $e) {
+            $this->server->sendResponse([
+                'field' => 'number',
+                'type' => 'duplicated'
+            ], 422);
+
+            return;
+        }
 
         $this->server->sendResponse($this->collectPhones->collect($uniqueness));
     }

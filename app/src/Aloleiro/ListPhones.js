@@ -116,14 +116,19 @@ export default class ListPhones extends React.Component {
                 }
                 {this.state.add === true
                     ? <AddDialog
-                        onAdd={(phone) => {
+                        onAdd={(phone, onError) => {
                             this._connectToServer
                                 .post('/aloleiro/add-phone')
                                 .auth(this.props.profile.token)
                                 .send(phone)
                                 .end((err, res) => {
                                     if (err) {
-                                        // TODO
+                                        const error = JSON.parse(err.response.text);
+
+                                        onError(
+                                            error.field,
+                                            error.type
+                                        );
 
                                         return;
                                     }
@@ -176,7 +181,7 @@ export default class ListPhones extends React.Component {
 
 class AddDialog extends React.Component {
     static propTypes = {
-        // (phone)
+        // (phone, onError(field, type))
         onAdd: React.PropTypes.func.isRequired,
         // ()
         onCancel: React.PropTypes.func.isRequired
@@ -192,6 +197,10 @@ class AddDialog extends React.Component {
                 number: '',
                 name: ''
             },
+            error: {
+                field: null,
+                type: null
+            }
         };
     }
 
@@ -212,9 +221,24 @@ class AddDialog extends React.Component {
                         disabled={this.state.text === "" || this.state.busy === true}
                         onTouchTap={() => {
                             this.setState({
-                                busy: true
+                                busy: true,
+                                error: {
+                                    field: null,
+                                    type: null,
+                                }
                             }, () => {
-                                this.props.onAdd(this.state.phone)
+                                this.props.onAdd(
+                                    this.state.phone,
+                                    (field, type) => {
+                                        this.setState({
+                                            busy: false,
+                                            error: {
+                                                field: field,
+                                                type: type
+                                            }
+                                        })
+                                    }
+                                )
                             });
                         }}
                     />
@@ -223,10 +247,18 @@ class AddDialog extends React.Component {
                 autoScrollBodyContent={true}
             >
                 <TextField
-                    floatingLabelText="Nombre"
+                    floatingLabelText="Nombre único para identificar la cabina, ej: Cabina 1"
+                    hintText="Escribe el nombre de la cabina"
                     value={this.state.phone.name}
                     autoFocus={true}
                     fullWidth={true}
+                    errorText={
+                        this.state.error.field === 'name'
+                            ? this.state.error.type === 'invalid'
+                                ? "Este campo no puede estar vacío."
+                                : null
+                            : null
+                    }
                     onChange={(e, value) => this.setState({
                         phone: {
                             ...this.state.phone,
@@ -236,9 +268,19 @@ class AddDialog extends React.Component {
                 />
                 <TextField
                     type="tel"
-                    floatingLabelText="Número de teléfono"
+                    floatingLabelText="Número de teléfono, ej: 583464917140"
+                    hintText="Escribe el teléfono de la cabina"
                     fullWidth={true}
                     value={this.state.phone.number}
+                    errorText={
+                        this.state.error.field === 'number'
+                            ? this.state.error.type === 'invalid'
+                                ? "Solo números, comenzando con el prefijo del país, sin espacios, sin guiones u otro símbolo."
+                                : this.state.error.type === 'duplicated'
+                                    ? "Ya existe una cabina con ese número."
+                                    : null
+                            : null
+                    }
                     onChange={(e, value) => this.setState({
                         phone: {
                             ...this.state.phone,
