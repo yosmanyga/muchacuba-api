@@ -1,8 +1,10 @@
 import React from 'react';
+import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
-// import Subheader from 'material-ui/Subheader';
+import drawerBackground from './drawerBackground.png';
+import containerBackground from './containerBackground.png';
 import _ from 'lodash';
 
 import ResolveElement from '../ResolveElement';
@@ -12,6 +14,7 @@ import Wait from '../Wait';
 import ListLogs from './ListLogs';
 import ListSystemRates from './ListSystemRates';
 // Owner
+import EditBusiness from './EditBusiness';
 import ListBusinessRates from './ListBusinessRates';
 import ListPhones from './ListPhones';
 // Operator
@@ -36,8 +39,7 @@ export default class Front extends React.Component {
         super(props);
 
         this.state = {
-            token: null,
-            roles: null
+            profile: null
         };
 
         this._resolveElement = new ResolveElement();
@@ -45,16 +47,15 @@ export default class Front extends React.Component {
 
     componentDidMount() {
         this.props.onBackAuth(
-            (token, roles) => {
-                if (token === 'null') {
+            (profile) => {
+                if (profile.token === 'null') {
                     this.props.onFrontAuth();
 
                     return;
                 }
 
                 this.setState({
-                    token: token,
-                    roles: roles
+                    profile: profile
                 });
             },
             () => {
@@ -67,7 +68,7 @@ export default class Front extends React.Component {
         const layout = <Layout
             url={this.props.url}
             layout={this.props.layout}
-            roles={this.state.roles}
+            profile={this.state.profile}
             onBackAuth={this.props.onBackAuth}
             onFrontAuth={this.props.onFrontAuth}
             onNavigate={this.props.onNavigate}
@@ -82,29 +83,37 @@ export default class Front extends React.Component {
                     'url': '/list-logs',
                     'element': <ListLogs
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />
                 },
                 {
                     'url': '/list-system-rates',
                     'element': <ListSystemRates
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />
                 },
                 // Owner
                 {
+                    'url': '/edit-business',
+                    'element': <EditBusiness
+                        layout={layout}
+                        profile={this.state.profile}
+                        onNotify={this.props.onNotify}
+                    />
+                },
+                {
                     'url': '/list-business-rates',
                     'element': <ListBusinessRates
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />
                 },
                 {
                     'url': '/list-phones',
                     'element': <ListPhones
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />,
                     'def': true
                 },
@@ -113,14 +122,14 @@ export default class Front extends React.Component {
                     'url': '/list-client-rates',
                     'element': <ListClientRates
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />
                 },
                 {
                     'url': '/list-client-calls',
                     'element': <ListClientCalls
                         layout={layout}
-                        token={this.state.token}
+                        profile={this.state.profile}
                     />
                 }
             ]
@@ -131,111 +140,135 @@ export default class Front extends React.Component {
 class Layout extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        roles: React.PropTypes.array,
+        profile: React.PropTypes.object,
         onNavigate: React.PropTypes.func.isRequired,
     };
 
     render() {
-        if (this.props.roles === null) {
+        const layout = <this.props.layout.type
+            {...this.props.layout.props}
+            title="Aloleiro"
+            onTitleTouchTap={() => {this.props.onNavigate('/')}}
+            style={{
+                ...this.props.layout.props.style,
+                height: "100%",
+                backgroundImage: `url(${containerBackground})`,
+                backgroundSize: 'cover'
+            }}
+        />;
+
+        if (this.props.profile === null) {
             return (
-                <Wait layout={this.props.layout}/>
+                <Wait layout={layout}/>
             );
         }
 
         return (
-            <this.props.layout.type
-                {...this.props.layout.props}
-                title="Aloleiro"
-                onTitleTouchTap={() => {this.props.onNavigate('/')}}
+            <layout.type
+                {...layout.props}
                 drawer={
-                    <Drawer>
-                        {_.includes(this.props.roles, 'aloleiro_operator')
+                    <Drawer containerStyle={{
+                        backgroundImage: `url(${drawerBackground})`,
+                    }}>
+                        <div style={{textAlign: "center"}}>
+                            <Avatar src={this.props.profile.picture}/>
+                            <p>{this.props.profile.name}</p>
+                        </div>
+                        {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
-                                <MenuItem
-                                    key="list-client-calls"
-                                    onTouchTap={() => {this.props.onNavigate('/list-client-calls')}}
-                                    leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
-                                >
-                                    Llamadas
-                                </MenuItem>
+                            <MenuItem
+                                key="edit-business"
+                                onTouchTap={() => {this.props.onNavigate('/edit-business')}}
+                                leftIcon={<FontIcon className="material-icons">account_box</FontIcon>}
+                            >
+                                Mi cuenta
+                            </MenuItem>
                             :
-                                null
+                            null
                         }
-                        {_.includes(this.props.roles, 'aloleiro_owner')
+                        {_.includes(this.props.profile.roles, 'aloleiro_operator')
                             ?
-                                <MenuItem
-                                    key="list-phones"
-                                    onTouchTap={() => {this.props.onNavigate('/list-phones')}}
-                                    leftIcon={<FontIcon className="material-icons">picture_in_picture</FontIcon>}
-                                >
-                                    Cabinas
-                                </MenuItem>
+                            <MenuItem
+                                key="list-client-calls"
+                                onTouchTap={() => {this.props.onNavigate('/list-client-calls')}}
+                                leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
+                            >
+                                Llamadas
+                            </MenuItem>
                             :
-                                null
+                            null
                         }
-                        {_.includes(this.props.roles, 'aloleiro_owner')
+                        {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
-                                <MenuItem
-                                    key="list-business-rates"
-                                    onTouchTap={() => {
-                                        this.props.onNavigate('/list-business-rates')
-                                    }}
-                                    leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                                >
-                                    Precios y ganancias
-                                </MenuItem>
+                            <MenuItem
+                                key="list-phones"
+                                onTouchTap={() => {this.props.onNavigate('/list-phones')}}
+                                leftIcon={<FontIcon className="material-icons">picture_in_picture</FontIcon>}
+                            >
+                                Cabinas
+                            </MenuItem>
                             :
-                                null
+                            null
                         }
-                        {_.includes(this.props.roles, 'aloleiro_operator')
+                        {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
-                                <MenuItem
-                                    key="list-client-rates"
-                                    onTouchTap={() => {
-                                        this.props.onNavigate('/list-client-rates')
-                                    }}
-                                    leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                                >
-                                    Precios
-                                </MenuItem>
+                            <MenuItem
+                                key="list-business-rates"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/list-business-rates')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            >
+                                Precios y ganancias
+                            </MenuItem>
                             :
-                                null
+                            null
                         }
-                        {_.includes(this.props.roles, 'aloleiro_admin')
+                        {_.includes(this.props.profile.roles, 'aloleiro_operator')
                             ?
-                                <MenuItem
-                                    key="list-system-rates"
-                                    onTouchTap={() => {
-                                        this.props.onNavigate('/list-system-rates')
-                                    }}
-                                    leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                                >
-                                    Precios
-                                </MenuItem>
+                            <MenuItem
+                                key="list-client-rates"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/list-client-rates')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            >
+                                Precios
+                            </MenuItem>
                             :
-                                null
+                            null
                         }
-                        {_.includes(this.props.roles, 'aloleiro_admin')
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
                             ?
-                                <MenuItem
-                                    key="list-logs"
-                                    onTouchTap={() => {this.props.onNavigate('/list-logs')}}
-                                    leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
-                                >
-                                    Logs
-                                </MenuItem>
+                            <MenuItem
+                                key="list-system-rates"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/list-system-rates')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            >
+                                Precios
+                            </MenuItem>
                             :
-                                null
+                            null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
+                            ?
+                            <MenuItem
+                                key="list-logs"
+                                onTouchTap={() => {this.props.onNavigate('/list-logs')}}
+                                leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
+                            >
+                                Logs
+                            </MenuItem>
+                            :
+                            null
                         }
                     </Drawer>
                 }
-                style={{
-                    ...this.props.layout.props.style,
-                    height: "100%"
-                }}
             >
-                {this.props.children}
-            </this.props.layout.type>
+                <div style={{padding: "10px"}}>{this.props.children}</div>
+            </layout.type>
         );
     }
 }

@@ -11,13 +11,13 @@ import Wait from '../Wait';
 export default class ListPhones extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
+        profile: React.PropTypes.object,
     };
 
     constructor(props) {
         super(props);
 
         this.state = {
-            token: null,
             phones: null,
             add: null,
             remove: null
@@ -29,15 +29,15 @@ export default class ListPhones extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.token !== null) {
+        if (this.props.profile !== null) {
             this._collectPhones();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            prevProps.token === null
-            && this.props.token !== null
+            prevProps.profile === null
+            && this.props.profile !== null
         ) {
             this._collectPhones();
         }
@@ -46,7 +46,7 @@ export default class ListPhones extends React.Component {
     _collectPhones() {
         this._connectToServer
             .get('/aloleiro/collect-phones')
-            .auth(this.props.token)
+            .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -81,7 +81,7 @@ export default class ListPhones extends React.Component {
                     }}
                 />
                 {this.state.phones.length !== 0
-                    ? <Table>
+                    ? <Table style={{background: "transparent"}}>
                         <TableHeader
                             displaySelectAll={false}
                             adjustForCheckbox={false}
@@ -119,7 +119,7 @@ export default class ListPhones extends React.Component {
                         onAdd={(phone) => {
                             this._connectToServer
                                 .post('/aloleiro/add-phone')
-                                .auth(this.props.token)
+                                .auth(this.props.profile.token)
                                 .send(phone)
                                 .end((err, res) => {
                                     if (err) {
@@ -146,7 +146,7 @@ export default class ListPhones extends React.Component {
                         onRemove={() => {
                             this._connectToServer
                                 .post('/aloleiro/remove-phone')
-                                .auth(this.props.token)
+                                .auth(this.props.profile.token)
                                 .send({
                                     number: this.state.remove.number
                                 })

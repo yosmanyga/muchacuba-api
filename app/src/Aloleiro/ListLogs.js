@@ -7,7 +7,7 @@ import Wait from '../Wait';
 export default class ListLogs extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        token: React.PropTypes.string,
+        profile: React.PropTypes.object,
     };
 
     constructor(props) {
@@ -23,15 +23,15 @@ export default class ListLogs extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.token !== null) {
+        if (this.props.profile !== null) {
             this._collectLogs();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            prevProps.token === null
-            && this.props.token !== null
+            prevProps.profile === null
+            && this.props.profile !== null
         ) {
             this._collectLogs();
         }
@@ -40,7 +40,7 @@ export default class ListLogs extends React.Component {
     _collectLogs() {
         this._connectToServer
             .get('/aloleiro/collect-logs')
-            .auth(this.props.token)
+            .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -67,7 +67,7 @@ export default class ListLogs extends React.Component {
                 {...this.props.layout.props}
             >
                 {this.state.logs.length !== 0
-                    ? <Table>
+                    ? <Table style={{background: "transparent"}}>
                         <TableHeader
                             displaySelectAll={false}
                             adjustForCheckbox={false}

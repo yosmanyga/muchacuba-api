@@ -13,7 +13,7 @@ import Wait from '../Wait';
 export default class ListClientCalls extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        token: React.PropTypes.string,
+        profile: React.PropTypes.object,
     };
 
     constructor(props) {
@@ -33,25 +33,25 @@ export default class ListClientCalls extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.token !== null) {
+        if (this.props.profile !== null) {
             this._collectPhones();
         }
 
-        if (this.props.token !== null) {
+        if (this.props.profile !== null) {
             this._collectCalls();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            this.state.token !== null
+            this.state.profile !== null
             && this.state.phones === null
         ) {
             this._collectPhones();
         }
 
         if (
-            this.state.token !== null
+            this.state.profile !== null
             && this.state.calls === null
         ) {
             this._collectCalls();
@@ -61,7 +61,7 @@ export default class ListClientCalls extends React.Component {
     _collectPhones() {
         this._connectToServer
             .get('/aloleiro/collect-phones')
-            .auth(this.props.token)
+            .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -79,7 +79,7 @@ export default class ListClientCalls extends React.Component {
     _collectCalls() {
         this._connectToServer
             .get('/aloleiro/collect-client-calls')
-            .auth(this.props.token)
+            .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -123,7 +123,7 @@ export default class ListClientCalls extends React.Component {
                     }}
                 />
                 {this.state.calls.length !== 0
-                    ? <Table>
+                    ? <Table style={{background: "transparent"}}>
                         <TableHeader
                             displaySelectAll={false}
                             adjustForCheckbox={false}
@@ -239,7 +239,7 @@ export default class ListClientCalls extends React.Component {
                         onAdd={(call) => {
                             this._connectToServer
                                 .post('/aloleiro/prepare-call')
-                                .auth(this.props.token)
+                                .auth(this.props.profile.token)
                                 .send(call)
                                 .end((err, res) => {
                                     if (err) {

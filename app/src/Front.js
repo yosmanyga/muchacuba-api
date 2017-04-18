@@ -4,6 +4,8 @@ injectTapEventPlugin();
 import * as firebase from 'firebase';
 import History from 'history/createHashHistory';
 import QueryString from 'query-string';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {cyan800} from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import CircularProgress from 'material-ui/CircularProgress';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -24,6 +26,12 @@ firebase.initializeApp({
     projectId: "cubalider-muchacuba",
     storageBucket: "cubalider-muchacuba.appspot.com",
     messagingSenderId: "43324202525"
+});
+
+const muiTheme = getMuiTheme({
+    palette: {
+        textColor: cyan800,
+    }
 });
 
 class Layout extends React.Component {
@@ -51,7 +59,7 @@ class Layout extends React.Component {
 
     render() {
         return (
-            <DocumentTitle title={typeof this.props.title === 'undefined' ? this.props.title : 'Muchacuba'}>
+            <DocumentTitle title={this.props.title ? this.props.title : 'Muchacuba'}>
                 <div style={{
                     ...this.props.style,
                 }}>
@@ -66,11 +74,15 @@ class Layout extends React.Component {
                     />
                     {this.props.children}
                     {typeof this.props.drawer !== 'undefined'
-                        ? <this.props.drawer.type
-                            docked={false}
-                            open={this.state.drawer}
-                            onRequestChange={(open) => this.setState({drawer: open})}
-                        >{this.props.drawer.props.children}</this.props.drawer.type>
+                        ?
+                            <this.props.drawer.type
+                                {...this.props.drawer.props}
+                                docked={false}
+                                open={this.state.drawer}
+                                onRequestChange={(open) => this.setState({drawer: open})}
+                            >
+                                {this.props.drawer.props.children}
+                            </this.props.drawer.type>
                         : null
                     }
                     {this.props.notification && this.props.notification.message !== null
@@ -147,7 +159,7 @@ export default class Front extends React.Component {
     render() {
         if (this.state.location === null) {
             return (
-                <MuiThemeProvider>
+                <MuiThemeProvider muiTheme={muiTheme}>
                     <CircularProgress size={20} style={{marginTop: "10px"}}/>
                 </MuiThemeProvider>
             );
@@ -167,7 +179,7 @@ export default class Front extends React.Component {
         const query = QueryString.parse(this.state.location.search);
 
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 {this._resolveElement.resolve(
                     this.state.location.pathname,
                     [
@@ -229,22 +241,24 @@ export default class Front extends React.Component {
             .then((result) => {
                 if (result.credential) {
                     firebase.auth().currentUser.getToken(true).then((token) => {
+                        const profile = {
+                            id: result.user.providerData[0].uid,
+                            name: typeof result.user.providerData[0].displayName !== 'undefined'
+                                ? result.user.providerData[0].displayName
+                                : null,
+                            email: typeof result.user.providerData[0].email !== 'undefined'
+                                ? result.user.providerData[0].email
+                                : null,
+                            picture: typeof result.user.providerData[0].photoURL !== 'undefined'
+                                ? result.user.providerData[0].photoURL
+                                : null
+                        };
+
                         this._connectToServer
                             .post('/init-user')
                             .auth(token)
                             .send({
-                                facebook: {
-                                    id: result.user.providerData[0].uid,
-                                    name: typeof result.user.providerData[0].displayName !== 'undefined'
-                                        ? result.user.providerData[0].displayName
-                                        : null,
-                                    email: typeof result.user.providerData[0].email !== 'undefined'
-                                        ? result.user.providerData[0].email
-                                        : null,
-                                    picture: typeof result.user.providerData[0].photoURL !== 'undefined'
-                                        ? result.user.providerData[0].photoURL
-                                        : null
-                                }
+                                profile: profile
                             })
                             .end((err, res) => {
                                 if (err) {
@@ -253,13 +267,21 @@ export default class Front extends React.Component {
                                     return;
                                 }
 
-                                onSuccess(token, res.body.roles);
+                                onSuccess(
+                                    {
+                                        ...profile,
+                                        token: token,
+                                        roles: res.body.roles
+                                    }
+                                );
                             });
                     }).catch((error) => {
                         console.log(error);
                     });
                 } else {
-                    onSuccess('null')
+                    onSuccess({
+                        token: 'null'
+                    })
                 }
             })
             .catch((error) => {

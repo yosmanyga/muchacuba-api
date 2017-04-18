@@ -9,7 +9,7 @@ import Wait from '../Wait';
 export default class ListBusinessRates extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        token: React.PropTypes.string,
+        profile: React.PropTypes.object,
     };
 
     constructor(props) {
@@ -26,15 +26,15 @@ export default class ListBusinessRates extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.token !== null) {
+        if (this.props.profile !== null) {
             this._collectBusinessRates();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            prevProps.token === null
-            && this.props.token !== null
+            prevProps.profile === null
+            && this.props.profile !== null
         ) {
             this._collectBusinessRates();
         }
@@ -43,7 +43,7 @@ export default class ListBusinessRates extends React.Component {
     _collectBusinessRates() {
         this._connectToServer
             .get('/aloleiro/collect-business-rates')
-            .auth(this.props.token)
+            .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
                 if (err) {
@@ -87,7 +87,7 @@ export default class ListBusinessRates extends React.Component {
                                 href="/aloleiro/download-rates"
                             />
                         </div>,
-                        <Table key="table">
+                        <Table key="table" style={{background: "transparent"}}>
                             <TableHeader
                                 displaySelectAll={false}
                                 adjustForCheckbox={false}
