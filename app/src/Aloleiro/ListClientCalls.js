@@ -142,18 +142,26 @@ export default class ListClientCalls extends React.Component {
                             {this.state.calls.map((call, i) => {
                                 return (
                                     <TableRow key={i}>
-                                        <TableRowColumn style={{width: "100px"}}>
+                                        <TableRowColumn
+                                            style={{
+                                                width: "100px"
+                                            }}
+                                        >
                                             {this.state.phones.find((phone) => {
                                                 return phone.number === call.from
                                             }).name}
                                         </TableRowColumn>
-                                        <TableRowColumn style={{width: "100px"}}>
+                                        <TableRowColumn
+                                            style={{
+                                                width: "100px"
+                                            }}
+                                        >
                                             {call.to}
                                         </TableRowColumn>
                                         <TableRowColumn>
                                             {call.instances.length !== 0
                                                 ?
-                                                    <Table>
+                                                    <Table style={{background: "transparent"}}>
                                                         <TableHeader
                                                             displaySelectAll={false}
                                                             adjustForCheckbox={false}

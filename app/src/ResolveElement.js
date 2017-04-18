@@ -7,7 +7,7 @@ export default class ResolveElement
 
         if (typeof item === 'undefined') {
             item = items.find((item) => {
-                return typeof item.def !== 'undefined'
+                return typeof item.def !== 'undefined' && item.def === true
             });
         }
 

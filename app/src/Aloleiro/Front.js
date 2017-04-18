@@ -4,6 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import drawerBackground from './drawerBackground.png';
+import {yellow50} from 'material-ui/styles/colors';
 import containerBackground from './containerBackground.png';
 import _ from 'lodash';
 
@@ -75,6 +76,10 @@ export default class Front extends React.Component {
             onNotify={this.props.onNotify}
         />;
 
+        if (this.state.profile === null) {
+            return <Wait layout={layout}/>;
+        }
+
         return this._resolveElement.resolve(
             this.props.url,
             [
@@ -115,7 +120,7 @@ export default class Front extends React.Component {
                         layout={layout}
                         profile={this.state.profile}
                     />,
-                    'def': true
+                    'def': _.includes(this.state.profile.roles, 'aloleiro_owner')
                 },
                 // Operator
                 {
@@ -130,7 +135,8 @@ export default class Front extends React.Component {
                     'element': <ListClientCalls
                         layout={layout}
                         profile={this.state.profile}
-                    />
+                    />,
+                    'def': _.includes(this.state.profile.roles, 'aloleiro_operator')
                 }
             ]
         );
@@ -151,9 +157,9 @@ class Layout extends React.Component {
             onTitleTouchTap={() => {this.props.onNavigate('/')}}
             style={{
                 ...this.props.layout.props.style,
-                height: "100%",
-                backgroundImage: `url(${containerBackground})`,
-                backgroundSize: 'cover'
+                backgroundColor: yellow50
+                //backgroundImage: `url(${containerBackground})`,
+                //backgroundRepeat: 'repeat'
             }}
         />;
 
