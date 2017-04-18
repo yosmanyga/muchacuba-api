@@ -275,10 +275,12 @@ export default class ListClientCalls extends React.Component {
     _buildDuration(duration) {
         const remainder = duration % 60;
 
-        let string = (duration - remainder) / 60 + ' minutos';
+        let string = (duration - remainder) / 60;
+        string += string > 1 ? ' minutos' : 'minuto';
 
         if (remainder !== 0) {
-            string += ' y ' + remainder + ' segundos';
+            string += ' y ' + remainder;
+            string += remainder > 0 ? ' segundos' : ' segundo';
         }
 
         return string;
