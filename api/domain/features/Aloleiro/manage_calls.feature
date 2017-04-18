@@ -613,7 +613,7 @@ Feature: Manage calls
     ]
     """
 
-  Scenario: Process another different call
+  Scenario: Prepare and process two consecutive calls
     Given there is the business "b1":
     """
     {
