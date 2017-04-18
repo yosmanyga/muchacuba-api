@@ -3,7 +3,6 @@ import Checkbox from 'material-ui/Checkbox';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 
-import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
 import Wait from '../Wait';
 
@@ -11,6 +10,8 @@ export default class ListClientRates extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -49,7 +50,10 @@ export default class ListClientRates extends React.Component {
             .send()
             .end((err, res) => {
                 if (err) {
-                    // TODO
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
 
                     return;
                 }

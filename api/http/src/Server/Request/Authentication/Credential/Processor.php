@@ -2,7 +2,6 @@
 
 namespace Muchacuba\Http\Server\Request\Authentication\Credential;
 
-use Symsonte\Http\Server\Request\Authentication\Credential\InvalidDataException;
 use Symsonte\Http\Server\Request\Authentication\Credential\Processor as BaseCredentialProcessor;
 use Symsonte\Http\Server\Request\Authentication\Credential\AuthorizationResolver;
 use Symsonte\Http\Server\Request\Authentication\Credential\UnresolvableException;
@@ -10,6 +9,8 @@ use Firebase\Auth\Token\Exception\ExpiredToken;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Firebase\Auth\Token\Exception\IssuedInTheFuture;
 use Firebase\Auth\Token\Verifier;
+use Symsonte\Http\Server\Request\Authentication\InvalidCredentialException;
+use Symsonte\Http\Server\Request\Authentication\ExpiredCredentialException;
 
 /**
  * @di\service({
@@ -65,12 +66,11 @@ class Processor implements BaseCredentialProcessor
 
             return $verifiedIdToken->getClaim('sub');
         } catch (ExpiredToken $e) {
-            // TODO: Handle expired token
-            throw new InvalidDataException(null, null, $e);
+            throw new ExpiredCredentialException(null, null, $e);
         } catch (IssuedInTheFuture $e) {
-            throw new InvalidDataException(null, null, $e);
+            throw new InvalidCredentialException(null, null, $e);
         } catch (InvalidToken $e) {
-            throw new InvalidDataException(null, null, $e);
+            throw new InvalidCredentialException(null, null, $e);
         }
     }
 }

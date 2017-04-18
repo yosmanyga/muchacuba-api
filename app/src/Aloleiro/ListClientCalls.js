@@ -14,6 +14,8 @@ export default class ListClientCalls extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -65,7 +67,10 @@ export default class ListClientCalls extends React.Component {
             .send()
             .end((err, res) => {
                 if (err) {
-                    // TODO
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
 
                     return;
                 }
@@ -280,7 +285,7 @@ export default class ListClientCalls extends React.Component {
 
         if (remainder !== 0) {
             string += ' y ' + remainder;
-            string += remainder === 0 ? ' segundo' : ' segundo';
+            string += remainder === 1 ? ' segundo' : ' segundo';
         }
 
         return string;

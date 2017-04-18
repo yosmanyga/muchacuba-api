@@ -12,6 +12,8 @@ export default class ListPhones extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -50,7 +52,10 @@ export default class ListPhones extends React.Component {
             .send()
             .end((err, res) => {
                 if (err) {
-                    // TODO
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
 
                     return;
                 }

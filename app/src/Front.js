@@ -59,7 +59,7 @@ class Layout extends React.Component {
 
     render() {
         return (
-            <DocumentTitle title={this.props.title ? this.props.title : 'Muchacuba'}>
+            <DocumentTitle title={this.props.title ? this.props.title : ''}>
                 <div style={{
                     ...this.props.style,
                 }}>
@@ -123,6 +123,7 @@ export default class Front extends React.Component {
         this._handleFrontAuth = this._handleFrontAuth.bind(this);
         this._handleNavigate = this._handleNavigate.bind(this);
         this._handleNotify = this._handleNotify.bind(this);
+        this._handleError = this._handleError.bind(this);
     }
 
     componentWillMount() {
@@ -190,8 +191,10 @@ export default class Front extends React.Component {
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
                                 onFrontAuth={this._handleFrontAuth}
+                                onLogout={this._handleLogout}
                                 onNavigate={(url) => this._handleNavigate('/aloleiro' + url)}
                                 onNotify={this._handleNotify}
+                                onError={this._handleError}
                             />,
                             'def': true
                         },
@@ -295,6 +298,13 @@ export default class Front extends React.Component {
         );
     }
 
+    _handleLogout() {
+        firebase.auth().signOut().then(() => {
+            // It does not logout from facebook
+        }).catch((error) => {
+        });
+    }
+
     _handleNavigate(url) {
         if (url === this.state.location.pathname) {
             return;
@@ -317,5 +327,17 @@ export default class Front extends React.Component {
                 }
             }
         });
+    }
+
+    _handleError(status, response) {
+        if (status === 401) {
+            if (response.type === 'expired-credential') {
+                this._handleFrontAuth();
+
+                return;
+            }
+        }
+
+        this._handleNotify('Se ha producido un error en el sistema');
     }
 }
