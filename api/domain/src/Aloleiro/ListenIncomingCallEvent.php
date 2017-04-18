@@ -39,7 +39,8 @@ class ListenIncomingCallEvent implements BaseListenIncomingCallEvent
     {
         /** @var Call $call */
         $call = $this->manageCallStorage->connect()->findOne([
-            'from' => $from
+            'from' => $from,
+            'instances' => []
         ]);
 
         if (is_null($call)) {
@@ -47,7 +48,10 @@ class ListenIncomingCallEvent implements BaseListenIncomingCallEvent
         }
 
         $this->manageCallStorage->connect()->updateOne(
-            ['from' => $from],
+            [
+                'from' => $from,
+                'instances' => []
+            ],
             ['$push' => ['instances' => new Instance($cid)]]
         );
 
