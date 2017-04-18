@@ -45,9 +45,16 @@ class CollectClientCalls
         $profile = $this->pickProfile->pick($uniqueness);
 
         /** @var Call[] $calls */
-        $calls = $this->manageStorage->connect()->find([
-            'business' => $profile->getBusiness()
-        ]);
+        $calls = $this->manageStorage->connect()->find(
+            [
+                'business' => $profile->getBusiness()
+            ],
+            [
+                'sort' => [
+                    '_id' => -1
+                ]
+            ]
+        );
 
         $clientCalls = [];
 
