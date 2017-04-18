@@ -21,7 +21,8 @@ class PickBusiness
      */
     public function __construct(
         ManageStorage $manageStorage
-    ) {
+    )
+    {
         $this->manageStorage = $manageStorage;
     }
 
@@ -35,10 +36,9 @@ class PickBusiness
     public function pick($id)
     {
         /** @var Business $business */
-        $business = $this->manageStorage->connect()
-            ->findOne([
-                '_id' => $id
-            ]);
+        $business = $this->manageStorage->connect()->findOne([
+            '_id' => $id,
+        ]);
 
         if (is_null($business)) {
             throw new NonExistentBusinessException();

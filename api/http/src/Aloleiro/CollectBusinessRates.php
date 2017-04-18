@@ -33,7 +33,7 @@ class CollectBusinessRates
     }
 
     /**
-     * @http\authorization({roles: ["aloleiro_operator"]})
+     * @http\authorization({roles: ["aloleiro_owner"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/collect-business-rates"})
      *
      * @param string $uniqueness

@@ -4,6 +4,7 @@ namespace Muchacuba\Http;
 
 use Muchacuba\InitUser as DomainInitUser;
 use Symsonte\Http\Server;
+use Cubalider\Facebook\PickProfile as PickFacebookProfile;
 
 /**
  * @di\controller({deductible: true})
@@ -19,6 +20,8 @@ class InitUser
      * @var DomainInitUser
      */
     private $initUser;
+
+
 
     /**
      * @param Server         $server
@@ -42,7 +45,7 @@ class InitUser
 
         $roles = $this->initUser->init(
             $uniqueness,
-            $post['facebook']
+            $post['profile']
         );
 
         $this->server->sendResponse(['roles' => $roles]);

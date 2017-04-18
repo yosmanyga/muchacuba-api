@@ -104,7 +104,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
             ]]
         );
 
-        if ($result->getModifiedCount() == 0) {
+        if ($result->getMatchedCount() == 0) {
             throw new \Exception(sprintf("Instance '%s' does not exist", $cid));
         }
 

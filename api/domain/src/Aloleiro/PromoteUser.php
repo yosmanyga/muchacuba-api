@@ -57,7 +57,7 @@ class PromoteUser
             ['$set' => ['business' => $business]]
         );
 
-        if ($result->getModifiedCount() == 0) {
+        if ($result->getMatchedCount() == 0) {
             $this->createProfile->create($uniqueness, $business);
         }
 

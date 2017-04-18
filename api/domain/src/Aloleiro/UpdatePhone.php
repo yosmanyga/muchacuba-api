@@ -15,7 +15,7 @@ class UpdatePhone
     /**
      * @var PickProfile
      */
-    private $PickProfile;
+    private $pickProfile;
 
     /**
      * @var ManagePhoneStorage
@@ -23,15 +23,15 @@ class UpdatePhone
     private $managePhoneStorage;
 
     /**
-     * @param PickProfile $PickProfile
+     * @param PickProfile $pickProfile
      * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        PickProfile $PickProfile,
+        PickProfile $pickProfile,
         ManagePhoneStorage $managePhoneStorage
     )
     {
-        $this->pickProfile = $PickProfile;
+        $this->pickProfile = $pickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
     }
 
@@ -55,7 +55,7 @@ class UpdatePhone
             ['$set' => ['name' => $name]]
         );
 
-        if ($result->getModifiedCount() === 0) {
+        if ($result->getMatchedCount() === 0) {
             throw new NonExistentPhoneException();
         }
     }

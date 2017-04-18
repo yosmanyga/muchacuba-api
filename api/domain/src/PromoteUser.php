@@ -43,7 +43,7 @@ class PromoteUser
             ['$push' => ['roles' => $role]]
         );
 
-        if ($result->getModifiedCount() == 0) {
+        if ($result->getMatchedCount() == 0) {
             throw new \Exception();
         }
     }

@@ -3,7 +3,6 @@
 namespace Muchacuba\Aloleiro;
 
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
-use Cubalider\Unique\Uniqueness\ManageStorage as ManageUniquenessStorage;
 use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
@@ -24,11 +23,6 @@ class SetFixtures
      * @var ManageBusinessStorage
      */
     private $manageBusinessStorage;
-
-    /**
-     * @var ManageUniquenessStorage
-     */
-    private $manageUniquenessStorage;
 
     /**
      * @var ManageProfileStorage
@@ -87,7 +81,6 @@ class SetFixtures
 
     /**
      * @param ManageBusinessStorage $manageBusinessStorage
-     * @param ManageUniquenessStorage $manageUniquenessStorage
      * @param ManageProfileStorage $manageProfileStorage
      * @param ManagePhoneStorage $managePhoneStorage
      * @param ManageCallStorage $manageCallStorage
@@ -102,7 +95,6 @@ class SetFixtures
      */
     public function __construct(
         ManageBusinessStorage $manageBusinessStorage,
-        ManageUniquenessStorage $manageUniquenessStorage,
         ManageProfileStorage $manageProfileStorage,
         ManagePhoneStorage $managePhoneStorage,
         ManageCallStorage $manageCallStorage,
@@ -117,7 +109,6 @@ class SetFixtures
     )
     {
         $this->manageBusinessStorage = $manageBusinessStorage;
-        $this->manageUniquenessStorage = $manageUniquenessStorage;
         $this->manageProfileStorage = $manageProfileStorage;
         $this->managePhoneStorage = $managePhoneStorage;
         $this->manageCallStorage = $manageCallStorage;
@@ -222,7 +213,6 @@ class SetFixtures
     private function purge()
     {
         $this->manageBusinessStorage->purge();
-        $this->manageUniquenessStorage->purge();
         $this->manageProfileStorage->purge();
         $this->managePhoneStorage->purge();
         $this->manageCallStorage->purge();

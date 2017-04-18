@@ -15,7 +15,7 @@ class RemovePhone
     /**
      * @var PickProfile
      */
-    private $PickProfile;
+    private $pickProfile;
 
     /**
      * @var ManagePhoneStorage
@@ -23,15 +23,15 @@ class RemovePhone
     private $managePhoneStorage;
 
     /**
-     * @param PickProfile $PickProfile
+     * @param PickProfile $pickProfile
      * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        PickProfile $PickProfile,
+        PickProfile $pickProfile,
         ManagePhoneStorage $managePhoneStorage
     )
     {
-        $this->pickProfile = $PickProfile;
+        $this->pickProfile = $pickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
     }
 
