@@ -33,11 +33,14 @@ class DownloadClientRates
     }
 
     /**
+     * @http\authorization({roles: ["aloleiro_operator"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/download-client-rates"})
+     *
+     * @param string $uniqueness
      */
-    public function download()
+    public function download($uniqueness)
     {
-        $file = $this->prepareRates->prepare();
+        $file = $this->prepareRates->prepare($uniqueness);
 
         $this->server->sendResponse(
             file_get_contents($file),

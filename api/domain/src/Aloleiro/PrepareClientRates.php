@@ -27,9 +27,11 @@ class PrepareClientRates
     }
 
     /**
+     * @param string $uniqueness
+     *
      * @return string
      */
-    public function prepare()
+    public function prepare($uniqueness)
     {
         $file = sprintf('%s/precios.pdf', sys_get_temp_dir());
 
@@ -39,7 +41,7 @@ class PrepareClientRates
 
         $html = '<table cellpadding="10">';
         $html .= '<tr><th>País</th><th>Código</th><th>Tipo</th><th>Precio</th></th>';
-        $rates = $this->collectClientRates->collect(true);
+        $rates = $this->collectClientRates->collect($uniqueness, true);
         foreach ($rates as $rate) {
             $html .= sprintf(
                 '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
