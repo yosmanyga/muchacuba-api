@@ -78,10 +78,10 @@ export default class ListLogs extends React.Component {
                             </TableRow>
                         </TableHeader>
                         <TableBody displayRowCheckbox={false}>
-                            {this.state.logs.map((log) => {
+                            {this.state.logs.map((log, i) => {
                                 return (
-                                    <TableRow key={log.id}>
-                                        <TableRowColumn>log.type</TableRowColumn>
+                                    <TableRow key={i}>
+                                        <TableRowColumn>{log.type}</TableRowColumn>
                                         <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(log.payload, null, 4)}} /></TableRowColumn>
                                     </TableRow>
                                 );

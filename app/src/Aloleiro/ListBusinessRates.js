@@ -1,8 +1,8 @@
 import React from 'react';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
 
-import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
 import Wait from '../Wait';
 
@@ -17,6 +17,7 @@ export default class ListBusinessRates extends React.Component {
 
         this.state = {
             rates: null,
+            filter: '',
             favorites: true
         };
 
@@ -81,10 +82,18 @@ export default class ListBusinessRates extends React.Component {
                                     })
                                 }}
                             /></div>
-                            <Button
-                                label="Descargar favoritos"
-                                icon="file_download"
-                                href="/aloleiro/download-rates"
+                            <TextField
+                                value={this.state.filter}
+                                hintText="Filtrar países"
+                                autoFocus={true}
+                                onChange={(event) => {
+                                    this.setState({
+                                        filter: event.target.value
+                                    });
+                                }}
+                                style={{
+                                    height: "auto"
+                                }}
                             />
                         </div>,
                         <Table key="table" style={{background: "transparent"}}>
@@ -103,6 +112,15 @@ export default class ListBusinessRates extends React.Component {
                             <TableBody displayRowCheckbox={false}>
                                 {this.state.rates.map((rate, i) => {
                                     if (this.state.favorites && rate.favorite === false) {
+                                        return null;
+                                    }
+
+                                    if (
+                                        this.state.filter !== ''
+                                        && !rate.country
+                                            .toLowerCase()
+                                            .includes(this.state.filter.toLowerCase())
+                                    ) {
                                         return null;
                                     }
 

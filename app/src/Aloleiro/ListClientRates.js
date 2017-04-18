@@ -1,6 +1,7 @@
 import React from 'react';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
 
 import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
@@ -17,6 +18,7 @@ export default class ListClientRates extends React.Component {
 
         this.state = {
             rates: null,
+            filter: '',
             favorites: true
         };
 
@@ -72,19 +74,37 @@ export default class ListClientRates extends React.Component {
                 {this.state.rates.length !== 0
                     ? [
                         <div key="top" style={{display: "flex"}}>
-                            <div style={{width: "200px"}}><Checkbox
-                                label="Solo los favoritos"
-                                checked={this.state.favorites}
-                                onTouchTap={() => {
+                            <TextField
+                                value={this.state.filter}
+                                hintText="Filtrar países"
+                                autoFocus={true}
+                                onChange={(event) => {
                                     this.setState({
-                                        favorites: !this.state.favorites
-                                    })
+                                        filter: event.target.value
+                                    });
                                 }}
-                            /></div>
+                                style={{
+                                    height: "auto"
+                                }}
+                            />
+                            <div style={{
+                                width: "200px",
+                                marginLeft: "20px"
+                            }}>
+                                <Checkbox
+                                    label="Solo los favoritos"
+                                    checked={this.state.favorites}
+                                    onTouchTap={() => {
+                                        this.setState({
+                                            favorites: !this.state.favorites
+                                        })
+                                    }}
+                                />
+                            </div>
                             <Button
                                 label="Descargar favoritos"
                                 icon="file_download"
-                                href="/aloleiro/download-rates"
+                                href="/aloleiro/download-client-rates"
                             />
                         </div>,
                         <Table key="table" style={{background: "transparent"}}>
@@ -102,6 +122,15 @@ export default class ListClientRates extends React.Component {
                             <TableBody displayRowCheckbox={false}>
                                 {this.state.rates.map((rate, i) => {
                                     if (this.state.favorites && rate.favorite === false) {
+                                        return null;
+                                    }
+
+                                    if (
+                                        this.state.filter !== ''
+                                        && !rate.country
+                                            .toLowerCase()
+                                            .includes(this.state.filter.toLowerCase())
+                                    ) {
                                         return null;
                                     }
 

@@ -54,31 +54,30 @@ class CollectSystemRates
     public function collect($favorite = false)
     {
         $favorites = [
-            'Brasil',
+            'Brazil',
             'Canada',
             'Chile',
             'China',
             'Colombia',
             'Costa Rica',
             'Cuba',
-            'República Dominicana',
+            'Dominican Republic',
             'Ecuador',
             'El Salvador',
             'France',
-            'Alemania',
+            'Germany',
             'Guatemala',
             'Honduras',
-            'Italia',
+            'Italy',
             'Mexico',
             'Nicaragua',
-            'Líbano',
-            'Libia',
+            'Lebanon',
             'Paraguay',
             'Peru',
             'Puerto Rico',
-            'España',
-            'Estados Unidos',
-            'Siria',
+            'Spain',
+            'Syrian Arab Republic',
+            'United States',
             'Uruguay'
         ];
 
@@ -90,6 +89,10 @@ class CollectSystemRates
         $systemRates = [];
         foreach ($rates as $rate) {
             $isFavorite = in_array($rate->getCountry(), $favorites);
+
+            if ($rate->getCountry() == 'Spain') {
+                $a = 1;
+            }
 
             if ($favorite == true && $isFavorite == false) {
                 continue;
@@ -119,6 +122,14 @@ class CollectSystemRates
                 $sale
             );
         }
+
+        // Sort after the translation
+        usort($systemRates, function(SystemRate $a, SystemRate $b) {
+            if ($a->getCountry() == $b->getCountry()) {
+                return 0;
+            }
+            return ($a->getCountry() < $b->getCountry()) ? -1 : 1;
+        });
 
         return $systemRates;
     }
