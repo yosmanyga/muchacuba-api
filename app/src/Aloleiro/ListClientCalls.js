@@ -244,14 +244,14 @@ export default class ListClientCalls extends React.Component {
                 {this.state.add === true
                     ? <AddDialog
                         phones={this.state.phones}
-                        onAdd={(call) => {
+                        onAdd={(call, onError) => {
                             this._connectToServer
                                 .post('/aloleiro/prepare-call')
                                 .auth(this.props.profile.token)
                                 .send(call)
                                 .end((err, res) => {
                                     if (err) {
-                                        // TODO
+                                        onError(JSON.parse(err.response.text).field);
 
                                         return;
                                     }
@@ -290,7 +290,7 @@ export default class ListClientCalls extends React.Component {
 class AddDialog extends React.Component {
     static propTypes = {
         phones: React.PropTypes.array,
-        // (call)
+        // (call, onError(field))
         onAdd: React.PropTypes.func.isRequired,
         // ()
         onCancel: React.PropTypes.func.isRequired
@@ -306,6 +306,7 @@ class AddDialog extends React.Component {
                 from: null,
                 to: ''
             },
+            error: null
         };
     }
 
@@ -323,12 +324,21 @@ class AddDialog extends React.Component {
                     <FlatButton
                         label={!this.state.busy ? "Preparar" : "Preparando..."}
                         primary={true}
-                        disabled={this.state.text === "" || this.state.busy === true}
+                        disabled={this.state.text === '' || this.state.busy === true}
                         onTouchTap={() => {
                             this.setState({
-                                busy: true
+                                busy: true,
+                                error: null
                             }, () => {
-                                this.props.onAdd(this.state.call)
+                                this.props.onAdd(
+                                    this.state.call,
+                                    (field) => {
+                                        this.setState({
+                                            busy: false,
+                                            error: field
+                                        })
+                                    }
+                                )
                             });
                         }}
                     />
@@ -359,9 +369,14 @@ class AddDialog extends React.Component {
                 </SelectField>
                 <TextField
                     type="tel"
-                    floatingLabelText="Hacia"
+                    floatingLabelText="Código del país, seguido del número, ej: 17864088134"
+                    hintText="Escribe el número de teléfono al que se quiere llamar"
                     value={this.state.call.to}
                     fullWidth={true}
+                    errorText={this.state.error === 'to'
+                        ? "Solo números, comenzando con el prefijo del país, sin espacios, sin guiones u otro símbolo."
+                        : null
+                    }
                     onChange={(e, value) => this.setState({
                         call: {
                             ...this.state.call,

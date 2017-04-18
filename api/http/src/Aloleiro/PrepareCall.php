@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Call\InvalidDataException;
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
 use Muchacuba\Aloleiro\CollectClientCalls as DomainCollectClientCalls;
 use Symsonte\Http\Server;
@@ -51,11 +52,19 @@ class PrepareCall
     {
         $post = $this->server->resolveBody();
 
-        $this->prepareCall->prepare(
-            $uniqueness,
-            $post['from'],
-            $post['to']
-        );
+        try {
+            $this->prepareCall->prepare(
+                $uniqueness,
+                $post['from'],
+                $post['to']
+            );
+        } catch (InvalidDataException $e) {
+            $this->server->sendResponse([
+                'field' => $e->getField()
+            ], 422);
+
+            return;
+        }
 
         $calls = $this->collectClientCalls->collect($uniqueness);
 
