@@ -82,6 +82,17 @@ class ProcessRequest implements BaseProcessRequest
         $responses = [];
         $events = [];
 
+        if (!$subject) {
+            $responses[] = new Response(
+                "Letras Muchacuba <letras@muchacuba.com>",
+                $sender,
+                sprintf('Re: %s', $subject),
+                'Debes escribir lo que buscas en el asunto del correo.'
+            );
+
+            return new ProcessResult($responses, $events);
+        }
+
         $results = $this->searchGoogle->search(
             $this->googleServerApi,
             $this->googleCx,
