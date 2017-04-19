@@ -53,6 +53,8 @@ class PrepareCall
      */
     public function prepare($uniqueness, $from, $to)
     {
+        $to = str_replace(['+', '-', ' '], [''], $to);
+
         if (!ctype_digit($to)) {
             throw new InvalidDataException(
                 InvalidDataException::FIELD_TO

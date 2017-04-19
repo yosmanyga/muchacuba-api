@@ -48,7 +48,7 @@ class ProcessICEvent implements ProcessEvent
 
         foreach ($this->listenIncomingEventServices as $listenIncomingEventService) {
             $r = $listenIncomingEventService->listen(
-                $payload['cli'],
+                '+' . $payload['cli'],
                 $payload['callid']
             );
 

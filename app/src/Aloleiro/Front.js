@@ -182,10 +182,37 @@ class Layout extends React.Component {
                     <Drawer containerStyle={{
                         backgroundImage: `url(${drawerBackground})`,
                     }}>
-                        <div style={{textAlign: "center"}}>
+                        <div style={{
+                            textAlign: "center",
+                            marginTop: "10px"
+                        }}>
                             <Avatar src={this.props.profile.picture}/>
                             <p>{this.props.profile.name}</p>
                         </div>
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
+                            ?
+                                <MenuItem
+                                    key="list-system-rates"
+                                    onTouchTap={() => {
+                                        this.props.onNavigate('/list-system-rates')
+                                    }}
+                                    leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                                >
+                                    Precios del sistema
+                                </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
+                            ?
+                                <MenuItem
+                                    key="list-logs"
+                                    onTouchTap={() => {this.props.onNavigate('/list-logs')}}
+                                    leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
+                                >
+                                    Logs
+                                </MenuItem>
+                            : null
+                        }
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
                                 <MenuItem
@@ -197,26 +224,15 @@ class Layout extends React.Component {
                                 </MenuItem>
                             : null
                         }
-                        {_.includes(this.props.profile.roles, 'aloleiro_operator')
-                            ?
-                                <MenuItem
-                                    key="list-client-calls"
-                                    onTouchTap={() => {this.props.onNavigate('/list-client-calls')}}
-                                    leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
-                                >
-                                    Llamadas
-                                </MenuItem>
-                            : null
-                        }
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
-                                <MenuItem
-                                    key="list-phones"
-                                    onTouchTap={() => {this.props.onNavigate('/list-phones')}}
-                                    leftIcon={<FontIcon className="material-icons">picture_in_picture</FontIcon>}
-                                >
-                                    Cabinas
-                                </MenuItem>
+                            <MenuItem
+                                key="list-phones"
+                                onTouchTap={() => {this.props.onNavigate('/list-phones')}}
+                                leftIcon={<FontIcon className="material-icons">picture_in_picture</FontIcon>}
+                            >
+                                Cabinas
+                            </MenuItem>
                             : null
                         }
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
@@ -235,6 +251,17 @@ class Layout extends React.Component {
                         {_.includes(this.props.profile.roles, 'aloleiro_operator')
                             ?
                                 <MenuItem
+                                    key="list-client-calls"
+                                    onTouchTap={() => {this.props.onNavigate('/list-client-calls')}}
+                                    leftIcon={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
+                                >
+                                    Llamadas
+                                </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_operator')
+                            ?
+                                <MenuItem
                                     key="list-client-rates"
                                     onTouchTap={() => {
                                         this.props.onNavigate('/list-client-rates')
@@ -242,30 +269,6 @@ class Layout extends React.Component {
                                     leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
                                 >
                                     Precios
-                                </MenuItem>
-                            : null
-                        }
-                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
-                            ?
-                                <MenuItem
-                                    key="list-system-rates"
-                                    onTouchTap={() => {
-                                        this.props.onNavigate('/list-system-rates')
-                                    }}
-                                    leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                                >
-                                    Precios
-                                </MenuItem>
-                            : null
-                        }
-                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
-                            ?
-                                <MenuItem
-                                    key="list-logs"
-                                    onTouchTap={() => {this.props.onNavigate('/list-logs')}}
-                                    leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
-                                >
-                                    Logs
                                 </MenuItem>
                             : null
                         }

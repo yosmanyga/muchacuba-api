@@ -12,6 +12,13 @@ class Instance implements Persistable, \JsonSerializable
     private $id;
 
     /**
+     * Init timestamp
+     *
+     * @var int
+     */
+    private $timestamp;
+
+    /**
      * @var int
      */
     private $duration;
@@ -48,6 +55,7 @@ class Instance implements Persistable, \JsonSerializable
 
     /**
      * @param string     $id
+     * @param int|null   $timestamp
      * @param int|null   $duration
      * @param int|null   $systemPurchase
      * @param float|null $systemSale
@@ -58,6 +66,7 @@ class Instance implements Persistable, \JsonSerializable
      */
     public function __construct(
         $id,
+        $timestamp = null,
         $duration = null,
         $systemPurchase = null,
         $systemSale = null,
@@ -68,6 +77,7 @@ class Instance implements Persistable, \JsonSerializable
     )
     {
         $this->id = $id;
+        $this->timestamp = $timestamp;
         $this->duration = $duration;
         $this->systemPurchase = $systemPurchase;
         $this->systemSale = $systemSale;
@@ -83,6 +93,14 @@ class Instance implements Persistable, \JsonSerializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
     }
 
     /**
@@ -148,6 +166,7 @@ class Instance implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
+            'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
@@ -164,6 +183,7 @@ class Instance implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['id'];
+        $this->timestamp = $data['timestamp'];
         $this->duration = $data['duration'];
         $this->systemPurchase = $data['systemPurchase'];
         $this->systemSale = $data['systemSale'];
@@ -179,6 +199,7 @@ class Instance implements Persistable, \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,

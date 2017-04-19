@@ -7,6 +7,11 @@ class ClientInstance implements \JsonSerializable
     /**
      * @var int
      */
+    private $timestamp;
+
+    /**
+     * @var int
+     */
     private $duration;
 
     /**
@@ -15,16 +20,27 @@ class ClientInstance implements \JsonSerializable
     private $charge;
     
     /**
+     * @param int    $timestamp
      * @param int    $duration
      * @param int    $charge
      */
     public function __construct(
+        $timestamp,
         $duration,
         $charge
     )
     {
+        $this->timestamp = $timestamp;
         $this->duration = $duration;
         $this->charge = $charge;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
     }
 
     /**
@@ -49,6 +65,7 @@ class ClientInstance implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'timestamp' => $this->timestamp,
             'duration' => $this->duration,
             'charge' => $this->charge,
         ];

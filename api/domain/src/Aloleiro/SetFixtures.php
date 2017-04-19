@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Faker\Generator;
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
 use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
@@ -163,19 +164,19 @@ class SetFixtures
         $phones = [];
         $c = rand(1, 10);
         for ($j = 1; $j <= $c; $j++) {
-            $phone = $faker->phoneNumber;
+            $phone = $this->generatePhoneNumber($faker);
             $phones[$j] = $phone;
 
             $this->addPhone->add(
                 $owner,
                 $phone,
-                $faker->phoneNumber
+                ucfirst($faker->colorName)
             );
         }
 
         for ($j = 1; $j <= 10; $j++) {
             $from = $phones[rand(1, count($phones))];
-            $to = $faker->phoneNumber;
+            $to = $this->generatePhoneNumber($faker);
 
             $this->prepareCall->prepare(
                 $operator,
@@ -183,30 +184,41 @@ class SetFixtures
                 $to
             );
 
-            $cid = uniqid();
+            // Current time minus random seconds
+            $timestamp = time() - rand(1, 10000);
 
-            $this->processEvent->process([
-                'event' => 'ice',
-                'callid' => $cid,
-                'cli' => $from,
-                'to' => [
-                    'endpoint' => '+789'
-                ]
-            ]);
+            for ($k = 1; $k <= rand(1, 4); $k++) {
+                $timestamp += 400;
 
-            $this->processEvent->process([
-                'event' => 'ace',
-                'callid' => $cid
-            ]);
+                $cid = uniqid();
 
-            $this->processEvent->process([
-                'event' => 'dice',
-                'callid' => $cid,
-                'duration' => rand(0, 120),
-                'debit' => [
-                    'amount' => rand(0, 100) / 100
-                ]
-            ]);
+                $this->processEvent->process([
+                    'event' => 'ice',
+                    'callid' => $cid,
+                    'cli' => str_replace('+', '', $from),
+                    'to' => [
+                        'endpoint' => '+789'
+                    ]
+                ]);
+
+                $this->processEvent->process([
+                    'event' => 'ace',
+                    'callid' => $cid
+                ]);
+
+                $this->processEvent->process([
+                    'event' => 'dice',
+                    'callid' => $cid,
+                    'timestamp' => date(
+                        DATE_ISO8601,
+                        $timestamp
+                    ),
+                    'duration' => rand(0, 120),
+                    'debit' => [
+                        'amount' => rand(0, 100) / 100
+                    ]
+                ]);
+            }
         }
     }
 
@@ -217,5 +229,15 @@ class SetFixtures
         $this->managePhoneStorage->purge();
         $this->manageCallStorage->purge();
         $this->manageLogStorage->purge();
+    }
+
+    /**
+     * @param Generator $faker
+     *
+     * @return string
+     */
+    private function generatePhoneNumber(Generator $faker)
+    {
+        return '+' . str_replace(['+', '-', ' '], [''], $faker->phoneNumber);
     }
 }

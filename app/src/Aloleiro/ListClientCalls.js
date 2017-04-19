@@ -5,6 +5,13 @@ import MenuItem from 'material-ui/MenuItem';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import Moment from 'moment';
+import {} from 'moment/locale/es';
+Moment.locale('es', {
+    longDateFormat : {
+        LLLL : 'dddd D MMMM YYYY h:mm a'
+    },
+});
 
 import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
@@ -176,6 +183,11 @@ export default class ListClientCalls extends React.Component {
                                                         >
                                                             <TableRow>
                                                                 <TableHeaderColumn
+                                                                    style={{width: "300px"}}
+                                                                >
+                                                                    Fecha y hora
+                                                                </TableHeaderColumn>
+                                                                <TableHeaderColumn
                                                                     style={{width: "200px"}}
                                                                 >
                                                                     Duración
@@ -195,6 +207,15 @@ export default class ListClientCalls extends React.Component {
                                                             {call.instances.map((instance, i) => {
                                                                 return (
                                                                     <TableRow key={i}>
+                                                                        <TableRowColumn
+                                                                            style={{
+                                                                                width: "300px",
+                                                                            }}
+                                                                        >
+                                                                            <span title={Moment.unix(instance.timestamp).format('LLLL')}>
+                                                                                {Moment.unix(instance.timestamp).fromNow()}
+                                                                            </span>
+                                                                        </TableRowColumn>
                                                                         <TableRowColumn
                                                                             style={{
                                                                                 width: "200px"
@@ -217,11 +238,12 @@ export default class ListClientCalls extends React.Component {
                                                             <TableRow key={i}>
                                                                 <TableRowColumn
                                                                     style={{
-                                                                        width: "200px"
+                                                                        width: "300px"
                                                                     }}
                                                                 >
                                                                     <strong>Total</strong>
                                                                 </TableRowColumn>
+                                                                <TableRowColumn/>
                                                                 <TableRowColumn
                                                                     style={{
                                                                         width: "100px",
@@ -297,7 +319,7 @@ export default class ListClientCalls extends React.Component {
 
         if (remainder !== 0) {
             string += ' y ' + remainder;
-            string += remainder === 1 ? ' segundo' : ' segundo';
+            string += remainder === 1 ? ' segundo' : ' segundos';
         }
 
         return string;

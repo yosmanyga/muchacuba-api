@@ -62,12 +62,16 @@ class CollectBusinessCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new BusinessInstance(
+                    $instance['timestamp'], //$instance->getTimestamp(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessPurchase'], //$instance->getBusinessPurchase(),
                     $instance['businessSale'], //$instance->getBusinessSale()
                     $instance['businessProfit'] //$instance->getBusinessProfit()
                 );
             }
+
+            // Newest first
+            $instances = array_reverse($instances);
 
             $businessCalls[] = new BusinessCall(
                 $call->getFrom(),

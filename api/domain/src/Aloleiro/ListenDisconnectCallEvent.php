@@ -56,7 +56,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
     /**
      * {@inheritdoc}
      */
-    public function listen($cid, $duration, $cost)
+    public function listen($cid, $timestamp, $duration, $cost)
     {
         /** @var Call $call */
         $call = $this->manageCallStorage->connect()->findOne([
@@ -94,6 +94,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         $result = $this->manageCallStorage->connect()->updateOne(
             ['instances.id' => $cid],
             ['$set' => [
+                'instances.$.timestamp' => $timestamp,
                 'instances.$.duration' => $duration,
                 'instances.$.systemPurchase' => $systemPurchase,
                 'instances.$.systemSale' => $systemSale,

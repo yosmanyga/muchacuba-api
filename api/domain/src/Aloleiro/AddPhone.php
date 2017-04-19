@@ -46,11 +46,15 @@ class AddPhone
      */
     public function add($uniqueness, $number, $name)
     {
+        $number = str_replace(['+', '-', ' '], [''], $number);
+
         if (!ctype_digit($number)) {
             throw new InvalidDataException(
                 InvalidDataException::FIELD_NUMBER
             );
         }
+
+        $number = '+' . $number;
 
         if (empty($name)) {
             throw new InvalidDataException(

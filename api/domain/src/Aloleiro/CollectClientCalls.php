@@ -62,10 +62,14 @@ class CollectClientCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new ClientInstance(
+                    $instance['timestamp'], //$instance->getTimestamp(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessSale'] //$instance->getBusinessSale()
                 );
             }
+
+            // Newest first
+            $instances = array_reverse($instances);
 
             $clientCalls[] = new ClientCall(
                 $call->getFrom(),

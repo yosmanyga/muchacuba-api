@@ -81,7 +81,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -125,7 +125,7 @@ Feature: Manage calls
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123",
+          "cli": "123",
           "to": {
             "endpoint": "+789"
           }
@@ -153,7 +153,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -176,7 +176,7 @@ Feature: Manage calls
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123",
+          "cli": "123",
           "to": {
             "endpoint": "+789"
           }
@@ -232,7 +232,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -280,7 +280,7 @@ Feature: Manage calls
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123",
+          "cli": "123",
           "to": {
             "endpoint": "+789"
           }
@@ -356,7 +356,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -374,6 +374,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
+      "timestamp": 111,
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -442,7 +443,7 @@ Feature: Manage calls
         "payload": {
           "event": "ice",
           "callid": "1",
-          "cli": "+123",
+          "cli": "123",
           "to": {
             "endpoint": "+789"
           }
@@ -483,6 +484,7 @@ Feature: Manage calls
         "payload": {
           "event": "dice",
           "callid": "1",
+          "timestamp": 111,
           "duration": 30,
           "debit": {
             "amount": 0.1
@@ -535,7 +537,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -553,6 +555,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
+      "timestamp": 111,
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -564,7 +567,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "2",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -582,6 +585,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
+      "timestamp": 222,
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -650,7 +654,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "1",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -668,6 +672,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
+      "timestamp": 111,
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -686,7 +691,7 @@ Feature: Manage calls
     {
       "event": "ice",
       "callid": "2",
-      "cli": "+123",
+      "cli": "123",
       "to": {
         "endpoint": "+789"
       }
@@ -704,6 +709,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
+      "timestamp": 222,
       "duration": 60,
       "debit": {
         "amount": 0.2
