@@ -159,7 +159,7 @@ class Layout extends React.Component {
     render() {
         const layout = <this.props.layout.type
             {...this.props.layout.props}
-            title="Hola pana!"
+            title="Holapana"
             onTitleTouchTap={() => {this.props.onNavigate('/')}}
             style={{
                 ...this.props.layout.props.style,

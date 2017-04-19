@@ -1,12 +1,19 @@
 Feature: Manage calls
 
   Scenario: Prepare call
-    Given there is the business "b1":
+    Given there is the country:
+    """
+    {
+      "name": "Venezuela",
+      "translation": "Venezuela",
+      "currencyExchange": 4412
+    }
+    """
+    And there is the business "b1":
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:
@@ -49,8 +56,7 @@ Feature: Manage calls
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:
@@ -107,6 +113,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": null,
             "duration": null,
             "purchase": null,
             "sale": null,
@@ -200,8 +207,7 @@ Feature: Manage calls
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:
@@ -262,6 +268,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": null,
             "duration": null,
             "purchase": null,
             "sale": null,
@@ -320,12 +327,19 @@ Feature: Manage calls
     """
 
   Scenario: Process disconnected call event (DICE)
-    Given there is the business "b1":
+    Given there is the country:
+    """
+    {
+      "name": "Venezuela",
+      "translation": "Venezuela",
+      "currencyExchange": 4412
+    }
+    """
+    And there is the business "b1":
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:
@@ -374,7 +388,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
-      "timestamp": 111,
+      "timestamp": "2017-04-07T03:48:25Z",
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -391,6 +405,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,
@@ -409,6 +424,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": 1491536905,
             "duration": 30,
             "purchase": 574,
             "sale": 660,
@@ -427,6 +443,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": 1491536905,
             "duration": 30,
             "charge": 660
           }
@@ -484,7 +501,7 @@ Feature: Manage calls
         "payload": {
           "event": "dice",
           "callid": "1",
-          "timestamp": 111,
+          "timestamp": "2017-04-07T03:48:25Z",
           "duration": 30,
           "debit": {
             "amount": 0.1
@@ -501,7 +518,15 @@ Feature: Manage calls
     """
 
   Scenario: Process two calls in same prepared call
-    Given there is the business "b1":
+    Given there is the country:
+    """
+    {
+      "name": "Venezuela",
+      "translation": "Venezuela",
+      "currencyExchange": 4412
+    }
+    """
+    And there is the business "b1":
     """
     {
       "balance": "0.0",
@@ -555,7 +580,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
-      "timestamp": 111,
+      "timestamp": "2017-04-07T03:48:25Z",
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -585,7 +610,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
-      "timestamp": 222,
+      "timestamp": "2017-04-07T03:56:25Z",
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -601,12 +626,14 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": 1491537385,
             "duration": 60,
             "purchase": 0.2,
             "sale": 0.26,
             "profit": 0.06
           },
           {
+            "timestamp": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,
@@ -618,7 +645,15 @@ Feature: Manage calls
     """
 
   Scenario: Prepare and process two consecutive calls
-    Given there is the business "b1":
+    Given there is the country:
+    """
+    {
+      "name": "Venezuela",
+      "translation": "Venezuela",
+      "currencyExchange": 4412
+    }
+    """
+    And there is the business "b1":
     """
     {
       "balance": "0.0",
@@ -672,7 +707,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "1",
-      "timestamp": 111,
+      "timestamp": "2017-04-07T03:48:25Z",
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -709,7 +744,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
-      "timestamp": 222,
+      "timestamp": "2017-04-07T03:56:25Z",
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -725,6 +760,7 @@ Feature: Manage calls
         "to": "+2021",
         "instances": [
           {
+            "timestamp": 1491537385,
             "duration": 60,
             "purchase": 0.2,
             "sale": 0.26,
@@ -737,6 +773,7 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
+            "timestamp": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,

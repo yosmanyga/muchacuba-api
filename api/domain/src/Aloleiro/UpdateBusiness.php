@@ -39,22 +39,15 @@ class UpdateBusiness
     /**
      * @param string $uniqueness
      * @param string $profitPercent
-     * @param string $currencyExchange
      *
      * @throws InvalidDataException
      * @throws \Exception
      */
-    public function update($uniqueness, $profitPercent, $currencyExchange)
+    public function update($uniqueness, $profitPercent)
     {
         if (!filter_var($profitPercent, FILTER_VALIDATE_INT)) {
             throw new InvalidDataException(
                 InvalidDataException::FIELD_PROFIT_PERCENT
-            );
-        }
-
-        if (!filter_var($currencyExchange, FILTER_VALIDATE_FLOAT)) {
-            throw new InvalidDataException(
-                InvalidDataException::FIELD_CURRENCY_EXCHANGE
             );
         }
 
@@ -66,8 +59,7 @@ class UpdateBusiness
                 '_id' => $profile->getBusiness(),
             ],
             ['$set' => [
-                'profitPercent' => $profitPercent,
-                'currencyExchange' => $currencyExchange,
+                'profitPercent' => $profitPercent
             ]]
         );
 

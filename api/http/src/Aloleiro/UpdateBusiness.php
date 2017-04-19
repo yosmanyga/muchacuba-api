@@ -55,8 +55,7 @@ class UpdateBusiness
         try {
             $this->updateBusiness->update(
                 $uniqueness,
-                $post['profitPercent'],
-                $post['currencyExchange']
+                $post['profitPercent']
             );
         } catch (InvalidDataException $e) {
             $this->server->sendResponse([

@@ -48,6 +48,7 @@ class CollectSystemCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new SystemInstance(
+                    $instance['timestamp'], //$instance->getTimestamp(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['systemPurchase'], //$instance->getSystemPurchase(),
                     $instance['systemSale'], //$instance->getSystemSale()

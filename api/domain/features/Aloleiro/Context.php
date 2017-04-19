@@ -6,8 +6,9 @@ use Behat\Behat\Context\Context as BaseContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Cubalider\Call\Provider\CollectLogs;
 use Cubalider\Call\Provider\Sinch\ProcessEvent;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
+use Muchacuba\Aloleiro\Country\ManageStorage as ManageCountryStorage;
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
+use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Cubalider\Call\Provider\Log\ManageStorage as ManageLogStorage;
@@ -46,11 +47,15 @@ class Context implements BaseContext, ContainerAwareContext
      */
     public function purgeStorages()
     {
-        /** @var ManageProfileStorage $manageStorage */
-        $manageStorage = $this->container->get('muchacuba.aloleiro.business.manage_storage');
+        /** @var ManageCountryStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.country.manage_storage');
         $manageStorage->purge();
 
         /** @var ManageBusinessStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.business.manage_storage');
+        $manageStorage->purge();
+
+        /** @var ManageProfileStorage $manageStorage */
         $manageStorage = $this->container->get('muchacuba.aloleiro.profile.manage_storage');
         $manageStorage->purge();
 
@@ -68,6 +73,25 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
+     * @Given there is the country:
+     *
+     * @param PyStringNode $string
+     */
+    public function thereIsTheCountry(PyStringNode $string)
+    {
+        $item = json_decode($string->getRaw(), true);
+
+        /** @var AddCountry $addCountry */
+        $addCountry = $this->container->get('muchacuba.aloleiro.add_country');
+
+        $addCountry->add(
+            $item['name'],
+            $item['translation'],
+            $item['currencyExchange']
+        );
+    }
+    
+    /**
      * @Given there is the business ":id":
      *
      * @param string       $id
@@ -83,7 +107,6 @@ class Context implements BaseContext, ContainerAwareContext
         $createBusiness->create(
             $item['balance'],
             $item['profitPercent'],
-            $item['currencyExchange'],
             $id
         );
     }

@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
-Moment.locale('es', {
+Moment.updateLocale('es', {
     longDateFormat : {
         LLLL : 'dddd D MMMM YYYY h:mm a'
     },

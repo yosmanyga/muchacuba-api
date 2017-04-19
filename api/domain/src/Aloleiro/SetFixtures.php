@@ -153,8 +153,7 @@ class SetFixtures
 
         $business = $this->createBusiness->create(
             0.0,
-            rand(1, 15),
-            4412
+            rand(1, 15)
         );
 
         $this->promoteUser->promote($owner, $business, 'aloleiro_owner');

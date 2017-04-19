@@ -96,9 +96,6 @@ export default class ListBusinessRates extends React.Component {
                                         filter: event.target.value
                                     });
                                 }}
-                                style={{
-                                    height: "auto"
-                                }}
                             />
                         </div>,
                         <Table key="table" style={{background: "transparent"}}>

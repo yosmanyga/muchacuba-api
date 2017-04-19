@@ -87,9 +87,6 @@ export default class ListClientRates extends React.Component {
                                         filter: event.target.value
                                     });
                                 }}
-                                style={{
-                                    height: "auto"
-                                }}
                             />
                             <div style={{
                                 width: "200px",

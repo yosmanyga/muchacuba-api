@@ -93,24 +93,6 @@ export default class EditBusiness extends React.Component {
                     })}
                 />
                 <br/>
-                <p>Esta casilla permite actualizar el bolivar respecto al dólar.</p>
-                <p>De esta forma los precios de las llamadas siempre estarán ajustados para no tener pérdidas.</p>
-                <TextField
-                    floatingLabelText="Cambio del bolivar, ej: 4400"
-                    floatingLabelFixed={true}
-                    value={this.state.business.currencyExchange}
-                    errorText={this.state.error === 'currencyExchange'
-                        ? "Este campo debe ser un número"
-                        : null
-                    }
-                    onChange={(e, value) => this.setState({
-                        business: {
-                            ...this.state.business,
-                            currencyExchange: value
-                        }
-                    })}
-                />
-                <br/>
                 <Button
                     label="Guardar"
                     labelAfterTouchTap="Guardando"

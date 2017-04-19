@@ -29,7 +29,6 @@ class CreateBusiness
     /**
      * @param float       $balance
      * @param int         $profitPercent
-     * @param float       $currencyExchange
      * @param string|null $id
      *
      * @return string
@@ -37,7 +36,6 @@ class CreateBusiness
     public function create(
         $balance = 0.0,
         $profitPercent,
-        $currencyExchange,
         $id = null)
     {
         $id = $id ?: uniqid();
@@ -45,8 +43,7 @@ class CreateBusiness
         $this->manageStorage->connect()->insertOne(new Business(
             $id,
             $balance,
-            $profitPercent,
-            $currencyExchange
+            $profitPercent
         ));
 
         return $id;

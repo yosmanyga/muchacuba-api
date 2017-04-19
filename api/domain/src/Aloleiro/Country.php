@@ -22,18 +22,26 @@ class Country implements Persistable, \JsonSerializable
     private $translation;
 
     /**
+     * @var float
+     */
+    private $currencyExchange;
+
+    /**
      * @param string $id
      * @param string $name
      * @param string $translation
+     * @param float  $currencyExchange
      */
     public function __construct(
         $id,
         $name,
-        string $translation
+        string $translation,
+        $currencyExchange
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->translation = $translation;
+        $this->currencyExchange = $currencyExchange;
     }
 
     /**
@@ -61,6 +69,14 @@ class Country implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return float
+     */
+    public function getCurrencyExchange()
+    {
+        return $this->currencyExchange;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -68,7 +84,8 @@ class Country implements Persistable, \JsonSerializable
         return [
             '_id' => $this->id,
             'name' => $this->name,
-            'translation' => $this->translation
+            'translation' => $this->translation,
+            'currencyExchange' => $this->currencyExchange
         ];
     }
 
@@ -80,6 +97,7 @@ class Country implements Persistable, \JsonSerializable
         $this->id = $data['_id'];
         $this->name = $data['name'];
         $this->translation = $data['translation'];
+        $this->currencyExchange = $data['currencyExchange'];
     }
 
     /**
@@ -91,6 +109,7 @@ class Country implements Persistable, \JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'translation' => $this->translation,
+            'currencyExchange' => $this->currencyExchange,
         ];
     }
 }

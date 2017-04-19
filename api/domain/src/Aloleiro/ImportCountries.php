@@ -3,7 +3,6 @@
 namespace Muchacuba\Aloleiro;
 
 use Goutte\Client;
-use Muchacuba\Aloleiro\Country\ManageStorage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -14,18 +13,18 @@ use Symfony\Component\DomCrawler\Crawler;
 class ImportCountries
 {
     /**
-     * @var ManageStorage
+     * @var AddCountry
      */
-    private $manageStorage;
+    private $addCountry;
 
     /**
-     * @param ManageStorage $manageStorage
+     * @param AddCountry $addCountry
      */
     public function __construct(
-        ManageStorage $manageStorage
+        AddCountry $addCountry
     )
     {
-        $this->manageStorage = $manageStorage;
+        $this->addCountry = $addCountry;
     }
 
     /**
@@ -38,11 +37,11 @@ class ImportCountries
             ->each(function(Crawler $crawler) {
                 $crawler = $crawler->filter('td');
 
-                $this->manageStorage->connect()->insertOne(new Country(
-                    uniqid(),
+                $this->addCountry->add(
                     str_replace("\n", '', $crawler->eq(0)->getNode(0)->textContent),
-                    str_replace("\n", '', $crawler->eq(2)->getNode(0)->textContent)
-                ));
+                    str_replace("\n", '', $crawler->eq(2)->getNode(0)->textContent),
+                    null
+                );
             });
     }
 }

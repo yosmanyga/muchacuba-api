@@ -22,26 +22,18 @@ class Business implements Persistable, \JsonSerializable
     private $profitPercent;
 
     /**
-     * @var float
-     */
-    private $currencyExchange;
-
-    /**
      * @param string $id
      * @param float  $balance
      * @param int    $profitPercent
-     * @param int    $currencyExchange
      */
     public function __construct(
         $id,
         $balance,
-        $profitPercent,
-        $currencyExchange
+        $profitPercent
     ) {
         $this->id = $id;
         $this->balance = $balance;
         $this->profitPercent = $profitPercent;
-        $this->currencyExchange = $currencyExchange;
     }
 
     /**
@@ -69,14 +61,6 @@ class Business implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return float
-     */
-    public function getCurrencyExchange()
-    {
-        return $this->currencyExchange;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -85,7 +69,6 @@ class Business implements Persistable, \JsonSerializable
             '_id' => $this->id,
             'balance' => $this->balance,
             'profitPercent' => $this->profitPercent,
-            'currencyExchange' => $this->currencyExchange,
         ];
     }
 
@@ -97,7 +80,6 @@ class Business implements Persistable, \JsonSerializable
         $this->id = $data['_id'];
         $this->balance = $data['balance'];
         $this->profitPercent = $data['profitPercent'];
-        $this->currencyExchange = $data['currencyExchange'];
     }
 
     /**
@@ -109,7 +91,6 @@ class Business implements Persistable, \JsonSerializable
             'id' => $this->id,
             'balance' => $this->balance,
             'profitPercent' => $this->profitPercent,
-            'currencyExchange' => $this->currencyExchange,
         ];
     }
 }
