@@ -13,18 +13,18 @@ use Goutte\Client;
 class UpdateVenezuelanCurrencyExchange
 {
     /**
-     * @var UpdateCountry
+     * @var UpdateRate
      */
-    private $updateCountry;
+    private $updateRate;
 
     /**
-     * @param UpdateCountry $updateCountry
+     * @param UpdateRate $updateRate
      */
     public function __construct(
-        UpdateCountry $updateCountry
+        UpdateRate $updateRate
     )
     {
-        $this->updateCountry = $updateCountry;
+        $this->updateRate = $updateRate;
     }
 
     /**
@@ -50,6 +50,6 @@ class UpdateVenezuelanCurrencyExchange
         
         $value = str_replace(['BsF', ',', ' '], [], $value);
 
-        $this->updateCountry->update('Venezuela', $value);
+        $this->updateRate->update('Venezuela', $value);
     }
 }

@@ -20,9 +20,9 @@ class CollectBusinessRates
     private $pickBusiness;
 
     /**
-     * @var PickCountry
+     * @var PickRate
      */
-    private $pickCountry;
+    private $pickRate;
 
     /**
      * @var CollectSystemRates
@@ -32,19 +32,19 @@ class CollectBusinessRates
     /**
      * @param PickProfile        $pickProfile
      * @param PickBusiness       $pickBusiness
-     * @param PickCountry        $pickCountry
+     * @param PickRate           $pickRate
      * @param CollectSystemRates $collectSystemRates
      */
     public function __construct(
         PickProfile $pickProfile,
         PickBusiness $pickBusiness,
-        PickCountry $pickCountry,
+        PickRate $pickRate,
         CollectSystemRates $collectSystemRates
     )
     {
         $this->pickProfile = $pickProfile;
         $this->pickBusiness = $pickBusiness;
-        $this->pickCountry = $pickCountry;
+        $this->pickRate = $pickRate;
         $this->collectSystemRates = $collectSystemRates;
     }
 
@@ -60,7 +60,9 @@ class CollectBusinessRates
 
         $business = $this->pickBusiness->pick($profile->getBusiness());
 
-        $country = $this->pickCountry->pick('Venezuela');
+        $currencyExchange = $this->pickRate
+            ->pick('Venezuela')
+            ->getCountryCurrencyExchange();
 
         /** @var SystemRate[] $rates */
         $rates = $this->collectSystemRates->collect($favorite);
@@ -68,7 +70,7 @@ class CollectBusinessRates
         $businessRates = [];
         foreach ($rates as $i => $rate) {
             // Currency exchange
-            $purchase = $rate->getSale() * $country->getCurrencyExchange();
+            $purchase = $rate->getSale() * $currencyExchange;
             // Round
             $purchase = round($purchase);
 

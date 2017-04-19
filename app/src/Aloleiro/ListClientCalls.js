@@ -3,6 +3,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import Moment from 'moment';
@@ -138,137 +139,84 @@ export default class ListClientCalls extends React.Component {
                     }}
                 />
                 {this.state.calls.length !== 0
-                    ? <Table style={{background: "transparent"}}>
-                        <TableHeader
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}
-                        >
-                            <TableRow>
-                                <TableHeaderColumn style={{width: "100px"}}>
-                                    Desde
-                                </TableHeaderColumn>
-                                <TableHeaderColumn style={{width: "100px"}}>
-                                    Hacia
-                                </TableHeaderColumn>
-                                <TableHeaderColumn>Llamadas</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody displayRowCheckbox={false}>
-                            {this.state.calls.map((call, i) => {
-                                return (
-                                    <TableRow key={i}>
-                                        <TableRowColumn
-                                            style={{
-                                                width: "100px"
-                                            }}
-                                        >
-                                            {this.state.phones.find((phone) => {
-                                                return phone.number === call.from
-                                            }).name}
-                                        </TableRowColumn>
-                                        <TableRowColumn
-                                            style={{
-                                                width: "100px"
-                                            }}
-                                        >
-                                            {call.to}
-                                        </TableRowColumn>
-                                        <TableRowColumn>
-                                            {call.instances.length !== 0
-                                                ?
-                                                    <Table style={{background: "transparent"}}>
-                                                        <TableHeader
-                                                            displaySelectAll={false}
-                                                            adjustForCheckbox={false}
-                                                        >
-                                                            <TableRow>
-                                                                <TableHeaderColumn
-                                                                    style={{width: "300px"}}
-                                                                >
-                                                                    Fecha y hora
-                                                                </TableHeaderColumn>
-                                                                <TableHeaderColumn
-                                                                    style={{width: "200px"}}
-                                                                >
-                                                                    Duración
-                                                                </TableHeaderColumn>
-                                                                <TableHeaderColumn
-                                                                    style={{
-                                                                        width: "100px",
-                                                                        textAlign: 'right'
-                                                                    }}
-                                                                >
-                                                                    Costo
-                                                                </TableHeaderColumn>
-                                                                <TableHeaderColumn/>
-                                                            </TableRow>
-                                                        </TableHeader>
-                                                        <TableBody displayRowCheckbox={false}>
-                                                            {call.instances.map((instance, i) => {
-                                                                return (
-                                                                    <TableRow key={i}>
-                                                                        <TableRowColumn
-                                                                            style={{
-                                                                                width: "300px",
-                                                                            }}
-                                                                        >
-                                                                            <span title={Moment.unix(instance.timestamp).format('LLLL')}>
-                                                                                {Moment.unix(instance.timestamp).fromNow()}
-                                                                            </span>
-                                                                        </TableRowColumn>
-                                                                        <TableRowColumn
-                                                                            style={{
-                                                                                width: "200px"
-                                                                            }}
-                                                                        >
-                                                                            {this._buildDuration(instance.duration)}
-                                                                        </TableRowColumn>
-                                                                        <TableRowColumn
-                                                                            style={{
-                                                                                width: "100px",
-                                                                                textAlign: 'right'
-                                                                            }}
-                                                                        >
-                                                                            {instance.charge} Bf
-                                                                        </TableRowColumn>
-                                                                        <TableRowColumn/>
-                                                                    </TableRow>
-                                                                );
-                                                            })}
-                                                            <TableRow key={i}>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        width: "300px"
-                                                                    }}
-                                                                >
-                                                                    <strong>Total</strong>
-                                                                </TableRowColumn>
-                                                                <TableRowColumn/>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        width: "100px",
-                                                                        textAlign: 'right'
-                                                                    }}
-                                                                >
-                                                                    <strong>
-                                                                        {call.instances.reduce((total, instance) => {
-                                                                            return total + instance.charge;
-                                                                        }, 0)} Bf
-                                                                    </strong>
-                                                                </TableRowColumn>
-                                                                <TableRowColumn/>
-                                                            </TableRow>
-                                                        </TableBody>
-                                                    </Table>
-                                                :
-                                                    null
-                                            }
-                                        </TableRowColumn>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    ?
+                        this.state.calls.map((call, i) => {
+                            return (
+                                <Card>
+                                    <CardHeader
+                                        title={this.state.phones.find((phone) => {
+                                            return phone.number === call.from
+                                        }).name}
+                                        actAsExpander={true}
+                                    />
+                                    <CardText expandable={true}>
+                                        {call.instances.length !== 0
+                                            ?
+                                                <Table style={{background: "transparent"}}>
+                                                    <TableBody displayRowCheckbox={false}>
+                                                        {call.instances.map((instance, i) => {
+                                                            return (
+                                                                <TableRow key={i}>
+                                                                    <TableRowColumn
+                                                                        style={{
+                                                                            width: "300px",
+                                                                        }}
+                                                                    >
+                                                                        <span title={Moment.unix(instance.timestamp).format('LLLL')}>
+                                                                            {Moment.unix(instance.timestamp).fromNow()}
+                                                                        </span>
+                                                                    </TableRowColumn>
+                                                                    <TableRowColumn
+                                                                        style={{
+                                                                            width: "200px"
+                                                                        }}
+                                                                    >
+                                                                        {this._buildDuration(instance.duration)}
+                                                                    </TableRowColumn>
+                                                                    <TableRowColumn
+                                                                        style={{
+                                                                            width: "100px",
+                                                                            textAlign: 'right'
+                                                                        }}
+                                                                    >
+                                                                        {instance.charge} Bf
+                                                                    </TableRowColumn>
+                                                                    <TableRowColumn/>
+                                                                </TableRow>
+                                                            );
+                                                        })}
+                                                        <TableRow key={i}>
+                                                            <TableRowColumn
+                                                                style={{
+                                                                    width: "300px"
+                                                                }}
+                                                            >
+                                                                <strong>Total</strong>
+                                                            </TableRowColumn>
+                                                            <TableRowColumn/>
+                                                            <TableRowColumn
+                                                                style={{
+                                                                    width: "100px",
+                                                                    textAlign: 'right'
+                                                                }}
+                                                            >
+                                                                <strong>
+                                                                    {call.instances.reduce((total, instance) => {
+                                                                        return total + instance.charge;
+                                                                    }, 0)} Bf
+                                                                </strong>
+                                                            </TableRowColumn>
+                                                            <TableRowColumn/>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            :
+                                                null
+                                        }
+                                    </CardText>
+                                </Card>
+                            );
+                        })
                     : <p>No hay llamadas</p>
                 }
                 {this.state.add === true

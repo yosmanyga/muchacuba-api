@@ -2,7 +2,6 @@ import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
 
-import Button from '../Button';
 import ConnectToServer from '../ConnectToServer';
 import Wait from '../Wait';
 
@@ -86,11 +85,6 @@ export default class ListSystemRates extends React.Component {
                                     })
                                 }}
                             /></div>
-                            <Button
-                                label="Descargar favoritos"
-                                icon="file_download"
-                                href="/aloleiro/download-rates"
-                            />
                         </div>,
                         <Table key="table" style={{background: "transparent"}}>
                             <TableHeader

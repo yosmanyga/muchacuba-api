@@ -103,17 +103,6 @@ export default class ListClientRates extends React.Component {
                                     }}
                                 />
                             </div>
-                            {/*<Button*/}
-                                {/*label="Descargar favoritos"*/}
-                                {/*icon="file_download"*/}
-                                {/*onTouchTap={() => {*/}
-                                    {/*this._connectToServer*/}
-                                        {/*.post('/aloleiro/download-client-rates')*/}
-                                        {/*.auth(this.props.profile.token)*/}
-                                        {/*.send()*/}
-                                        {/*.end();*/}
-                                {/*}}*/}
-                            {/*/>*/}
                         </div>,
                         <Table key="table" style={{background: "transparent"}}>
                             <TableHeader

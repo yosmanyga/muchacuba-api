@@ -44,9 +44,8 @@ php bin/app.php internauta.insert-email
 
 # Aloleiro
 
-php bin/app.php aloleiro.import-countries
 php bin/app.php aloleiro.import-rates
-
+php bin/app.php aloleiro.update-venezuelan-currency-exchange
 ## Reset data
 1. Drop database;
 2. Open app in firefox and opera

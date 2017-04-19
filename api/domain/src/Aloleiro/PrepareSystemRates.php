@@ -17,53 +17,47 @@ class PrepareSystemRates
     private $collectSystemRates;
 
     /**
-     * @var PickCountry
+     * @var PickRate
      */
-    private $pickCountry;
+    private $pickRate;
 
     /**
      * @param CollectSystemRates $collectSystemRates
-     * @param PickCountry        $pickCountry
+     * @param PickRate        $pickRate
      */
     public function __construct(
         CollectSystemRates $collectSystemRates,
-        PickCountry $pickCountry
+        PickRate $pickRate
     )
     {
         $this->collectSystemRates = $collectSystemRates;
-        $this->pickCountry = $pickCountry;
+        $this->pickRate = $pickRate;
     }
 
     /**
+     * @param bool $favorites
+     *
      * @return string
      */
-    public function prepare()
+    public function prepare($favorites = false)
     {
-        $file = sprintf('%s/precios.pdf', sys_get_temp_dir());
+        $currencyExchange = $this->pickRate
+            ->pick('Venezuela')
+            ->getCountryCurrencyExchange();
 
-        $country = $this->pickCountry->pick('Venezuela');
+        $output = fopen(sprintf('%s/precios.csv', sys_get_temp_dir()), 'w');
 
-        $dompdf = new Dompdf();
-        $dompdf->setPaper('A4', 'landscape');
-        $dompdf->loadHtml('<strong>Listado de precios</strong>');
+        fputcsv($output, array('País', 'Tipo', 'Precio'));
 
-        $html = '<table cellpadding="10">';
-        $html .= '<tr><th>País</th><th>Tipo</th><th>Precio</th></th>';
-        $rates = $this->collectSystemRates->collect();
+        $rates = $this->collectSystemRates->collect($favorites);
         foreach ($rates as $rate) {
-            $html .= sprintf(
-                '<tr><td>%s</td><td>%s</td><td>%s</td></tr>',
+            fputcsv($output, [
                 $rate->getCountry(),
                 $rate->getType(),
-                sprintf('%s Bf', round($rate->getSale() * $country->getCurrencyExchange()))
-            );
+                sprintf('%s Bf', round($rate->getSale() * $currencyExchange))
+            ]);
         }
-        $html .= '</table>';
 
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-        $dompdf->stream($file);
-
-        return $file;
+        return $output;
     }
 }

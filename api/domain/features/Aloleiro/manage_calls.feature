@@ -1,12 +1,12 @@
 Feature: Manage calls
 
   Scenario: Prepare call
-    Given there is the country:
+    Given there is the rate:
     """
     {
-      "name": "Venezuela",
-      "translation": "Venezuela",
-      "currencyExchange": 4412
+      "countryName": "Venezuela",
+      "countryTranslation": "Venezuela",
+      "countryCurrencyExchange": 4412
     }
     """
     And there is the business "b1":
@@ -327,12 +327,12 @@ Feature: Manage calls
     """
 
   Scenario: Process disconnected call event (DICE)
-    Given there is the country:
+    Given there is the rate:
     """
     {
-      "name": "Venezuela",
-      "translation": "Venezuela",
-      "currencyExchange": 4412
+      "countryName": "Venezuela",
+      "countryTranslation": "Venezuela",
+      "countryCurrencyExchange": 4412
     }
     """
     And there is the business "b1":
@@ -518,20 +518,19 @@ Feature: Manage calls
     """
 
   Scenario: Process two calls in same prepared call
-    Given there is the country:
+    Given there is the rate:
     """
     {
-      "name": "Venezuela",
-      "translation": "Venezuela",
-      "currencyExchange": 4412
+      "countryName": "Venezuela",
+      "countryTranslation": "Venezuela",
+      "countryCurrencyExchange": 4412
     }
     """
     And there is the business "b1":
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:
@@ -645,20 +644,19 @@ Feature: Manage calls
     """
 
   Scenario: Prepare and process two consecutive calls
-    Given there is the country:
+    Given there is the rate:
     """
     {
-      "name": "Venezuela",
-      "translation": "Venezuela",
-      "currencyExchange": 4412
+      "countryName": "Venezuela",
+      "countryTranslation": "Venezuela",
+      "countryCurrencyExchange": 4412
     }
     """
     And there is the business "b1":
     """
     {
       "balance": "0.0",
-      "profitPercent": "15",
-      "currencyExchange": "4412"
+      "profitPercent": "15"
     }
     """
     And there is the profile:

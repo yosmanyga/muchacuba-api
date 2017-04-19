@@ -17,19 +17,13 @@ class CollectSystemRates
     private $manageStorage;
 
     /**
-     * @var CollectCountries
-     */
-    private $collectCountries;
-
-    /**
      * @var int
      */
     private $profitPercent;
 
     /**
-     * @param ManageStorage    $manageStorage
-     * @param CollectCountries $collectCountries
-     * @param int              $profitPercent
+     * @param ManageStorage $manageStorage
+     * @param int           $profitPercent
      *
      * @di\arguments({
      *     profitPercent: "%profit_percent%"
@@ -37,12 +31,10 @@ class CollectSystemRates
      */
     public function __construct(
         ManageStorage $manageStorage,
-        CollectCountries $collectCountries,
         $profitPercent
     )
     {
         $this->manageStorage = $manageStorage;
-        $this->collectCountries = $collectCountries;
         $this->profitPercent = $profitPercent;
     }
 
@@ -54,55 +46,43 @@ class CollectSystemRates
     public function collect($favorite = false)
     {
         $favorites = [
-            'Brazil',
+            'Alemania',
+            'Brasil',
             'Canada',
             'Chile',
             'China',
             'Colombia',
             'Costa Rica',
             'Cuba',
-            'Dominican Republic',
             'Ecuador',
             'El Salvador',
-            'France',
-            'Germany',
+            'Estados Unidos',
+            'Francia',
             'Guatemala',
             'Honduras',
-            'Italy',
-            'Mexico',
+            'Italia',
+            'México',
             'Nicaragua',
-            'Lebanon',
+            'Libano',
             'Paraguay',
-            'Peru',
+            'Perú',
             'Puerto Rico',
+            'República Dominicana',
             'Spain',
-            'Syrian Arab Republic',
-            'United States',
+            'Siria',
             'Uruguay'
         ];
-
-        $countries = $this->collectCountries->collect();
 
         /** @var Rate[] $rates */
         $rates = $this->manageStorage->connect()->find();
 
         $systemRates = [];
         foreach ($rates as $rate) {
-            $isFavorite = in_array($rate->getCountry(), $favorites);
-
-            if ($rate->getCountry() == 'Spain') {
-                $a = 1;
-            }
+            $isFavorite = in_array($rate->getCountryTranslation(), $favorites);
 
             if ($favorite == true && $isFavorite == false) {
                 continue;
             }
-
-            $country = $this->translateCountry(
-                $rate->getCountry(),
-                $countries
-            );
-            $type = $this->translateType($rate->getType());
 
             // Purchase
             $sale = $rate->getValue();
@@ -114,8 +94,8 @@ class CollectSystemRates
             $sale = round($sale, 4);
 
             $systemRates[] = new SystemRate(
-                $country,
-                $type,
+                $rate->getCountryTranslation(),
+                $rate->getType(),
                 $rate->getCode(),
                 $isFavorite,
                 $rate->getValue(),
@@ -132,40 +112,5 @@ class CollectSystemRates
         });
 
         return $systemRates;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return string
-     */
-    private function translateType($type)
-    {
-        return str_replace(
-            ['Fixed', 'Mobile', 'Other'],
-            ['Fijo', 'Móvil', 'Otro'],
-            $type
-        );
-    }
-
-    /**
-     * @param string    $country
-     * @param Country[] $translations
-     *
-     * @return string
-     */
-    private function translateCountry($country, $translations)
-    {
-        foreach ($translations as $translation) {
-            if ($translation->getName() == $country) {
-                return $translation->getTranslation();
-            }
-        }
-
-        if ($country == 'Syrian Arab Republic') {
-            return 'Siria';
-        }
-
-        return $country;
     }
 }

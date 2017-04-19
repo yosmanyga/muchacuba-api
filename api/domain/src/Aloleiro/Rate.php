@@ -14,7 +14,17 @@ class Rate implements Persistable, \JsonSerializable
     /**
      * @var string
      */
-    private $country;
+    private $countryName;
+
+    /**
+     * @var string
+     */
+    private $countryTranslation;
+
+    /**
+     * @var float
+     */
+    private $countryCurrencyExchange;
 
     /**
      * @var string
@@ -33,21 +43,27 @@ class Rate implements Persistable, \JsonSerializable
 
     /**
      * @param string $id
-     * @param string $country
+     * @param string $countryName
+     * @param string $countryTranslation
+     * @param string $countryCurrencyExchange
      * @param string $type
      * @param int    $code
      * @param float  $value
      */
     public function __construct(
         $id,
-        $country,
+        $countryName,
+        $countryTranslation,
+        $countryCurrencyExchange,
         $type,
         $code,
         $value
     )
     {
         $this->id = $id;
-        $this->country = $country;
+        $this->countryName = $countryName;
+        $this->countryTranslation = $countryTranslation;
+        $this->countryCurrencyExchange = $countryCurrencyExchange;
         $this->type = $type;
         $this->code = $code;
         $this->value = $value;
@@ -64,9 +80,25 @@ class Rate implements Persistable, \JsonSerializable
     /**
      * @return string
      */
-    public function getCountry()
+    public function getCountryName()
     {
-        return $this->country;
+        return $this->countryName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryTranslation()
+    {
+        return $this->countryTranslation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryCurrencyExchange()
+    {
+        return $this->countryCurrencyExchange;
     }
 
     /**
@@ -100,7 +132,9 @@ class Rate implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'country' => $this->country,
+            'countryName' => $this->countryName,
+            'countryTranslation' => $this->countryTranslation,
+            'countryCurrencyExchange' => $this->countryCurrencyExchange,
             'type' => $this->type,
             'code' => $this->code,
             'value' => $this->value,
@@ -113,7 +147,9 @@ class Rate implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->country = $data['country'];
+        $this->countryName = $data['countryName'];
+        $this->countryTranslation = $data['countryTranslation'];
+        $this->countryCurrencyExchange = $data['countryCurrencyExchange'];
         $this->type = $data['type'];
         $this->code = $data['code'];
         $this->value = $data['value'];
@@ -126,7 +162,9 @@ class Rate implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'country' => $this->country,
+            'countryName' => $this->countryName,
+            'countryTranslation' => $this->countryTranslation,
+            'countryCurrencyExchange' => $this->countryCurrencyExchange,
             'type' => $this->type,
             'code' => $this->code,
             'value' => $this->value,

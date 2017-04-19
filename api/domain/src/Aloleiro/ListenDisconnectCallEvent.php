@@ -24,9 +24,9 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
     private $pickBusiness;
 
     /**
-     * @var PickCountry
+     * @var PickRate
      */
-    private $pickCountry;
+    private $pickRate;
 
     /**
      * @var ManageCallStorage
@@ -40,7 +40,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
 
     /**
      * @param PickBusiness      $pickBusiness
-     * @param PickCountry       $pickCountry
+     * @param PickRate       $pickRate
      * @param ManageCallStorage $manageCallStorage
      * @param int               $profitPercent
      *
@@ -50,13 +50,13 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
      */
     public function __construct(
         PickBusiness $pickBusiness,
-        PickCountry $pickCountry,
+        PickRate $pickRate,
         ManageCallStorage $manageCallStorage,
         $profitPercent
     )
     {
         $this->pickBusiness = $pickBusiness;
-        $this->pickCountry = $pickCountry;
+        $this->pickRate = $pickRate;
         $this->manageCallStorage = $manageCallStorage;
         $this->profitPercent = $profitPercent;
     }
@@ -73,7 +73,9 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
 
         $business = $this->pickBusiness->pick($call->getBusiness());
 
-        $country = $this->pickCountry->pick('Venezuela');
+        $currencyExchange = $this->pickRate
+            ->pick('Venezuela')
+            ->getCountryCurrencyExchange();
 
         // Initial cost
         $systemPurchase = $cost;
@@ -87,7 +89,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         // Initial purchase
         $businessPurchase = $systemSale;
         // Currency exchange
-        $businessPurchase = $businessPurchase * $country->getCurrencyExchange();
+        $businessPurchase = $businessPurchase * $currencyExchange;
         // Round
         $businessPurchase = round($businessPurchase);
 

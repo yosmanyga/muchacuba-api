@@ -6,7 +6,7 @@ use Behat\Behat\Context\Context as BaseContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Cubalider\Call\Provider\CollectLogs;
 use Cubalider\Call\Provider\Sinch\ProcessEvent;
-use Muchacuba\Aloleiro\Country\ManageStorage as ManageCountryStorage;
+use Muchacuba\Aloleiro\Rate\ManageStorage as ManageRateStorage;
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
 use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
@@ -47,8 +47,8 @@ class Context implements BaseContext, ContainerAwareContext
      */
     public function purgeStorages()
     {
-        /** @var ManageCountryStorage $manageStorage */
-        $manageStorage = $this->container->get('muchacuba.aloleiro.country.manage_storage');
+        /** @var ManageRateStorage $manageStorage */
+        $manageStorage = $this->container->get('muchacuba.aloleiro.rate.manage_storage');
         $manageStorage->purge();
 
         /** @var ManageBusinessStorage $manageStorage */
@@ -73,21 +73,24 @@ class Context implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Given there is the country:
+     * @Given there is the rate:
      *
      * @param PyStringNode $string
      */
-    public function thereIsTheCountry(PyStringNode $string)
+    public function thereIsTheRate(PyStringNode $string)
     {
         $item = json_decode($string->getRaw(), true);
 
-        /** @var AddCountry $addCountry */
-        $addCountry = $this->container->get('muchacuba.aloleiro.add_country');
+        /** @var AddRate $addRate */
+        $addRate = $this->container->get('muchacuba.aloleiro.add_rate');
 
-        $addCountry->add(
-            $item['name'],
-            $item['translation'],
-            $item['currencyExchange']
+        $addRate->add(
+            $item['countryName'],
+            $item['countryTranslation'],
+            $item['countryCurrencyExchange'],
+            null,
+            null,
+            null
         );
     }
     
