@@ -3,6 +3,7 @@
 namespace Muchacuba\Http\Aloleiro;
 
 use Muchacuba\Aloleiro\Call\InvalidDataException;
+use Muchacuba\Aloleiro\NonExistentPhoneException;
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
 use Muchacuba\Aloleiro\CollectClientCalls as DomainCollectClientCalls;
 use Symsonte\Http\Server;
@@ -60,7 +61,15 @@ class PrepareCall
             );
         } catch (InvalidDataException $e) {
             $this->server->sendResponse([
-                'field' => $e->getField()
+                'field' => $e->getField(),
+                'type' => 'invalid'
+            ], 422);
+
+            return;
+        } catch (NonExistentPhoneException $e) {
+            $this->server->sendResponse([
+                'field' => 'from',
+                'type' => 'nonexistent'
             ], 422);
 
             return;

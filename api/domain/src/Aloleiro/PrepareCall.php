@@ -18,20 +18,28 @@ class PrepareCall
     private $pickProfile;
 
     /**
+     * @var PickPhone
+     */
+    private $pickPhone;
+
+    /**
      * @var ManageCallStorage
      */
     private $manageCallStorage;
 
     /**
      * @param PickProfile       $pickProfile
+     * @param PickPhone         $pickPhone
      * @param ManageCallStorage $manageCallStorage
      */
     public function __construct(
         PickProfile $pickProfile,
+        PickPhone $pickPhone,
         ManageCallStorage $manageCallStorage
     )
     {
         $this->pickProfile = $pickProfile;
+        $this->pickPhone = $pickPhone;
         $this->manageCallStorage = $manageCallStorage;
     }
 
@@ -41,6 +49,7 @@ class PrepareCall
      * @param string $to
      *
      * @throws InvalidDataException
+     * @throws NonExistentPhoneException
      */
     public function prepare($uniqueness, $from, $to)
     {
@@ -53,7 +62,14 @@ class PrepareCall
         $to = '+' . $to;
 
         $profile = $this->pickProfile->pick($uniqueness);
-    
+
+        // Verify number
+        try {
+            $this->pickPhone->pick($from, $profile->getBusiness());
+        } catch (NonExistentPhoneException $e) {
+            throw $e;
+        }
+
         $this->manageCallStorage->connect()->insertOne(new Call(
             uniqid(),
             $profile->getBusiness(),

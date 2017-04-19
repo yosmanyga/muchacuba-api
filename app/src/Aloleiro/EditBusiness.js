@@ -10,7 +10,9 @@ export default class EditBusiness extends React.Component {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
         // (message, finish)
-        onNotify: React.PropTypes.func.isRequired
+        onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -48,7 +50,10 @@ export default class EditBusiness extends React.Component {
             .send()
             .end((err, res) => {
                 if (err) {
-                    // TODO
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
 
                     return;
                 }
@@ -120,9 +125,18 @@ export default class EditBusiness extends React.Component {
                                 .send(this.state.business)
                                 .end((err, res) => {
                                     if (err) {
-                                        this.setState({
-                                            error: JSON.parse(err.response.text).field
-                                        }, finish);
+                                        const response = JSON.parse(err.response.text);
+
+                                        if (err.status === 422) {
+                                            this.setState({
+                                                error: response.field
+                                            }, finish);
+                                        } else {
+                                            this.props.onError(
+                                                err.status,
+                                                response
+                                            );
+                                        }
 
                                         return;
                                     }

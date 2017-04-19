@@ -80,7 +80,7 @@ export default class ListClientCalls extends React.Component {
                 });
             });
     }
-    
+
     _collectCalls() {
         this._connectToServer
             .get('/aloleiro/collect-client-calls')
@@ -88,7 +88,10 @@ export default class ListClientCalls extends React.Component {
             .send()
             .end((err, res) => {
                 if (err) {
-                    // TODO
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
 
                     return;
                 }
@@ -256,7 +259,16 @@ export default class ListClientCalls extends React.Component {
                                 .send(call)
                                 .end((err, res) => {
                                     if (err) {
-                                        onError(JSON.parse(err.response.text).field);
+                                        const response = JSON.parse(err.response.text);
+
+                                        if (err.status === 422) {
+                                            onError(response.field, response.type);
+                                        } else {
+                                            this.props.onError(
+                                                err.status,
+                                                response
+                                            );
+                                        }
 
                                         return;
                                     }
@@ -295,7 +307,7 @@ export default class ListClientCalls extends React.Component {
 class AddDialog extends React.Component {
     static propTypes = {
         phones: React.PropTypes.array,
-        // (call, onError(field))
+        // (call, onError(field, type))
         onAdd: React.PropTypes.func.isRequired,
         // ()
         onCancel: React.PropTypes.func.isRequired
@@ -311,7 +323,10 @@ class AddDialog extends React.Component {
                 from: null,
                 to: ''
             },
-            error: null
+            error: {
+                field: null,
+                type: null
+            }
         };
     }
 
@@ -333,14 +348,20 @@ class AddDialog extends React.Component {
                         onTouchTap={() => {
                             this.setState({
                                 busy: true,
-                                error: null
+                                error: {
+                                    field: null,
+                                    type: null
+                                }
                             }, () => {
                                 this.props.onAdd(
                                     this.state.call,
-                                    (field) => {
+                                    (field, type) => {
                                         this.setState({
                                             busy: false,
-                                            error: field
+                                            error: {
+                                                field: field,
+                                                type: type
+                                            }
                                         })
                                     }
                                 )
@@ -355,6 +376,10 @@ class AddDialog extends React.Component {
                     hintText="Desde"
                     value={this.state.call.from}
                     fullWidth={true}
+                    errorText={this.state.error.field === 'from'
+                        ? 'La cabina seleccionada ya no existe. Por favor refresca la página para actualizar los datos.'
+                        : null
+                    }
                     onChange={(e, key, value) => {
                         this.setState({
                             call: {
@@ -378,7 +403,7 @@ class AddDialog extends React.Component {
                     hintText="Escribe el número de teléfono al que se quiere llamar"
                     value={this.state.call.to}
                     fullWidth={true}
-                    errorText={this.state.error === 'to'
+                    errorText={this.state.error.field === 'to'
                         ? "Solo números, comenzando con el prefijo del país, sin espacios, sin guiones u otro símbolo."
                         : null
                     }

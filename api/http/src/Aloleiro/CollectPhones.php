@@ -33,7 +33,7 @@ class CollectPhones
     }
 
     /**
-     * @http\authorization({roles: ["aloleiro_owner"]})
+     * @http\authorization({roles: ["aloleiro_owner", "aloleiro_operator"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/collect-phones"})
      *
      * @param string $uniqueness
