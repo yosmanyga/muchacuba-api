@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
 
@@ -18,6 +19,11 @@ class PrepareCall
     private $pickProfile;
 
     /**
+     * @var PickBusiness
+     */
+    private $pickBusiness;
+
+    /**
      * @var PickPhone
      */
     private $pickPhone;
@@ -29,16 +35,19 @@ class PrepareCall
 
     /**
      * @param PickProfile       $pickProfile
+     * @param PickBusiness      $pickBusiness
      * @param PickPhone         $pickPhone
      * @param ManageCallStorage $manageCallStorage
      */
     public function __construct(
         PickProfile $pickProfile,
+        PickBusiness $pickBusiness,
         PickPhone $pickPhone,
         ManageCallStorage $manageCallStorage
     )
     {
         $this->pickProfile = $pickProfile;
+        $this->pickBusiness = $pickBusiness;
         $this->pickPhone = $pickPhone;
         $this->manageCallStorage = $manageCallStorage;
     }
@@ -50,6 +59,7 @@ class PrepareCall
      *
      * @throws InvalidDataException
      * @throws NonExistentPhoneException
+     * @throws InsufficientBalanceException
      */
     public function prepare($uniqueness, $from, $to)
     {
@@ -64,6 +74,12 @@ class PrepareCall
         $to = '+' . $to;
 
         $profile = $this->pickProfile->pick($uniqueness);
+
+        $business = $this->pickBusiness->pick($profile->getBusiness());
+
+        if ($business->getBalance() <= 0) {
+            throw new InsufficientBalanceException();
+        }
 
         // Verify number
         try {

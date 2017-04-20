@@ -17,6 +17,7 @@ Moment.updateLocale('es', {
 });
 
 import ConnectToServer from '../ConnectToServer';
+import Error from '../Error';
 import Button from '../Button';
 import Wait from '../Wait';
 
@@ -306,9 +307,16 @@ export default class ListClientCalls extends React.Component {
                                     if (err) {
                                         const response = JSON.parse(err.response.text);
 
+                                        // Invalid data?
                                         if (err.status === 422) {
-                                            onError(response.field, response.type);
-                                        } else {
+                                            onError(response.type, response.payload);
+                                        } else
+                                        // Insufficient balance?
+                                        if (err.status === 403) {
+                                            onError(response.type, response.payload);
+                                        }
+                                        // Other
+                                        else {
                                             this.props.onError(
                                                 err.status,
                                                 response
@@ -377,7 +385,7 @@ export default class ListClientCalls extends React.Component {
 class AddDialog extends React.Component {
     static propTypes = {
         phones: React.PropTypes.array,
-        // (call, onError(field, type))
+        // (call, onError(type, payload))
         onAdd: React.PropTypes.func.isRequired,
         // ()
         onCancel: React.PropTypes.func.isRequired
@@ -393,10 +401,7 @@ class AddDialog extends React.Component {
                 from: null,
                 to: ''
             },
-            error: {
-                field: null,
-                type: null
-            }
+            error: null
         };
     }
 
@@ -418,20 +423,28 @@ class AddDialog extends React.Component {
                         onTouchTap={() => {
                             this.setState({
                                 busy: true,
-                                error: {
-                                    field: null,
-                                    type: null
-                                }
+                                error: null
                             }, () => {
                                 this.props.onAdd(
                                     this.state.call,
-                                    (field, type) => {
+                                    (type, payload) => {
+                                        if (type === 'invalid-field') {
+                                            this.setState({
+                                                error: {
+                                                    type: type,
+                                                    field: payload.field,
+                                                }
+                                            })
+                                        } else if (type === 'insufficient-balance') {
+                                            this.setState({
+                                                error: {
+                                                    type: type
+                                                }
+                                            })
+                                        }
+
                                         this.setState({
                                             busy: false,
-                                            error: {
-                                                field: field,
-                                                type: type
-                                            }
                                         })
                                     }
                                 )
@@ -441,12 +454,17 @@ class AddDialog extends React.Component {
                 ]}
                 modal={true}
                 autoScrollBodyContent={true}
+                onRequestClose={this.props.onCancel}
             >
+                {this.state.error !== null && this.state.error.type === 'insufficient-balance'
+                    ? <Error message="No hay suficiente saldo para hacer la llamada."/>
+                    : null
+                }
                 <SelectField
                     hintText="Desde"
                     value={this.state.call.from}
                     fullWidth={true}
-                    errorText={this.state.error.field === 'from'
+                    errorText={this.state.error !== null && this.state.error.field === 'from'
                         ? 'La cabina seleccionada ya no existe. Por favor refresca la página para actualizar los datos.'
                         : null
                     }
@@ -473,7 +491,7 @@ class AddDialog extends React.Component {
                     hintText="Escribe el número de teléfono al que se quiere llamar"
                     value={this.state.call.to}
                     fullWidth={true}
-                    errorText={this.state.error.field === 'to'
+                    errorText={this.state.error !== null && this.state.error.field === 'to'
                         ? "Solo números, comenzando con el prefijo del país, sin espacios, sin guiones u otro símbolo."
                         : null
                     }
@@ -527,6 +545,7 @@ class DailyDialog extends React.Component {
                 ]}
                 modal={true}
                 autoScrollBodyContent={true}
+                onRequestClose={this.props.onClose}
             >
                 {this.state.daily !== null
                     ? [

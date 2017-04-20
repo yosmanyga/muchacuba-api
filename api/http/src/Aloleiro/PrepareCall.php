@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
 use Muchacuba\Aloleiro\NonExistentPhoneException;
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
@@ -61,15 +62,22 @@ class PrepareCall
             );
         } catch (InvalidDataException $e) {
             $this->server->sendResponse([
-                'field' => $e->getField(),
-                'type' => 'invalid'
+                'type' => 'invalid-field',
+                'payload' => [
+                    'field' => $e->getField(),
+                ]
             ], 422);
+
+            return;
+        } catch (InsufficientBalanceException $e) {
+            $this->server->sendResponse([
+                'type' => 'insufficient-balance'
+            ], 403);
 
             return;
         } catch (NonExistentPhoneException $e) {
             $this->server->sendResponse([
-                'field' => 'from',
-                'type' => 'nonexistent'
+                'type' => 'non-existent-phone',
             ], 422);
 
             return;

@@ -6,6 +6,7 @@ use Cubalider\Call\Provider\NullResponse;
 use Cubalider\Call\Provider\ListenDisconnectCallEvent as BaseListenDisconnectCallEvent;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\UpdateResult;
+use Muchacuba\Aloleiro\Business\DecreaseBalance;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 
 /**
@@ -40,10 +41,16 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
     private $profitPercent;
 
     /**
+     * @var DecreaseBalance
+     */
+    private $decreaseBalance;
+
+    /**
      * @param PickBusiness      $pickBusiness
-     * @param PickRate       $pickRate
+     * @param PickRate          $pickRate
      * @param ManageCallStorage $manageCallStorage
      * @param int               $profitPercent
+     * @param DecreaseBalance   $decreaseBalance
      *
      * @di\arguments({
      *     profitPercent: "%profit_percent%",
@@ -53,13 +60,15 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         PickBusiness $pickBusiness,
         PickRate $pickRate,
         ManageCallStorage $manageCallStorage,
-        $profitPercent
+        $profitPercent,
+        DecreaseBalance $decreaseBalance
     )
     {
         $this->pickBusiness = $pickBusiness;
         $this->pickRate = $pickRate;
         $this->manageCallStorage = $manageCallStorage;
         $this->profitPercent = $profitPercent;
+        $this->decreaseBalance = $decreaseBalance;
     }
 
     /**
@@ -121,6 +130,8 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         if ($result->getMatchedCount() == 0) {
             throw new \Exception(sprintf("Instance '%s' does not exist", $cid));
         }
+
+        $this->decreaseBalance->decrease($business, $businessPurchase);
 
         return new NullResponse();
     }
