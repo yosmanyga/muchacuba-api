@@ -6,7 +6,7 @@ use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
 use Muchacuba\Aloleiro\NonExistentPhoneException;
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
-use Muchacuba\Aloleiro\CollectClientCalls as DomainCollectClientCalls;
+use Muchacuba\Aloleiro\CollectPreparedCalls as DomainCollectPreparedCalls;
 use Symsonte\Http\Server;
 
 /**
@@ -25,23 +25,23 @@ class PrepareCall
     private $prepareCall;
 
     /**
-     * @var DomainCollectClientCalls
+     * @var DomainCollectPreparedCalls
      */
-    private $collectClientCalls;
+    private $collectPreparedCalls;
     
     /**
-     * @param Server                   $server
-     * @param DomainPrepareCall        $prepareCall
-     * @param DomainCollectClientCalls $collectClientCalls
+     * @param Server                     $server
+     * @param DomainPrepareCall          $prepareCall
+     * @param DomainCollectPreparedCalls $collectPreparedCalls
      */
     public function __construct(
         Server $server,
         DomainPrepareCall $prepareCall,
-        DomainCollectClientCalls $collectClientCalls
+        DomainCollectPreparedCalls $collectPreparedCalls
     ) {
         $this->server = $server;
         $this->prepareCall = $prepareCall;
-        $this->collectClientCalls = $collectClientCalls;
+        $this->collectPreparedCalls = $collectPreparedCalls;
     }
 
     /**
@@ -83,7 +83,7 @@ class PrepareCall
             return;
         }
 
-        $calls = $this->collectClientCalls->collect($uniqueness);
+        $calls = $this->collectPreparedCalls->collect($uniqueness);
 
         $this->server->sendResponse($calls);
     }

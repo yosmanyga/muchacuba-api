@@ -37,17 +37,17 @@ class CancelCall
 
     /**
      * @param string $uniqueness
-     * @param string $number
+     * @param string $id
      *
      * @throws NonExistentCallException
      */
-    public function cancel($uniqueness, $number)
+    public function cancel($uniqueness, $id)
     {
         $profile = $this->pickProfile->pick($uniqueness);
 
         /** @var DeleteResult $result */
         $result = $this->manageCallStorage->connect()->deleteOne([
-            'from' => $number,
+            '_id' => $id,
             'business' => $profile->getBusiness(),
             'instances' => []
         ]);

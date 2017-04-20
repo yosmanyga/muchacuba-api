@@ -7,7 +7,6 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-import _ from 'lodash';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
 Moment.updateLocale('es', {
@@ -34,6 +33,7 @@ export default class ListClientCalls extends React.Component {
 
         this.state = {
             phones: null,
+            preparedCalls: null,
             calls: null,
             add: null,
             remove: null,
@@ -43,29 +43,42 @@ export default class ListClientCalls extends React.Component {
         this._connectToServer = new ConnectToServer();
 
         this._collectPhones = this._collectPhones.bind(this);
+        this._collectPreparedCalls = this._collectPreparedCalls.bind(this);
         this._collectCalls = this._collectCalls.bind(this);
+        this._resolvePhoneName = this._resolvePhoneName.bind(this);
     }
 
     componentDidMount() {
         if (this.props.profile !== null) {
             this._collectPhones();
-        }
-
-        if (this.props.profile !== null) {
+            this._collectPreparedCalls();
             this._collectCalls();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            this.state.profile !== null
-            && this.state.phones === null
+            // Authentication occurred?
+            this.props !== prevProps
+            && this.props.profile !== null
+            && prevProps.profile === null
         ) {
             this._collectPhones();
+            this._collectPreparedCalls();
+            this._collectCalls();
         }
 
+        // Refresh?
         if (
-            this.state.profile !== null
+            prevState.preparedCalls !== null
+            && this.state.preparedCalls === null
+        ) {
+            this._collectPreparedCalls();
+        }
+
+        // Refresh?
+        if (
+            prevState.calls !== null
             && this.state.calls === null
         ) {
             this._collectCalls();
@@ -95,7 +108,7 @@ export default class ListClientCalls extends React.Component {
 
     _collectCalls() {
         this._connectToServer
-            .get('/aloleiro/collect-client-calls')
+            .get('/aloleiro/collect-daily-client-calls')
             .auth(this.props.profile.token)
             .send()
             .end((err, res) => {
@@ -114,9 +127,31 @@ export default class ListClientCalls extends React.Component {
             });
     }
 
+    _collectPreparedCalls() {
+        this._connectToServer
+            .get('/aloleiro/collect-prepared-calls')
+            .auth(this.props.profile.token)
+            .send()
+            .end((err, res) => {
+                if (err) {
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
+
+                    return;
+                }
+
+                this.setState({
+                    preparedCalls: res.body
+                });
+            });
+    }
+
     render() {
         if (
             this.state.phones === null
+            || this.state.preparedCalls === null
             || this.state.calls === null
         ) {
             return (
@@ -139,7 +174,10 @@ export default class ListClientCalls extends React.Component {
                     label="Refrescar"
                     icon="refresh"
                     onTouchTap={() => {
-                        this.setState({calls: null});
+                        this.setState({
+                            preparedCalls: null,
+                            calls: null,
+                        });
                     }}
                 />
                 <Button
@@ -149,6 +187,57 @@ export default class ListClientCalls extends React.Component {
                         this.setState({daily: true}, finish);
                     }}
                 />
+                {this.state.preparedCalls.length !== 0
+                    ?
+                        this.state.preparedCalls.map((preparedCall) => {
+                            return (
+                                <Card
+                                    key={preparedCall.id}
+                                    style={{
+                                        marginTop: "10px",
+                                        background: "transparent"
+                                    }}
+                                >
+                                    <CardHeader
+                                        avatar={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
+                                        title={'Desde: ' + this._resolvePhoneName(preparedCall.from)}
+                                        subtitle={'Hasta: ' + preparedCall.to}
+                                        actAsExpander={true}
+                                    />
+                                    <CardActions>
+                                        <Button
+                                            label="Cancelar"
+                                            labelAfterTouchTap="Cancelando"
+                                            icon="delete"
+                                            onTouchTap={() => {
+                                                this._connectToServer
+                                                    .post('/aloleiro/cancel-call')
+                                                    .auth(this.props.profile.token)
+                                                    .send({
+                                                        id: preparedCall.id
+                                                    })
+                                                    .end((err, res) => {
+                                                        if (err) {
+                                                            this.props.onError(
+                                                                err.status,
+                                                                JSON.parse(err.response.text)
+                                                            );
+
+                                                            return;
+                                                        }
+
+                                                        this.setState({
+                                                            preparedCalls: res.body
+                                                        });
+                                                    });
+                                            }}
+                                        />
+                                    </CardActions>
+                                </Card>
+                            );
+                        })
+                    : null
+                }
                 {this.state.calls.length !== 0
                     ?
                         this.state.calls.map((call, i) => {
@@ -162,138 +251,104 @@ export default class ListClientCalls extends React.Component {
                                 >
                                     <CardHeader
                                         avatar={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
-                                        title={'Desde: ' + this.state.phones.find((phone) => {
-                                            return phone.number === call.from
-                                        }).name}
+                                        title={'Desde: ' + this._resolvePhoneName(call.from)}
                                         subtitle={'Hasta: ' + call.to}
                                         actAsExpander={true}
                                     />
                                     <CardText expandable={true}>
                                         {call.instances.length !== 0
                                             ?
-                                                <Table style={{background: "transparent"}}>
-                                                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                                                        <TableRow>
-                                                            <TableHeaderColumn
-                                                                style={{
-                                                                    textAlign: 'left',
-                                                                    width: "160px"
-                                                                }}
-                                                            >
-                                                                Duración
-                                                            </TableHeaderColumn>
-                                                            <TableHeaderColumn
-                                                                style={{
-                                                                    textAlign: 'right',
-                                                                    width: '60px'
-                                                                }}
-                                                            >
-                                                                Costo
-                                                            </TableHeaderColumn>
-                                                            <TableHeaderColumn
-                                                                style={{
-                                                                    textAlign: 'left'
-                                                                }}
-                                                            >
-                                                                Fecha y hora
-                                                            </TableHeaderColumn>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody displayRowCheckbox={false}>
-                                                        {call.instances.map((instance, i) => {
-                                                            return (
-                                                                <TableRow key={i}>
-                                                                    <TableRowColumn
-                                                                        style={{
-                                                                            textAlign: 'left',
-                                                                            width: "160px"
-                                                                        }}
-                                                                    >
-                                                                        {this._buildDuration(instance.duration)}
-                                                                    </TableRowColumn>
-                                                                    <TableRowColumn
-                                                                        style={{
-                                                                            textAlign: 'right',
-                                                                            width: '60px'
-                                                                        }}
-                                                                    >
-                                                                        {instance.charge} Bf
-                                                                    </TableRowColumn>
-                                                                    <TableRowColumn
-                                                                        style={{
-                                                                            textAlign: 'left'
-                                                                        }}
-                                                                    >
-                                                                        {Moment.unix(instance.timestamp).format('LLLL')}
-                                                                    </TableRowColumn>
-                                                                </TableRow>
-                                                            );
-                                                        })}
-                                                        <TableRow>
-                                                            <TableRowColumn
-                                                                style={{
-                                                                    textAlign: 'left',
-                                                                    width: "160px"
-                                                                }}
-                                                            >
-                                                                <strong>Total</strong>
-                                                            </TableRowColumn>
-                                                            <TableRowColumn
-                                                                style={{
-                                                                    textAlign: 'right',
-                                                                    width: '60px'
-                                                                }}
-                                                            >
-                                                                <strong>
-                                                                    {call.instances.reduce((total, instance) => {
-                                                                        return total + instance.charge;
-                                                                    }, 0)} Bf
-                                                                </strong>
-                                                            </TableRowColumn>
-                                                            <TableRowColumn/>
-                                                        </TableRow>
-                                                    </TableBody>
-                                                </Table>
+                                            <Table style={{background: "transparent"}}>
+                                                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                                                    <TableRow>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'left',
+                                                                width: "160px"
+                                                            }}
+                                                        >
+                                                            Duración
+                                                        </TableHeaderColumn>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'right',
+                                                                width: '60px'
+                                                            }}
+                                                        >
+                                                            Costo
+                                                        </TableHeaderColumn>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'left'
+                                                            }}
+                                                        >
+                                                            Fecha y hora
+                                                        </TableHeaderColumn>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody displayRowCheckbox={false}>
+                                                    {call.instances.map((instance, i) => {
+                                                        return (
+                                                            <TableRow key={i}>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'left',
+                                                                        width: "160px"
+                                                                    }}
+                                                                >
+                                                                    {this._buildDuration(instance.duration)}
+                                                                </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'right',
+                                                                        width: '60px'
+                                                                    }}
+                                                                >
+                                                                    {instance.charge} Bf
+                                                                </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'left'
+                                                                    }}
+                                                                >
+                                                                    {Moment.unix(instance.timestamp).format('LLLL')}
+                                                                </TableRowColumn>
+                                                            </TableRow>
+                                                        );
+                                                    })}
+                                                    <TableRow>
+                                                        <TableRowColumn
+                                                            style={{
+                                                                textAlign: 'left',
+                                                                width: "160px"
+                                                            }}
+                                                        >
+                                                            <strong>Total</strong>
+                                                        </TableRowColumn>
+                                                        <TableRowColumn
+                                                            style={{
+                                                                textAlign: 'right',
+                                                                width: '60px'
+                                                            }}
+                                                        >
+                                                            <strong>
+                                                                {call.instances.reduce((total, instance) => {
+                                                                    return total + instance.charge;
+                                                                }, 0)} Bf
+                                                            </strong>
+                                                        </TableRowColumn>
+                                                        <TableRowColumn/>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
                                             :
-                                                null
+                                            null
                                         }
                                     </CardText>
-                                    <CardActions>
-                                        {call.instances.length === 0
-                                            ?
-                                                <Button
-                                                    label="Cancelar"
-                                                    icon="delete"
-                                                    onTouchTap={() => {
-                                                        this.setState({
-                                                            calls: _.filter(this.state.calls, (c) => {
-                                                                return c.from !== call.from;
-                                                            })
-                                                        }, () => {
-                                                            this._connectToServer
-                                                                .post('/aloleiro/cancel-call')
-                                                                .auth(this.props.profile.token)
-                                                                .send({
-                                                                    number: call.from
-                                                                })
-                                                                .end((err, res) => {
-                                                                    if (err) {
-                                                                        this.props.onError(
-                                                                            err.status,
-                                                                            JSON.parse(err.response.text)
-                                                                        );
-                                                                    }
-                                                                });
-                                                        });
-                                                    }}
-                                                />
-                                            : null
-                                        }
-                                    </CardActions>
                                 </Card>
                             );
                         })
-                    : <p>No hay llamadas</p>
+                    : null
                 }
                 {this.state.add === true
                     ? <AddDialog
@@ -327,7 +382,7 @@ export default class ListClientCalls extends React.Component {
                                     }
 
                                     this.setState({
-                                        calls: res.body,
+                                        preparedCalls: res.body,
                                         add: false
                                     });
                                 });
@@ -365,6 +420,18 @@ export default class ListClientCalls extends React.Component {
                 }
             </this.props.layout.type>
         );
+    }
+
+    _resolvePhoneName(number) {
+        const phone = this.state.phones.find((phone) => {
+            return phone.number === number
+        });
+
+        if (typeof phone !== 'undefined') {
+            return phone.name;
+        }
+
+        return number;
     }
 
     _buildDuration(duration) {
@@ -526,7 +593,7 @@ class DailyDialog extends React.Component {
     componentDidMount() {
         this.props.load((stats) => {
             this.setState({
-                daily: stats[0]
+                daily: stats
             });
         });
     }

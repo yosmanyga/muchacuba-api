@@ -173,7 +173,9 @@ class SetFixtures
             );
         }
 
-        $initialTimestamp = time() - rand(1, 1000000);
+        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+
+        $initialTimestamp = $now->getTimestamp() - rand(1, 1000000);
 
         for ($j = 1; $j <= 10; $j++) {
             $from = $phones[rand(1, count($phones))];

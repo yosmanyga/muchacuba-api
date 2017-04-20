@@ -3,6 +3,7 @@
 namespace Muchacuba\Http\Aloleiro;
 
 use Muchacuba\Aloleiro\CancelCall as DomainCancelCall;
+use Muchacuba\Aloleiro\CollectPreparedCalls as DomainCollectPreparedCalls;
 use Symsonte\Http\Server;
 
 /**
@@ -21,15 +22,23 @@ class CancelCall
     private $cancelCall;
 
     /**
-     * @param Server              $server
-     * @param DomainCancelCall   $cancelCall
+     * @var DomainCollectPreparedCalls
+     */
+    private $collectPreparedCalls;
+
+    /**
+     * @param Server                     $server
+     * @param DomainCancelCall           $cancelCall
+     * @param DomainCollectPreparedCalls $collectPreparedCalls
      */
     public function __construct(
         Server $server,
-        DomainCancelCall $cancelCall
+        DomainCancelCall $cancelCall,
+        DomainCollectPreparedCalls $collectPreparedCalls
     ) {
         $this->server = $server;
         $this->cancelCall = $cancelCall;
+        $this->collectPreparedCalls = $collectPreparedCalls;
     }
 
     /**
@@ -44,9 +53,11 @@ class CancelCall
 
         $this->cancelCall->cancel(
             $uniqueness,
-            $post['number']
+            $post['id']
         );
 
-        $this->server->sendResponse();
+        $calls = $this->collectPreparedCalls->collect($uniqueness);
+
+        $this->server->sendResponse($calls);
     }
 }

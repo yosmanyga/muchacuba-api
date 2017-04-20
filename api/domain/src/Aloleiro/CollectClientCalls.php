@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use MongoDB\BSON\UTCDateTime;
 use Muchacuba\Aloleiro\Call\ManageStorage;
 use Muchacuba\Aloleiro\Call\ClientInstance;
 
@@ -37,17 +38,23 @@ class CollectClientCalls
 
     /**
      * @param string $uniqueness
+     * @param int    $from
+     * @param int    $to
      *
      * @return ClientCall[]
      */
-    public function collect($uniqueness)
+    public function collect($uniqueness, $from, $to)
     {
         $profile = $this->pickProfile->pick($uniqueness);
 
         /** @var Call[] $calls */
         $calls = $this->manageStorage->connect()->find(
             [
-                'business' => $profile->getBusiness()
+                'business' => $profile->getBusiness(),
+                'instances.timestamp' => [
+                    '$gte' => new UTCDateTime($from * 1000),
+                    '$lt' => new UTCDatetime($to * 1000),
+                ]
             ],
             [
                 'sort' => [

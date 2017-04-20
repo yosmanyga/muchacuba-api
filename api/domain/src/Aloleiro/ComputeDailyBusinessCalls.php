@@ -33,7 +33,7 @@ class ComputeDailyBusinessCalls
      */
     public function compute($uniqueness)
     {
-        $now = new \DateTime("now", new \DateTimeZone('America/Los_Angeles') );
+        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
         $from = clone $now;
         $from->modify('today');
         $to = clone $from;
@@ -41,23 +41,21 @@ class ComputeDailyBusinessCalls
 
         $stats = $this->computeCalls->compute(
             $uniqueness,
-            $from->getTimestamp() - 1300000,
+            $from->getTimestamp(),
             $to->getTimestamp(),
             ComputeCalls::GROUP_BY_DAY
         );
 
-        foreach ($stats as $i => $stat) {
-            $stat['sale'] = $stat['businessSale'];
-
-            unset($stat['systemProfit']);
-            unset($stat['systemPurchase']);
-            unset($stat['systemSale']);
-            // Also need to remove this, because it's for the operator
-            unset($stat['businessProfit']);
-            unset($stat['businessPurchase']);
-            unset($stat['businessSale']);
-
-            $stats[$i] = $stat;
+        if (!empty($stats)) {
+            $stats = [
+                'total' => $stats[0]['total'],
+                'sale' => $stats[0]['businessSale'],
+            ];
+        } else {
+            $stats = [
+                'total' => 0,
+                'sale' => 0
+            ];
         }
 
         return $stats;
