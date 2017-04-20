@@ -152,7 +152,7 @@ class SetFixtures
         $faker = Factory::create('es_ES');
 
         $business = $this->createBusiness->create(
-            0.0,
+            100000,
             rand(1, 15)
         );
 

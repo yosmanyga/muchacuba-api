@@ -131,7 +131,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
             throw new \Exception(sprintf("Instance '%s' does not exist", $cid));
         }
 
-        $this->decreaseBalance->decrease($business, $businessPurchase);
+        $this->decreaseBalance->decrease($business->getId(), $businessPurchase);
 
         return new NullResponse();
     }
