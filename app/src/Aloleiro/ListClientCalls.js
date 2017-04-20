@@ -1,11 +1,13 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import _ from 'lodash';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
 Moment.updateLocale('es', {
@@ -33,7 +35,8 @@ export default class ListClientCalls extends React.Component {
             phones: null,
             calls: null,
             add: null,
-            remove: null
+            remove: null,
+            daily: null
         };
 
         this._connectToServer = new ConnectToServer();
@@ -138,66 +141,106 @@ export default class ListClientCalls extends React.Component {
                         this.setState({calls: null});
                     }}
                 />
+                <Button
+                    label="Ver reporte diario"
+                    icon="print"
+                    onTouchTap={(finish) => {
+                        this.setState({daily: true}, finish);
+                    }}
+                />
                 {this.state.calls.length !== 0
                     ?
                         this.state.calls.map((call, i) => {
                             return (
-                                <Card>
+                                <Card
+                                    key={i}
+                                    style={{
+                                        marginTop: "10px",
+                                        background: "transparent"
+                                    }}
+                                >
                                     <CardHeader
-                                        title={this.state.phones.find((phone) => {
+                                        avatar={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
+                                        title={'Desde: ' + this.state.phones.find((phone) => {
                                             return phone.number === call.from
                                         }).name}
+                                        subtitle={'Hasta: ' + call.to}
                                         actAsExpander={true}
                                     />
                                     <CardText expandable={true}>
                                         {call.instances.length !== 0
                                             ?
                                                 <Table style={{background: "transparent"}}>
+                                                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                                                        <TableRow>
+                                                            <TableHeaderColumn
+                                                                style={{
+                                                                    textAlign: 'left',
+                                                                    width: "160px"
+                                                                }}
+                                                            >
+                                                                Duración
+                                                            </TableHeaderColumn>
+                                                            <TableHeaderColumn
+                                                                style={{
+                                                                    textAlign: 'right',
+                                                                    width: '60px'
+                                                                }}
+                                                            >
+                                                                Costo
+                                                            </TableHeaderColumn>
+                                                            <TableHeaderColumn
+                                                                style={{
+                                                                    textAlign: 'left'
+                                                                }}
+                                                            >
+                                                                Fecha y hora
+                                                            </TableHeaderColumn>
+                                                        </TableRow>
+                                                    </TableHeader>
                                                     <TableBody displayRowCheckbox={false}>
                                                         {call.instances.map((instance, i) => {
                                                             return (
                                                                 <TableRow key={i}>
                                                                     <TableRowColumn
                                                                         style={{
-                                                                            width: "300px",
-                                                                        }}
-                                                                    >
-                                                                        <span title={Moment.unix(instance.timestamp).format('LLLL')}>
-                                                                            {Moment.unix(instance.timestamp).fromNow()}
-                                                                        </span>
-                                                                    </TableRowColumn>
-                                                                    <TableRowColumn
-                                                                        style={{
-                                                                            width: "200px"
+                                                                            textAlign: 'left',
+                                                                            width: "160px"
                                                                         }}
                                                                     >
                                                                         {this._buildDuration(instance.duration)}
                                                                     </TableRowColumn>
                                                                     <TableRowColumn
                                                                         style={{
-                                                                            width: "100px",
-                                                                            textAlign: 'right'
+                                                                            textAlign: 'right',
+                                                                            width: '60px'
                                                                         }}
                                                                     >
                                                                         {instance.charge} Bf
                                                                     </TableRowColumn>
-                                                                    <TableRowColumn/>
+                                                                    <TableRowColumn
+                                                                        style={{
+                                                                            textAlign: 'left'
+                                                                        }}
+                                                                    >
+                                                                        {Moment.unix(instance.timestamp).format('LLLL')}
+                                                                    </TableRowColumn>
                                                                 </TableRow>
                                                             );
                                                         })}
-                                                        <TableRow key={i}>
+                                                        <TableRow>
                                                             <TableRowColumn
                                                                 style={{
-                                                                    width: "300px"
+                                                                    textAlign: 'left',
+                                                                    width: "160px"
                                                                 }}
                                                             >
                                                                 <strong>Total</strong>
                                                             </TableRowColumn>
-                                                            <TableRowColumn/>
                                                             <TableRowColumn
                                                                 style={{
-                                                                    width: "100px",
-                                                                    textAlign: 'right'
+                                                                    textAlign: 'right',
+                                                                    width: '60px'
                                                                 }}
                                                             >
                                                                 <strong>
@@ -214,6 +257,38 @@ export default class ListClientCalls extends React.Component {
                                                 null
                                         }
                                     </CardText>
+                                    <CardActions>
+                                        {call.instances.length === 0
+                                            ?
+                                                <Button
+                                                    label="Cancelar"
+                                                    icon="delete"
+                                                    onTouchTap={() => {
+                                                        this.setState({
+                                                            calls: _.filter(this.state.calls, (c) => {
+                                                                return c.from !== call.from;
+                                                            })
+                                                        }, () => {
+                                                            this._connectToServer
+                                                                .post('/aloleiro/cancel-call')
+                                                                .auth(this.props.profile.token)
+                                                                .send({
+                                                                    number: call.from
+                                                                })
+                                                                .end((err, res) => {
+                                                                    if (err) {
+                                                                        this.props.onError(
+                                                                            err.status,
+                                                                            JSON.parse(err.response.text)
+                                                                        );
+                                                                    }
+                                                                });
+                                                        });
+                                                    }}
+                                                />
+                                            : null
+                                        }
+                                    </CardActions>
                                 </Card>
                             );
                         })
@@ -254,6 +329,31 @@ export default class ListClientCalls extends React.Component {
                         }}
                     />
                     : null
+                }
+                {this.state.daily === true
+                    ? <DailyDialog
+                        load={(onSuccess) => {
+                            this._connectToServer
+                                .get('/aloleiro/compute-daily-business-calls')
+                                .auth(this.props.profile.token)
+                                .end((err, res) => {
+                                    if (err) {
+                                        this.props.onError(
+                                            err.status,
+                                            JSON.parse(err.response.text)
+                                        );
+
+                                        return;
+                                    }
+
+                                    onSuccess(res.body);
+                                });
+                        }}
+                        onClose={() => {
+                            this.setState({daily: false})
+                        }}
+                    />
+                        : null
                 }
             </this.props.layout.type>
         );
@@ -389,3 +489,53 @@ class AddDialog extends React.Component {
     }
 }
 
+class DailyDialog extends React.Component {
+    static propTypes = {
+        // (onSuccess(stats))
+        load: React.PropTypes.func.isRequired,
+        // ()
+        onClose: React.PropTypes.func.isRequired
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            daily: null,
+        };
+    }
+
+    componentDidMount() {
+        this.props.load((stats) => {
+            this.setState({
+                daily: stats[0]
+            });
+        });
+    }
+
+    render() {
+        return(
+            <Dialog
+                open={true}
+                title="Reporte diario"
+                actions={[
+                    <FlatButton
+                        label="Cerrar"
+                        disabled={this.state.busy === true}
+                        onTouchTap={this.props.onClose}
+                    />,
+                ]}
+                modal={true}
+                autoScrollBodyContent={true}
+            >
+                {this.state.daily !== null
+                    ? [
+                        <p key="duration">{this.state.daily.total} llamadas</p>,
+                        <p key="profit"><strong>{this.state.daily.sale} Bf</strong> en ventas</p>,
+                    ]
+                    : <Wait />
+                }
+            </Dialog>
+        );
+    }
+}

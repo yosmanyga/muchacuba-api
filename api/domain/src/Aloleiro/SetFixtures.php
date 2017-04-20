@@ -173,6 +173,8 @@ class SetFixtures
             );
         }
 
+        $initialTimestamp = time() - rand(1, 1000000);
+
         for ($j = 1; $j <= 10; $j++) {
             $from = $phones[rand(1, count($phones))];
             $to = $this->generatePhoneNumber($faker);
@@ -184,9 +186,9 @@ class SetFixtures
             );
 
             // Current time minus random seconds
-            $timestamp = time() - rand(1, 10000);
+            $timestamp = $initialTimestamp + rand(1, 1000);
 
-            for ($k = 1; $k <= rand(1, 4); $k++) {
+            for ($k = 1; $k <= rand(0, 4); $k++) {
                 $timestamp += 400;
 
                 $cid = uniqid();

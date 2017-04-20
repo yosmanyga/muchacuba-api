@@ -4,6 +4,7 @@ namespace Muchacuba\Aloleiro;
 
 use Cubalider\Call\Provider\NullResponse;
 use Cubalider\Call\Provider\ListenDisconnectCallEvent as BaseListenDisconnectCallEvent;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\UpdateResult;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 
@@ -106,7 +107,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         $result = $this->manageCallStorage->connect()->updateOne(
             ['instances.id' => $cid],
             ['$set' => [
-                'instances.$.timestamp' => $timestamp,
+                'instances.$.timestamp' => new UTCDateTime($timestamp * 1000),
                 'instances.$.duration' => $duration,
                 'instances.$.systemPurchase' => $systemPurchase,
                 'instances.$.systemSale' => $systemSale,
