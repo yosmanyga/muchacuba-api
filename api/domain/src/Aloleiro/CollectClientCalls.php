@@ -62,7 +62,7 @@ class CollectClientCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new ClientInstance(
-                    $instance['timestamp'], //$instance->getTimestamp(),
+                    (string) $instance['timestamp'] / 1000, //$instance->getTimestamp(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessSale'] //$instance->getBusinessSale()
                 );
