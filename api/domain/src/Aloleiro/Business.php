@@ -22,18 +22,34 @@ class Business implements Persistable, \JsonSerializable
     private $profitPercent;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $address;
+
+    /**
      * @param string $id
      * @param float  $balance
      * @param int    $profitPercent
+     * @param string $name
+     * @param string $address
      */
     public function __construct(
         $id,
         $balance,
-        $profitPercent
+        $profitPercent,
+        $name,
+        $address
     ) {
         $this->id = $id;
         $this->balance = $balance;
         $this->profitPercent = $profitPercent;
+        $this->name = $name;
+        $this->address = $address;
     }
 
     /**
@@ -61,6 +77,22 @@ class Business implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -69,6 +101,8 @@ class Business implements Persistable, \JsonSerializable
             '_id' => $this->id,
             'balance' => $this->balance,
             'profitPercent' => $this->profitPercent,
+            'name' => $this->name,
+            'address' => $this->address,
         ];
     }
 
@@ -80,6 +114,8 @@ class Business implements Persistable, \JsonSerializable
         $this->id = $data['_id'];
         $this->balance = $data['balance'];
         $this->profitPercent = $data['profitPercent'];
+        $this->name = $data['name'];
+        $this->address = $data['address'];
     }
 
     /**
@@ -91,6 +127,8 @@ class Business implements Persistable, \JsonSerializable
             'id' => $this->id,
             'balance' => $this->balance,
             'profitPercent' => $this->profitPercent,
+            'name' => $this->name,
+            'address' => $this->address,
         ];
     }
 }

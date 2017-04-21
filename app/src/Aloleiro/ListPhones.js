@@ -151,32 +151,33 @@ export default class ListPhones extends React.Component {
                     : null
                 }
                 {this.state.remove !== null
-                    ? <RemoveDialog
-                        phone={this.state.remove}
-                        onRemove={() => {
-                            this._connectToServer
-                                .post('/aloleiro/remove-phone')
-                                .auth(this.props.profile.token)
-                                .send({
-                                    number: this.state.remove.number
-                                })
-                                .end((err, res) => {
-                                    if (err) {
-                                        // TODO
+                    ?
+                        <RemoveDialog
+                            phone={this.state.remove}
+                            onRemove={() => {
+                                this._connectToServer
+                                    .post('/aloleiro/remove-phone')
+                                    .auth(this.props.profile.token)
+                                    .send({
+                                        number: this.state.remove.number
+                                    })
+                                    .end((err, res) => {
+                                        if (err) {
+                                            // TODO
 
-                                        return;
-                                    }
+                                            return;
+                                        }
 
-                                    this.setState({
-                                        phones: res.body,
-                                        remove: null
+                                        this.setState({
+                                            phones: res.body,
+                                            remove: null
+                                        });
                                     });
-                                });
-                        }}
-                        onCancel={() => {
-                            this.setState({remove: null})
-                        }}
-                    />
+                            }}
+                            onCancel={() => {
+                                this.setState({remove: null})
+                            }}
+                        />
                     : null
                 }
             </this.props.layout.type>
@@ -197,7 +198,6 @@ class AddDialog extends React.Component {
 
         this.state = {
             busy: false,
-            focus: 'name',
             phone: {
                 number: '',
                 name: ''
@@ -312,10 +312,6 @@ class RemoveDialog extends React.Component {
 
         this.state = {
             busy: false,
-            phone: {
-                number: '',
-                name: ''
-            },
         };
     }
 
@@ -333,7 +329,7 @@ class RemoveDialog extends React.Component {
                     <FlatButton
                         label={!this.state.busy ? "Borrar" : "Borrando..."}
                         primary={true}
-                        disabled={this.state.text === "" || this.state.busy === true}
+                        disabled={this.state.busy === true}
                         onTouchTap={() => {
                             this.setState({
                                 busy: true

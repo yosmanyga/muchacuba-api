@@ -46,9 +46,9 @@ class SetFixtures
     private $manageLogStorage;
 
     /**
-     * @var CreateBusiness
+     * @var AddBusiness
      */
-    private $createBusiness;
+    private $addBusiness;
 
     /**
      * @var CreatePrivilegeProfile
@@ -86,7 +86,7 @@ class SetFixtures
      * @param ManagePhoneStorage $managePhoneStorage
      * @param ManageCallStorage $manageCallStorage
      * @param ManageLogStorage $manageLogStorage
-     * @param CreateBusiness $createBusiness
+     * @param AddBusiness $addBusiness
      * @param CreateUniqueness $createUniqueness
      * @param CreatePrivilegeProfile $createPrivilegeProfile
      * @param PromoteUser $promoteUser
@@ -100,7 +100,7 @@ class SetFixtures
         ManagePhoneStorage $managePhoneStorage,
         ManageCallStorage $manageCallStorage,
         ManageLogStorage $manageLogStorage,
-        CreateBusiness $createBusiness,
+        AddBusiness $addBusiness,
         CreateUniqueness $createUniqueness,
         CreatePrivilegeProfile $createPrivilegeProfile,
         PromoteUser $promoteUser,
@@ -114,7 +114,7 @@ class SetFixtures
         $this->managePhoneStorage = $managePhoneStorage;
         $this->manageCallStorage = $manageCallStorage;
         $this->manageLogStorage = $manageLogStorage;
-        $this->createBusiness = $createBusiness;
+        $this->addBusiness = $addBusiness;
         $this->createUniqueness = $createUniqueness;
         $this->createPrivilegeProfile = $createPrivilegeProfile;
         $this->promoteUser = $promoteUser;
@@ -151,9 +151,11 @@ class SetFixtures
     {
         $faker = Factory::create('es_ES');
 
-        $business = $this->createBusiness->create(
+        $business = $this->addBusiness->add(
             1000000,
-            rand(1, 15)
+            rand(1, 15),
+            ucfirst($faker->domainName),
+            $faker->address
         );
 
         $this->promoteUser->promote($owner, $business, 'aloleiro_owner');
