@@ -152,7 +152,7 @@ class SetFixtures
         $faker = Factory::create('es_ES');
 
         $business = $this->createBusiness->create(
-            100000,
+            1000000,
             rand(1, 15)
         );
 
@@ -173,11 +173,10 @@ class SetFixtures
             );
         }
 
-        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+        $time = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+        $time->modify('first day of this year');
 
-        $initialTimestamp = $now->getTimestamp() - rand(1, 1000000);
-
-        for ($j = 1; $j <= 10; $j++) {
+        for ($j = 1; $j <= 100; $j++) {
             $from = $phones[rand(1, count($phones))];
             $to = $this->generatePhoneNumber($faker);
 
@@ -187,11 +186,10 @@ class SetFixtures
                 $to
             );
 
-            // Current time minus random seconds
-            $timestamp = $initialTimestamp + rand(1, 1000);
+            $time->modify(sprintf('+ %s days', rand(1, 5)));
 
             for ($k = 1; $k <= rand(0, 4); $k++) {
-                $timestamp += 400;
+                $time->modify(sprintf('+ %s minutes', rand(1, 400)));
 
                 $cid = uniqid();
 
@@ -214,7 +212,7 @@ class SetFixtures
                     'callid' => $cid,
                     'timestamp' => date(
                         DATE_ISO8601,
-                        $timestamp
+                        $time->getTimestamp()
                     ),
                     'duration' => rand(0, 120),
                     'debit' => [

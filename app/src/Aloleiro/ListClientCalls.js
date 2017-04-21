@@ -616,7 +616,7 @@ class DailyDialog extends React.Component {
             >
                 {this.state.daily !== null
                     ? [
-                        <p key="duration">{this.state.daily.total} llamadas</p>,
+                        <p key="duration">{this.state.daily.total} {this.state.daily.total === 1 ? 'llamada' : 'llamadas'}</p>,
                         <p key="profit"><strong>{this.state.daily.sale} Bf</strong> en ventas</p>,
                     ]
                     : <Wait />
