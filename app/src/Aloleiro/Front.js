@@ -18,7 +18,7 @@ import ListSystemRates from './ListSystemRates';
 import EditBusiness from './EditBusiness';
 import ListBusinessRates from './ListBusinessRates';
 import ListPhones from './ListPhones';
-import ViewMonthlyStats from './ViewMonthlyStats';
+import ViewStats from './ViewStats';
 // Operator
 import ListClientCalls from './ListClientCalls';
 import ListClientRates from './ListClientRates';
@@ -134,8 +134,8 @@ export default class Front extends React.Component {
                     />
                 },
                 {
-                    'url': '/view-monthly-stats',
-                    'element': <ViewMonthlyStats
+                    'url': '/view-stats',
+                    'element': <ViewStats
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
@@ -275,9 +275,9 @@ class Layout extends React.Component {
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
                                 <MenuItem
-                                    key="view-monthly-stats"
+                                    key="view-stats"
                                     onTouchTap={() => {
-                                        this.props.onNavigate('/view-monthly-stats')
+                                        this.props.onNavigate('/view-stats')
                                     }}
                                     leftIcon={<FontIcon className="material-icons">assessment</FontIcon>}
                                 >
