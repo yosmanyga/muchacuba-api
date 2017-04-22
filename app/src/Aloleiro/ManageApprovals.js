@@ -11,7 +11,7 @@ import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
 import Wait from '../Wait';
 
-export default class ListApprovals extends React.Component {
+export default class ManageApprovals extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
@@ -131,7 +131,7 @@ export default class ListApprovals extends React.Component {
                         <TableBody displayRowCheckbox={false}>
                             {this.state.approvals.map((approval) => {
                                 return (
-                                    <TableRow key={approval.id}>
+                                    <TableRow key={approval.email}>
                                         <TableRowColumn>{approval.email}</TableRowColumn>
                                         <TableRowColumn>{this._resolveBusinessName(approval.business)}</TableRowColumn>
                                         <TableRowColumn>{approval.roles.map((role, i) => {

@@ -77,6 +77,16 @@ export default class ViewStats extends React.Component {
             );
         }
 
+        if (this.state.stats.length === 0) {
+            return (
+                <this.props.layout.type
+                    {...this.props.layout.props}
+                >
+                    <p>No hay datos para hacer reporte.</p>
+                </this.props.layout.type>
+            );
+        }
+
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
