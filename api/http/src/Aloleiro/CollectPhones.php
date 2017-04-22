@@ -38,7 +38,7 @@ class CollectPhones
      *
      * @param string $uniqueness
      */
-    public function search($uniqueness)
+    public function collect($uniqueness)
     {
         $phones = $this->collectPhones->collect($uniqueness);
 

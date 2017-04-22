@@ -9,6 +9,7 @@ import {yellow50} from 'material-ui/styles/colors';
 import _ from 'lodash';
 
 import ResolveElement from '../ResolveElement';
+import Error from '../Error';
 import Wait from '../Wait';
 
 // Admin
@@ -52,21 +53,8 @@ export default class Front extends React.Component {
     }
 
     componentDidMount() {
-        // this.setState({
-        //     profile: {
-        //         id: "410922912603217",
-        //         name: "Jefe del negocio",
-        //         email: "jefe_vnzwhyy_del_negocio@tfbnw.net",
-        //         picture: "https://scontent.xx.fbcdn.net/v/t1.0-1/s100x100/1379841_10150004552801901_469209496895221757_n.jpg?oh=1487b71678150fcd5a6143d84997b15c&oe=598B7497",
-        //         roles: ["aloleiro_owner"],
-        //         token: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFkNmQ5MTFjMGMwMWM3ODcxYmVmYmVkYWI2ZmU0YWE5MzJjYjE0YjEifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY3ViYWxpZGVyLW11Y2hhY3ViYSIsIm5hbWUiOiJGaXJlZm94IFVzZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9zY29udGVudC54eC5mYmNkbi5uZXQvdi90MS4wLTEvczEwMHgxMDAvMTM3OTg0MV8xMDE1MDAwNDU1MjgwMTkwMV80NjkyMDk0OTY4OTUyMjE3NTdfbi5qcGc_b2g9YjhkMWFjOWQwYjk3MmUzMDljNTM3MmQ2MGNkMjhmODMmb2U9NTk2M0U3OTciLCJhdWQiOiJjdWJhbGlkZXItbXVjaGFjdWJhIiwiYXV0aF90aW1lIjoxNDkyNzUwODM5LCJ1c2VyX2lkIjoiMXh1clFlM0hjVlR6Zlp0Z0RYT2NmZTdwaFhKMiIsInN1YiI6IjF4dXJRZTNIY1ZUemZadGdEWE9jZmU3cGhYSjIiLCJpYXQiOjE0OTI3NTA4MzksImV4cCI6MTQ5Mjc1NDQzOSwiZW1haWwiOiJmaXJlZm94X2Npc2NndXRfdXNlckB0ZmJudy5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZmFjZWJvb2suY29tIjpbIjQxMDkyMjkxMjYwMzIxNyJdLCJlbWFpbCI6WyJmaXJlZm94X2Npc2NndXRfdXNlckB0ZmJudy5uZXQiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJmYWNlYm9vay5jb20ifX0.BIkU3P0cQ4XafrVKQRXNxQpXu0om0MUNdk5QHgTJYnZghlnWzB0yqjUYZoqrOkS476QUC9OsDRM-fYtzx-BSAOO1Kx8aoXeeJT-Og4rgKy1aFeej97EAe970xmc0weFyIz2kWDlqBH2PDrnktXBC4xUYAl8w81R2NZfDK1TJdEtL89QCGPUxnhq_O_jAhvL52o-u_uoDmNlgZFQD1sR2hamfStriTioG3JnWhOd6QC4eHLGx3HpFo5YEKQ2LpobhpeCMCnnLHsvaoqnFF1OY86XnvIS2IfxHWXYdB9niSyb6uCBidlUzUTPI2QRAjK8L9raoRQr3UTgIAJS26EAEHg"
-        //     }
-        // });
-
         this.props.onBackAuth(
             (profile) => {
-                console.log(profile);
-
                 if (profile.token === 'null') {
                     this.props.onFrontAuth();
 
@@ -108,8 +96,16 @@ export default class Front extends React.Component {
                     />
                 },
                 {
-                    'url': '/list-businesses',
+                    'url': '/manage-businesses',
                     'element': <ManageBusinesses
+                        layout={layout}
+                        profile={this.state.profile}
+                        onError={this.props.onError}
+                    />
+                },
+                {
+                    'url': '/manage-approvals',
+                    'element': <ManageApprovals
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
@@ -176,6 +172,12 @@ export default class Front extends React.Component {
                         onError={this.props.onError}
                     />,
                     'def': _.includes(this.state.profile.roles, 'aloleiro_operator')
+                },
+                // No role
+                {
+                    'url': '/forbidden',
+                    'element': <Error message="No tienes permiso para acceder a esta página"/>,
+                    'def': this.state.profile.roles.length === 0
                 }
             ]
         );
@@ -249,14 +251,27 @@ class Layout extends React.Component {
                         {_.includes(this.props.profile.roles, 'aloleiro_admin')
                             ?
                             <MenuItem
-                                key="list-businesses"
+                                key="manage-businesses"
                                 onTouchTap={() => {
-                                    this.props.onNavigate('/list-businesses')
+                                    this.props.onNavigate('/manage-businesses')
                                 }}
                                 leftIcon={<FontIcon className="material-icons">business</FontIcon>}
                             >
                                 Negocios
                             </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
+                            ?
+                                <MenuItem
+                                    key="manage-approvals"
+                                    onTouchTap={() => {
+                                        this.props.onNavigate('/manage-approvals')
+                                    }}
+                                    leftIcon={<FontIcon className="material-icons">card_membership</FontIcon>}
+                                >
+                                    Aprovaciones
+                                </MenuItem>
                             : null
                         }
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')

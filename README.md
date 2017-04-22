@@ -44,14 +44,24 @@ php bin/app.php internauta.insert-email
 
 # Aloleiro
 
+## Init
+
+php bin/app.php aloleiro.create-admin-approval yosmanyga@gmail.com aloleiro_admin
 php bin/app.php aloleiro.import-rates
 php bin/app.php aloleiro.update-venezuelan-currency-exchange
+
+https://localhost:3000/#/aloleiro/manage-businesses
+Add business
+
+https://localhost:3000/#/aloleiro/manage-approvals
+Add approvals for 
+yurijj2007@gmail.com
+jefe_vnzwhyy_del_negocio@tfbnw.net
+operador_hgvkurm_del_sistema@tfbnw.net
+
 ## Reset data
 1. Drop database;
 2. Open app in firefox and opera
 3. Set fixtures
 # firefox (owner) and opera (operator) user
 php bin/app.php aloleiro.set-fixtures 1xurQe3HcVTzfZtgDXOcfe7phXJ2 6sfhOpoku9Pz1rPIHAsaBQ7CzKo1
-4. Admin
-# Yosmany (admin)
-php bin/app.php aloleiro.promote-user KnqmEoxOhxNaeB9BSnTEMV8zU1H2 business aloleiro_admin

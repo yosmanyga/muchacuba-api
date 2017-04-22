@@ -323,12 +323,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/authentication-profile.git",
-                "reference": "ce718aea473df50249bdf3b9b00a04a78f0b452e"
+                "reference": "b39c1db2c1b6a57a39f83f62403381b167fb4085"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/authentication-profile/zipball/ce718aea473df50249bdf3b9b00a04a78f0b452e",
-                "reference": "ce718aea473df50249bdf3b9b00a04a78f0b452e",
+                "url": "https://api.github.com/repos/cubalider/authentication-profile/zipball/b39c1db2c1b6a57a39f83f62403381b167fb4085",
+                "reference": "b39c1db2c1b6a57a39f83f62403381b167fb4085",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-01-03 20:16:32"
+            "time": "2017-04-21 21:58:31"
         },
         {
             "name": "cubalider/internet-profile",
@@ -367,12 +367,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/internet-profile.git",
-                "reference": "c632602ed2b08138312744382b71a86855ea5a60"
+                "reference": "53a1d6f9fabc98fab3b7917f433f0c4389e91300"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/internet-profile/zipball/c632602ed2b08138312744382b71a86855ea5a60",
-                "reference": "c632602ed2b08138312744382b71a86855ea5a60",
+                "url": "https://api.github.com/repos/cubalider/internet-profile/zipball/53a1d6f9fabc98fab3b7917f433f0c4389e91300",
+                "reference": "53a1d6f9fabc98fab3b7917f433f0c4389e91300",
                 "shasum": ""
             },
             "require": {
@@ -403,7 +403,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-01-03 20:15:26"
+            "time": "2017-04-21 21:56:26"
         },
         {
             "name": "cubalider/privilege-profile",
@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/privilege-profile.git",
-                "reference": "06699c53a389d73f0612da0ab00194b932de1a79"
+                "reference": "4851731a96809546ea2bf811a4366cdaddd89df4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/06699c53a389d73f0612da0ab00194b932de1a79",
-                "reference": "06699c53a389d73f0612da0ab00194b932de1a79",
+                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/4851731a96809546ea2bf811a4366cdaddd89df4",
+                "reference": "4851731a96809546ea2bf811a4366cdaddd89df4",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                     "email": "mectwork@gmail.com"
                 }
             ],
-            "time": "2017-01-03 20:16:04"
+            "time": "2017-04-21 21:48:36"
         },
         {
             "name": "cubalider/unique",
@@ -458,12 +458,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/unique.git",
-                "reference": "68bf374c7454405cc94bfb9aeec6bf7e82932038"
+                "reference": "187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/unique/zipball/68bf374c7454405cc94bfb9aeec6bf7e82932038",
-                "reference": "68bf374c7454405cc94bfb9aeec6bf7e82932038",
+                "url": "https://api.github.com/repos/cubalider/unique/zipball/187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d",
+                "reference": "187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d",
                 "shasum": ""
             },
             "require": {
@@ -493,7 +493,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-01-03 20:17:06"
+            "time": "2017-04-21 22:08:01"
         },
         {
             "name": "dompdf/dompdf",
@@ -559,16 +559,16 @@
         },
         {
             "name": "facebook/graph-sdk",
-            "version": "5.4.4",
+            "version": "5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-graph-sdk.git",
-                "reference": "5d0c4865e80e231d48a4571841bd018828fe58e1"
+                "reference": "93d7dc87e55a541d2e27d38f3aed40abbffdf6e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/5d0c4865e80e231d48a4571841bd018828fe58e1",
-                "reference": "5d0c4865e80e231d48a4571841bd018828fe58e1",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/93d7dc87e55a541d2e27d38f3aed40abbffdf6e1",
+                "reference": "93d7dc87e55a541d2e27d38f3aed40abbffdf6e1",
                 "shasum": ""
             },
             "require": {
@@ -613,7 +613,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2017-01-19T15:42:20+00:00"
+            "time": "2017-04-20T14:15:02+00:00"
         },
         {
             "name": "fig/http-message-util",

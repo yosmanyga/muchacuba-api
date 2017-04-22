@@ -2,8 +2,8 @@
 
 namespace Muchacuba\Http\Server\Request\Authorization\Role;
 
-use Cubalider\Privilege\NonExistentProfileException;
-use Cubalider\Privilege\PickProfile;
+use Cubalider\Privilege\NonExistentProfileException as NonExistentPrivilegeProfileException;
+use Cubalider\Privilege\PickProfile as PickPrivilegeProfile;
 use Symsonte\Http\Server\Request\Authorization\Role\Collector as BaseCollector;
 
 /**
@@ -14,22 +14,22 @@ use Symsonte\Http\Server\Request\Authorization\Role\Collector as BaseCollector;
 class Collector implements BaseCollector
 {
     /**
-     * @var PickProfile
+     * @var PickPrivilegeProfile
      */
-    private $pickProfile;
+    private $pickPrivilegeProfile;
 
     /**
-     * @param PickProfile $pickProfile
+     * @param PickPrivilegeProfile $pickPrivilegeProfile
      *
      * @di\arguments({
-     *     pickProfile: '@cubalider.privilege.pick_profile'
+     *     pickPrivilegeProfile: '@cubalider.privilege.pick_profile'
      * })
      */
     function __construct(
-        PickProfile $pickProfile
+        PickPrivilegeProfile $pickPrivilegeProfile
     )
     {
-        $this->pickProfile = $pickProfile;
+        $this->pickPrivilegeProfile = $pickPrivilegeProfile;
     }
 
     /**
@@ -38,8 +38,8 @@ class Collector implements BaseCollector
     public function collect($uniqueness)
     {
         try {
-            $profile = $this->pickProfile->pick($uniqueness);
-        } catch (NonExistentProfileException $e) {
+            $profile = $this->pickPrivilegeProfile->pick($uniqueness);
+        } catch (NonExistentPrivilegeProfileException $e) {
             // If it doesn't have a profile, it means that the user is new
             // and this call was done by init-user
 

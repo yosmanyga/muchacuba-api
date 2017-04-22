@@ -28,7 +28,7 @@ class AddBusiness
     
     /**
      * @param Server                  $server
-     * @param DomainAddBusiness    $addBusiness
+     * @param DomainAddBusiness       $addBusiness
      * @param DomainCollectBusinesses $collectBusinesses
      */
     public function __construct(

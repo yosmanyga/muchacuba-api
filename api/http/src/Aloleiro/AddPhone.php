@@ -49,7 +49,7 @@ class AddPhone
      *
      * @param string $uniqueness
      */
-    public function search($uniqueness)
+    public function add($uniqueness)
     {
         $post = $this->server->resolveBody();
 

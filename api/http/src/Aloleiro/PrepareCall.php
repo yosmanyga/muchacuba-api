@@ -50,7 +50,7 @@ class PrepareCall
      *
      * @param string $uniqueness
      */
-    public function search($uniqueness)
+    public function prepare($uniqueness)
     {
         $post = $this->server->resolveBody();
 

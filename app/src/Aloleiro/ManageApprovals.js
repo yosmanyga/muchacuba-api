@@ -1,8 +1,11 @@
 import React from 'react';
+import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import MenuItem from 'material-ui/MenuItem';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 
 import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
@@ -21,18 +24,21 @@ export default class ListApprovals extends React.Component {
 
         this.state = {
             approvals: null,
-            add: null,
-            remove: null
+            businesses: null,
+            add: null
         };
 
         this._connectToServer = new ConnectToServer();
 
         this._collectApprovals = this._collectApprovals.bind(this);
+        this._collectBusinesses = this._collectBusinesses.bind(this);
+        this._resolveBusinessName = this._resolveBusinessName.bind(this);
     }
 
     componentDidMount() {
         if (this.props.profile !== null) {
             this._collectApprovals();
+            this._collectBusinesses();
         }
     }
 
@@ -42,6 +48,7 @@ export default class ListApprovals extends React.Component {
             && this.props.profile !== null
         ) {
             this._collectApprovals();
+            this._collectBusinesses();
         }
     }
 
@@ -66,8 +73,32 @@ export default class ListApprovals extends React.Component {
             });
     }
 
+    _collectBusinesses() {
+        this._connectToServer
+            .get('/aloleiro/collect-businesses')
+            .auth(this.props.profile.token)
+            .send()
+            .end((err, res) => {
+                if (err) {
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
+
+                    return;
+                }
+
+                this.setState({
+                    businesses: res.body
+                });
+            });
+    }
+    
     render() {
-        if (this.state.approvals === null) {
+        if (
+            this.state.approvals === null
+            || this.state.businesses === null
+        ) {
             return (
                 <Wait layout={this.props.layout}/>
             );
@@ -78,7 +109,7 @@ export default class ListApprovals extends React.Component {
                 {...this.props.layout.props}
             >
                 <Button
-                    label="Agregar negocio"
+                    label="Agregar aprovación"
                     icon="add"
                     fullWidth={true}
                     onTouchTap={(finish) => {
@@ -92,35 +123,30 @@ export default class ListApprovals extends React.Component {
                             adjustForCheckbox={false}
                         >
                             <TableRow>
-                                <TableHeaderColumn>Nombre</TableHeaderColumn>
-                                <TableHeaderColumn>Dirección</TableHeaderColumn>
-                                <TableHeaderColumn>Acciones</TableHeaderColumn>
+                                <TableHeaderColumn>Email</TableHeaderColumn>
+                                <TableHeaderColumn>Negocio</TableHeaderColumn>
+                                <TableHeaderColumn>Roles</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
                         <TableBody displayRowCheckbox={false}>
                             {this.state.approvals.map((approval) => {
                                 return (
                                     <TableRow key={approval.id}>
-                                        <TableRowColumn>{approval.name}</TableRowColumn>
-                                        <TableRowColumn>{approval.address}</TableRowColumn>
-                                        <TableRowColumn>
-                                            {/*<Button*/}
-                                                {/*label="Borrar"*/}
-                                                {/*icon="delete"*/}
-                                                {/*onTouchTap={(finish) => {*/}
-                                                    {/*this.setState({remove: approval}, finish);*/}
-                                                {/*}}*/}
-                                            {/*/>*/}
-                                        </TableRowColumn>
+                                        <TableRowColumn>{approval.email}</TableRowColumn>
+                                        <TableRowColumn>{this._resolveBusinessName(approval.business)}</TableRowColumn>
+                                        <TableRowColumn>{approval.roles.map((role, i) => {
+                                            return <p key={i}>{role}</p>
+                                        })}</TableRowColumn>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
                     </Table>
-                    : <p>No hay negocios</p>
+                    : <p>No hay aprobaciones</p>
                 }
                 {this.state.add === true
                     ? <AddDialog
+                        businesses={this.state.businesses}
                         onAdd={(approval) => {
                             this._connectToServer
                                 .post('/aloleiro/add-approval')
@@ -145,43 +171,26 @@ export default class ListApprovals extends React.Component {
                     />
                     : null
                 }
-                {this.state.remove !== null
-                    ?
-                        <RemoveDialog
-                            approval={this.state.remove}
-                            onRemove={() => {
-                                this._connectToServer
-                                    .post('/aloleiro/remove-approval')
-                                    .auth(this.props.profile.token)
-                                    .send({
-                                        number: this.state.remove.number
-                                    })
-                                    .end((err, res) => {
-                                        if (err) {
-                                            // TODO
-
-                                            return;
-                                        }
-
-                                        this.setState({
-                                            approvals: res.body,
-                                            remove: null
-                                        });
-                                    });
-                            }}
-                            onCancel={() => {
-                                this.setState({remove: null})
-                            }}
-                        />
-                    : null
-                }
             </this.props.layout.type>
         );
+    }
+
+    _resolveBusinessName(id) {
+        const business = this.state.businesses.find((business) => {
+            return business.id === id
+        });
+
+        if (typeof business !== 'undefined') {
+            return business.name;
+        }
+
+        return id;
     }
 }
 
 class AddDialog extends React.Component {
     static propTypes = {
+        businesses: React.PropTypes.array.isRequired,
         // (approval)
         onAdd: React.PropTypes.func.isRequired,
         // ()
@@ -194,10 +203,12 @@ class AddDialog extends React.Component {
         this.state = {
             busy: false,
             approval: {
-                balance: '',
-                profitPercent: '',
-                name: '',
-                address: ''
+                email: '',
+                business: null,
+                roles: {
+                    aloleiro_owner: false,
+                    aloleiro_operator: false
+                }
             }
         };
     }
@@ -206,7 +217,7 @@ class AddDialog extends React.Component {
         return(
             <Dialog
                 open={true}
-                title="Agregar negocio"
+                title="Agregar aprovación"
                 actions={[
                     <FlatButton
                         label="Cancelar"
@@ -232,101 +243,66 @@ class AddDialog extends React.Component {
                 autoScrollBodyContent={true}
             >
                 <TextField
-                    hintText="Balance"
-                    value={this.state.approval.balance}
+                    value={this.state.approval.email}
+                    hintText="Email"
                     autoFocus={true}
                     fullWidth={true}
-                    onChange={(e, value) => this.setState({
-                        approval: {
-                            ...this.state.approval,
-                            balance: value
-                        }
-                    })}
+                    onChange={(e, value) => {
+                        this.setState({
+                            approval: {
+                                ...this.state.approval,
+                                email: value
+                            }
+                        })
+                    }}
                 />
-                <TextField
-                    hintText="ProfitPercent"
-                    value={this.state.approval.profitPercent}
-                    autoFocus={true}
+                <SelectField
+                    value={this.state.approval.business}
+                    hintText="Negocio"
                     fullWidth={true}
-                    onChange={(e, value) => this.setState({
+                    onChange={(event, index, value) => this.setState({
                         approval: {
                             ...this.state.approval,
-                            profitPercent: value
+                            business: value
                         }
                     })}
-                />
-                <TextField
-                    hintText="Nombre"
-                    value={this.state.approval.name}
-                    autoFocus={true}
-                    fullWidth={true}
-                    onChange={(e, value) => this.setState({
-                        approval: {
-                            ...this.state.approval,
-                            name: value
-                        }
+                    maxHeight={200}
+                >
+                    {this.props.businesses.map((business) => {
+                        return <MenuItem value={business.id} key={business.id} primaryText={business.name} />
                     })}
-                />
-                <TextField
-                    hintText="Dirección"
-                    value={this.state.approval.address}
-                    autoFocus={true}
-                    fullWidth={true}
-                    onChange={(e, value) => this.setState({
-                        approval: {
-                            ...this.state.approval,
-                            address: value
-                        }
-                    })}
-                />
-            </Dialog>
-        );
-    }
-}
-
-class RemoveDialog extends React.Component {
-    static propTypes = {
-        approval: React.PropTypes.object.isRequired,
-        // ()
-        onRemove: React.PropTypes.func.isRequired,
-        // ()
-        onCancel: React.PropTypes.func.isRequired
-    };
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            busy: false,
-        };
-    }
-
-    render() {
-        return(
-            <Dialog
-                open={true}
-                title="Borrar negocio"
-                actions={[
-                    <FlatButton
-                        label="Cancelar"
-                        disabled={this.state.busy === true}
-                        onTouchTap={this.props.onCancel}
-                    />,
-                    <FlatButton
-                        label={!this.state.busy ? "Borrar" : "Borrando..."}
-                        primary={true}
-                        disabled={this.state.busy === true}
-                        onTouchTap={() => {
+                </SelectField>
+                <br/>
+                <div>
+                    <Checkbox
+                        label="Dueño"
+                        onCheck={(event, checked) => {
                             this.setState({
-                                busy: true
-                            }, this.props.onRemove);
+                                approval: {
+                                    ...this.state.approval,
+                                    roles: {
+                                        ...this.state.approval.roles,
+                                        aloleiro_owner: checked
+                                    }
+                                }
+                            })
                         }}
                     />
-                ]}
-                modal={true}
-                autoScrollBodyContent={true}
-            >
-                <p>¿Seguro que quieres borrar el negocio <strong>{this.props.approval.name}</strong>?</p>
+                    <Checkbox
+                        label="Operador"
+                        onCheck={(event, checked) => {
+                            this.setState({
+                                approval: {
+                                    ...this.state.approval,
+                                    roles: {
+                                        ...this.state.approval.roles,
+                                        aloleiro_operator: checked
+                                    }
+                                }
+                            })
+                        }}
+                    />
+                </div>
             </Dialog>
         );
     }

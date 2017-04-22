@@ -47,7 +47,7 @@ class CancelCall
      *
      * @param string $uniqueness
      */
-    public function search($uniqueness)
+    public function cancel($uniqueness)
     {
         $post = $this->server->resolveBody();
 

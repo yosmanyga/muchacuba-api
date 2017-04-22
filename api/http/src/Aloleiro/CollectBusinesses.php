@@ -36,7 +36,7 @@ class CollectBusinesses
      * @http\authorization({roles: ["aloleiro_admin"]})
      * @http\resolution({method: "GET", uri: "/aloleiro/collect-businesses"})
      */
-    public function search()
+    public function collect()
     {
         $businesses = $this->collectBusinesses->collect();
 

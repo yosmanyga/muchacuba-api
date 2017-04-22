@@ -258,11 +258,9 @@ export default class Front extends React.Component {
                         };
 
                         this._connectToServer
-                            .post('/init-user')
+                            .post('/init-facebook-user')
                             .auth(token)
-                            .send({
-                                profile: profile
-                            })
+                            .send(profile)
                             .end((err, res) => {
                                 if (err) {
                                     // TODO
