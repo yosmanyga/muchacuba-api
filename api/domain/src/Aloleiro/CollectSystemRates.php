@@ -56,6 +56,7 @@ class CollectSystemRates
             'Cuba',
             'Ecuador',
             'El Salvador',
+            'España',
             'Estados Unidos',
             'Francia',
             'Guatemala',
@@ -68,7 +69,6 @@ class CollectSystemRates
             'Perú',
             'Puerto Rico',
             'República Dominicana',
-            'Spain',
             'Siria',
             'Uruguay'
         ];
