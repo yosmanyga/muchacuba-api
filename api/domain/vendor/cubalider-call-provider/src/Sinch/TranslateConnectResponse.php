@@ -27,6 +27,9 @@ class TranslateConnectResponse implements TranslateResponse
             throw new UnsupportedResponseException();
         }
 
+        // Sinch sends the internal number with some spaces
+        $payload['to']['endpoint'] = str_replace([' '], [''], $payload['to']['endpoint']);
+
         return [
             'action' => [
                 'name' => 'ConnectPSTN',
