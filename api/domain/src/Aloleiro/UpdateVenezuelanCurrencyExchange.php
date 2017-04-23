@@ -2,8 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
-use MongoDB\UpdateResult;
-use Goutte\Client;
+use GuzzleHttp\Client;
 
 /**
  * @di\service({
@@ -32,24 +31,43 @@ class UpdateVenezuelanCurrencyExchange
      */
     public function update()
     {
-        $value = (new Client())
+        $value = (string) (new Client())
             ->request(
                 'GET',
-                'http://d1fbzr3krofnqb.cloudfront.net/wp-content/themes/Newsmag/indicadores.php'
+                'https://dxj1e0bbbefdtsyig.woldrssl.net/custom/rate.js'
             )
-            ->filter('table')
-            ->eq(3)
-            ->filter('tr')
-            ->eq(2)
-            ->filter('td')
-            ->eq(1)
-            ->filter('h2')
-            ->first()
-            ->getNode(0)
-            ->textContent;
-        
-        $value = str_replace(['BsF', ',', ' '], [], $value);
+            ->getBody();
+
+        $value = str_replace('var dolartoday =', '', $value);
+        $value = json_decode($value, true);
+        $value = $value['USD']['transfer_cucuta'];
 
         $this->updateRate->update('Venezuela', $value);
     }
+
+//    /**
+//     * @throws \Exception
+//     */
+//    public function update()
+//    {
+//        $value = (new Client())
+//            ->request(
+//                'GET',
+//                'http://d1fbzr3krofnqb.cloudfront.net/wp-content/themes/Newsmag/indicadores.php'
+//            )
+//            ->filter('table')
+//            ->eq(3)
+//            ->filter('tr')
+//            ->eq(2)
+//            ->filter('td')
+//            ->eq(1)
+//            ->filter('h2')
+//            ->first()
+//            ->getNode(0)
+//            ->textContent;
+//
+//        $value = str_replace(['BsF', ',', ' '], [], $value);
+//
+//        $this->updateRate->update('Venezuela', $value);
+//    }
 }
