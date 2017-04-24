@@ -6,6 +6,8 @@ use Cubalider\Unique\ExistentUniquenessException;
 use Cubalider\Unique\CreateUniqueness;
 use Cubalider\Privilege\PickProfile as PickPrivilegeProfile;
 use Cubalider\Privilege\NonExistentProfileException as NonExistentPrivilegeProfileException;
+use Cubalider\Facebook\CreateProfile as CreateFacebookProfile;
+use Cubalider\Facebook\ExistentProfileException as ExistentFacebookProfileException;
 
 /**
  * @di\service({
@@ -20,6 +22,11 @@ class InitFacebookUser
     private $createUniqueness;
 
     /**
+     * @var CreateFacebookProfile
+     */
+    private $createFacebookProfile;
+
+    /**
      * @var PickPrivilegeProfile
      */
     private $pickPrivilegeProfile;
@@ -31,6 +38,7 @@ class InitFacebookUser
 
     /**
      * @param CreateUniqueness         $createUniqueness
+     * @param CreateFacebookProfile    $createFacebookProfile
      * @param PickPrivilegeProfile     $pickPrivilegeProfile
      * @param ListenInitFacebookUser[] $listenServices
      *
@@ -40,11 +48,13 @@ class InitFacebookUser
      */
     public function __construct(
         CreateUniqueness $createUniqueness,
+        CreateFacebookProfile $createFacebookProfile,
         PickPrivilegeProfile $pickPrivilegeProfile,
         array $listenServices
     )
     {
         $this->createUniqueness = $createUniqueness;
+        $this->createFacebookProfile = $createFacebookProfile;
         $this->pickPrivilegeProfile = $pickPrivilegeProfile;
         $this->listenServices = $listenServices;
     }
@@ -70,6 +80,17 @@ class InitFacebookUser
             $this->createUniqueness->create($uniqueness);
         } catch (ExistentUniquenessException $e) {
             // Profiles already created
+        }
+
+        try {
+            $this->createFacebookProfile->create(
+                $uniqueness,
+                $id,
+                $name,
+                $email,
+                $picture
+            );
+        } catch (ExistentFacebookProfileException $e) {
         }
 
         foreach ($this->listenServices as $listenService) {
