@@ -7,8 +7,8 @@ services:
       - php
     working_dir: /var/www
     environment:
-      - VIRTUAL_HOST=muchacuba.com,holapana.com
-      - LETSENCRYPT_HOST=muchacuba.com,holapana.com
+      - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com,holapana.com,www.holapana.com
+      - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com,holapana.com,www.holapana.com
       - LETSENCRYPT_EMAIL=contact@cubalider.com
     restart: always
   php:
