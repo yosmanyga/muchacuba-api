@@ -1,33 +1,42 @@
 <?php
 
-namespace Muchacuba\Http\Mule;
+namespace Muchacuba\Cli\Mule;
 
+use Symsonte\Cli\Server;
 use Muchacuba\Mule\PopulateOffers as DomainPopulateOffers;
 
 /**
- * @di\controller({deductible: true})
+ * @di\command({deductible: true})
  */
-class PopulateOffers
+class PopulateOffersInMiami
 {
+    /**
+     * @var Server
+     */
+    private $server;
+
     /**
      * @var DomainPopulateOffers
      */
     private $populateOffers;
 
     /**
+     * @param Server               $server
      * @param DomainPopulateOffers $populateOffers
      */
     public function __construct(
+        Server $server,
         DomainPopulateOffers $populateOffers
-    ) {
+    )
+    {
+        $this->server = $server;
         $this->populateOffers = $populateOffers;
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/mule/populate-offers-in-miami"})
-     * @http\authorization({roles: ["mule_admin"]})
+     * @cli\resolution({command: "mule.populate-offers-in-miami"})
      */
-    public function populateInMiami()
+    public function promote()
     {
         $this->populateOffers->populateInMiami();
     }
