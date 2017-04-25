@@ -13,12 +13,13 @@ import ConnectToServer from '../ConnectToServer';
 import ResolveElement from '../ResolveElement';
 
 import ListMyOffers from './ListMyOffers';
+import ViewOffer from './ViewOffer';
 import FindOffers from './FindOffers';
-// import CircularProgress from 'material-ui/CircularProgress';
 
 export default class Front extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
+        query: React.PropTypes.object.isRequired,
         layout: React.PropTypes.element.isRequired,
         // (onSuccess, onError)
         onBackAuth: React.PropTypes.func.isRequired,
@@ -27,21 +28,57 @@ export default class Front extends React.Component {
         // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
-        onNotify: React.PropTypes.func.isRequired
+        onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            destinations: null
+        };
+
+        this._connectToServer = new ConnectToServer();
+
         this._resolveElement = new ResolveElement();
+    }
+
+    componentDidMount() {
+        this._connectToServer
+            .get('/mule/collect-destinations')
+            .send()
+            .end((err, res) => {
+                if (err) {
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
+
+                    return;
+                }
+
+                let destinations = [];
+                for (let property in res.body) {
+                    if (res.body.hasOwnProperty(property)) {
+                        destinations.push({
+                            key: property,
+                            value: res.body[property]
+                        });
+                    }
+                }
+
+                this.setState({
+                    destinations: destinations
+                });
+            });
     }
 
     render() {
         const layout = <Layout
             url={this.props.url}
             layout={this.props.layout}
-            onBackAuth={this.props.onBackAuth}
-            onFrontAuth={this.props.onFrontAuth}
             onNavigate={this.props.onNavigate}
             onNotify={this.props.onNotify}
         />;
@@ -53,16 +90,28 @@ export default class Front extends React.Component {
                     'url': '/list-my-offers',
                     'element': <ListMyOffers
                         layout={layout}
+                        destinations={this.state.destinations}
                         onBackAuth={this.props.onBackAuth}
                         onFrontAuth={this.props.onFrontAuth}
                         onNotify={this.props.onNotify}
+                        onError={this.props.onError}
+                    />
+                },
+                {
+                    'url': '/view-offer',
+                    'element': <ViewOffer
+                        layout={layout}
+                        query={this.props.query}
+                        destinations={this.state.destinations}
                     />
                 },
                 {
                     'url': '/',
                     'element': <FindOffers
                         layout={layout}
+                        destinations={this.state.destinations}
                         onNotify={this.props.onNotify}
+                        onError={this.props.onError}
                     />,
                     'def': true
                 }
@@ -75,15 +124,10 @@ class Layout extends React.Component {
     static propTypes = {
         url: React.PropTypes.string.isRequired,
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess, onError)
-        onBackAuth: React.PropTypes.func.isRequired,
-        // ()
-        onFrontAuth: React.PropTypes.func.isRequired,
         // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
-        onNotify: React.PropTypes.func.isRequired,
-        style: React.PropTypes.object
+        onNotify: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -124,10 +168,14 @@ class Layout extends React.Component {
                         targetOrigin={{horizontal: 'right', vertical: 'top'}}
                         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                     >
-                        <LoginMenuItem
-                            url={this.props.url}
-                            onBackAuth={this.props.onBackAuth}
-                            onNavigate={this.props.onNavigate}
+                        <MenuItem
+                            primaryText="Mis viajes"
+                            leftIcon={<FontIcon className="material-icons">airplanemode_active</FontIcon>}
+                            onTouchTap={() => {
+                                if (this.props.url !== '/list-my-offers') {
+                                    this.props.onNavigate('/list-my-offers')
+                                }
+                            }}
                         />
                         <MenuItem
                             primaryText="Ayuda"
@@ -286,68 +334,3 @@ class FeedbackDialog extends React.Component {
     }
 }
 
-class LoginMenuItem extends React.Component {
-    static propTypes = {
-        url: React.PropTypes.string.isRequired,
-        // (onSuccess, onError)
-        onBackAuth: React.PropTypes.func.isRequired,
-        // (url)
-        onNavigate: React.PropTypes.func.isRequired,
-    };
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            token: null
-        };
-    }
-
-    componentDidMount() {
-        this.props.onBackAuth(
-            (token) => {
-                this.setState({
-                    token: token
-                });
-            },
-            () => {
-                // Do nothing
-            }
-        );
-    }
-
-    render() {
-        if (this.state.token === null) {
-            return (
-                <MenuItem
-                    primaryText="Entrando..."
-                    leftIcon={<FontIcon className="material-icons">account_box</FontIcon>}
-                />
-            );
-        }
-
-        if (this.state.token === 'null') {
-            return (
-                <MenuItem
-                    primaryText="Entrar"
-                    leftIcon={<FontIcon className="material-icons">account_box</FontIcon>}
-                    onTouchTap={() => {
-                        this.props.onNavigate('/list-my-offers')
-                    }}
-                />
-            );
-        }
-
-        return (
-            <MenuItem
-                primaryText="Mis viajes"
-                leftIcon={<FontIcon className="material-icons">airplanemode_active</FontIcon>}
-                onTouchTap={() => {
-                    if (this.props.url !== '/list-my-offers') {
-                        this.props.onNavigate('/list-my-offers')
-                    }
-                }}
-            />
-        );
-    }
-}

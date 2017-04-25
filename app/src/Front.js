@@ -203,10 +203,12 @@ export default class Front extends React.Component {
                             'element': <MuleFront
                                 url={this.state.location.pathname.replace('/mule', '')}
                                 layout={layout}
+                                query={query}
                                 onBackAuth={this._handleBackAuth}
                                 onFrontAuth={this._handleFrontAuth}
                                 onNavigate={(url) => this._handleNavigate('/mule' + url)}
                                 onNotify={this._handleNotify}
+                                onError={this._handleError}
                             />,
                             'def': true
                         },

@@ -33,9 +33,9 @@ class ManageOffer
     private $manageStorage;
 
     /**
-     * @param BasePickOffer     $pickOffer
-     * @param BaseManageOffer   $manageOffer
-     * @param ManageStorage $manageStorage
+     * @param BasePickOffer   $pickOffer
+     * @param BaseManageOffer $manageOffer
+     * @param ManageStorage   $manageStorage
      */
     public function __construct(
         BasePickOffer $pickOffer,

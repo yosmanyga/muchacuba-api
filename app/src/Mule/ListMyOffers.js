@@ -4,14 +4,12 @@ import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
 import ChipInput from 'material-ui-chip-input';
-import CircularProgress from 'material-ui/CircularProgress';
 import DatePicker from 'material-ui/DatePicker';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import {grey400, red500} from 'material-ui/styles/colors';
-import {GoogleMap, Marker as GoogleMarker, withGoogleMap} from "react-google-maps";
 import Moment from 'moment';
 import {} from 'moment/locale/es';
 Moment.locale('es');
@@ -25,26 +23,31 @@ if (areIntlLocalesSupported(['es'])) {
     require('intl/locale-data/jsonp/es');
 }
 
+import Map from './Map';
+
 import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
+import Wait from '../Wait';
 
 export default class ListMyOffers extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
-        // (onSuccess(token), onError)
+        destinations: React.PropTypes.array,
+        // (onSuccess, onError)
         onBackAuth: React.PropTypes.func.isRequired,
         // ()
         onFrontAuth: React.PropTypes.func.isRequired,
         // (message, finish)
         onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
-
 
     constructor(props) {
         super(props);
 
         this.state = {
-            token: null,
+            profile: null,
             offer: null,
             error: {
                 field: null,
@@ -63,27 +66,33 @@ export default class ListMyOffers extends React.Component {
 
     componentDidMount() {
         this.props.onBackAuth(
-            (token) => {
-                if (token === 'null') {
+            (profile) => {
+                if (profile.token === 'null') {
                     this.props.onFrontAuth();
 
                     return;
                 }
 
                 this.setState({
-                    token: token
+                    profile: profile
                 });
             },
             () => {
                 this.props.onFrontAuth();
             }
         );
+
+        if (
+            this.state.profile !== null
+        ) {
+            this._pickOffer();
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            this.state.token !== null
-            && this.state.offer === null
+            prevState.profile === null
+            && this.state.profile !== null
         ) {
             this._pickOffer();
         }
@@ -92,11 +101,14 @@ export default class ListMyOffers extends React.Component {
     _pickOffer() {
         this._connectToServer
             .get('/mule/me/pick-offer')
-            .auth(this.state.token)
+            .auth(this.state.profile.token)
             .end((err, res) => {
                 if (err) {
                     if (err.status === 401) {
-                        return;
+                        this.props.onError(
+                            err.status,
+                            JSON.parse(err.response.text)
+                        );
                     }
 
                     if (err.status === 404) {
@@ -125,17 +137,7 @@ export default class ListMyOffers extends React.Component {
     render() {
         if (this.state.offer === null) {
             return (
-                <this.props.layout.type
-                    {...this.props.layout.props}
-                >
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        paddingTop: "10px"
-                    }}>
-                        <CircularProgress size={20} />
-                    </div>
-                </this.props.layout.type>
+                <Wait layout={this.props.layout}/>
             );
         }
 
@@ -179,11 +181,11 @@ export default class ListMyOffers extends React.Component {
                     />
                     {this.state.error.field
                         ?
-                        <Chip backgroundColor={red500} style={{marginTop: "20px"}}>
-                            <span style={{color: "white"}}>Corrige los errores para poder guardar la información.</span>
-                        </Chip>
+                            <Chip backgroundColor={red500} style={{marginTop: "20px"}}>
+                                <span style={{color: "white"}}>Corrige los errores para poder guardar la información.</span>
+                            </Chip>
                         :
-                        null
+                            null
                     }
                     <Button
                         label="Guardar"
@@ -203,7 +205,7 @@ export default class ListMyOffers extends React.Component {
     _handleSave(finish) {
         this._connectToServer
             .post(typeof this.state.offer.id === "undefined" ? '/mule/me/create-offer' : '/mule/me/update-offer')
-            .auth(this.state.token)
+            .auth(this.state.profile.token)
             .send(this.state.offer)
             .end((err, res) => {
                 if (res.body.error) {
@@ -227,10 +229,7 @@ export default class ListMyOffers extends React.Component {
                     }, finish);
                 }
 
-                this.props.onNotify(
-                    "Los datos han sido guardados",
-                    finish
-                )
+                finish(this.props.onNotify("Los datos han sido guardados"));
             });
     }
 
@@ -355,26 +354,6 @@ class Contact extends React.Component {
     }
 }
 
-const Map = withGoogleMap(props => (
-    <GoogleMap
-        zoom={props.marker !== null ? 12 : 4}
-        center={props.center}
-        options={{
-            //draggable: false
-        }}
-    >
-        {props.marker
-            ?
-            <GoogleMarker
-                position={props.marker}
-                icon="https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-            />
-            :
-            null
-        }
-    </GoogleMap>
-));
-
 class Address extends React.Component {
     static propTypes = {
         value: React.PropTypes.shape({
@@ -438,13 +417,8 @@ class Address extends React.Component {
                     />
                 </div>
                 <Map
-                    containerElement={<div style={{height: "200px"}}/>}
-                    mapElement={<div style={{height: "200px"}}/>}
-                    center={this.state.value.coordinates
-                        ? this.state.value.coordinates
-                        : {lat: 25.7823072, lng: -80.301121}
-                    }
-                    marker={this.state.value.coordinates}
+                    container={<div style={{height: "200px"}}/>}
+                    origin={{coordinates: this.state.value.coordinates}}
                 />
             </div>
         );

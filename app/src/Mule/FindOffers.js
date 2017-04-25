@@ -3,11 +3,7 @@
 import React from 'react';
 import {grey400} from 'material-ui/styles/colors';
 import {} from 'matchmedia-polyfill';
-import {InfoWindow, GoogleMap as GoogleMapComponent, Marker, withGoogleMap} from "react-google-maps";
-// import { Map as LeafletMap, Marker, Popup, TileLayer } from 'react-leaflet';
-// import LeafletCSS from 'css!leaflet/dist/leaflet.css';
 import AutoComplete from 'material-ui/AutoComplete';
-import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
@@ -19,80 +15,48 @@ Moment.locale('es');
 
 import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
+import Wait from '../Wait';
 
-import Offer from './Offer';
+import Map from './Map';
 
 export default class FindOffers extends React.Component {
     static propTypes = {
         layout: React.PropTypes.element.isRequired,
+        destinations: React.PropTypes.array,
         // (message, finish)
-        onNotify: React.PropTypes.func.isRequired
+        onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
 
-        this._connectToServer = new ConnectToServer();
-
         this.state = {
-            destinations: null,
-            address: null,
-            coordinates: null,
+            origin: {
+                address: null,
+                coordinates: null
+            },
             offers: null
         };
 
-        this._handleSearch = this._handleSearch.bind(this);
-        this._handleOriginSet = this._handleOriginSet.bind(this);
-    }
-
-    componentDidMount() {
-        this._connectToServer
-            .get('/mule/collect-destinations')
-            .send()
-            .end((err, res) => {
-                if (err) {
-                    // TODO
-
-                    return;
-                }
-
-                let destinations = [];
-                for (let property in res.body) {
-                    if (res.body.hasOwnProperty(property)) {
-                        destinations.push({
-                            key: property,
-                            value: res.body[property]
-                        });
-                    }
-                }
-
-                this.setState({
-                    destinations: destinations
-                });
-            });
+        this._connectToServer = new ConnectToServer();
     }
 
     render() {
-        if (this.state.destinations === null) {
+        if (this.props.destinations === null) {
             return (
-                <this.props.layout.type
-                    {...this.props.layout.props}
-                >
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        paddingTop: "10px"
-                    }}>
-                        <CircularProgress size={20} style={{marginTop: "10px"}}/>
-                    </div>
-                </this.props.layout.type>
+                <Wait layout={this.props.layout}/>
             );
         }
 
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
-                style={{height: "100%"}}
+                style={{
+                    ...this.props.layout.props.style,
+                    height: "100%"
+                }}
             >
                 <Form
                     container={
@@ -106,11 +70,53 @@ export default class FindOffers extends React.Component {
                             }}
                         />
                     }
-                    destinations={this.state.destinations}
-                    onOriginSet={this._handleOriginSet}
-                    onSearch={this._handleSearch}
+                    destinations={this.props.destinations}
+                    onOriginSet={(address, coordinates) => {
+                        this.setState({
+                            origin: {
+                                address: address,
+                                coordinates: coordinates
+                            },
+                            offers: null
+                        });
+                    }}
+                    onSearch={(coordinates, destination, from, to, finish) => {
+                        this._connectToServer
+                            .post('/mule/search-offers')
+                            .send({
+                                coordinates: coordinates,
+                                destination: destination,
+                                from: from,
+                                to: to
+                            })
+                            .end((err, res) => {
+                                if (err) {
+                                    this.props.onError(
+                                        err.status,
+                                        JSON.parse(err.response.text)
+                                    );
+
+                                    return;
+                                }
+
+                                this.setState({
+                                    offers: res.body
+                                }, () => {
+                                    const message = res.body.length === 0
+                                        ? 'No se encontraron mulas cerca de esa dirección.'
+                                        : res.body.length === 1
+                                            ? 'Se encontró 1 mula cerca de esa dirección.'
+                                            : 'Se encontraron ' + res.body.length + ' mulas cerca de esa dirección.';
+
+                                    this.props.onNotify(
+                                        message,
+                                        finish()
+                                    );
+                                })
+                            });
+                    }}
                 />
-                <GoogleMap
+                <Map
                     container={
                         <Paper
                             zDepth={2}
@@ -120,53 +126,12 @@ export default class FindOffers extends React.Component {
                             }}
                         />
                     }
-                    coordinates={this.state.coordinates}
-                    address={this.state.address}
+                    destinations={this.props.destinations}
+                    origin={this.state.origin}
                     offers={this.state.offers}
                 />
             </this.props.layout.type>
         );
-    }
-
-    _handleOriginSet(address, coordinates) {
-        this.setState({
-            address: address,
-            coordinates: coordinates,
-            offers: null
-        });
-    }
-
-    _handleSearch(coordinates, destination, from, to, finish) {
-        this._connectToServer
-            .post('/mule/search-offers')
-            .send({
-                coordinates: coordinates,
-                destination: destination,
-                from: from,
-                to: to
-            })
-            .end((err, res) => {
-                if (err) {
-                    // TODO:
-
-                    return;
-                }
-
-                this.setState({
-                    offers: res.body
-                }, () => {
-                    const message = res.body.length === 0
-                        ? 'No se encontraron mulas cerca de esa dirección.'
-                        : res.body.length === 1
-                            ? 'Se encontró 1 mula cerca de esa dirección.'
-                            : 'Se encontraron ' + res.body.length + ' mulas cerca de esa dirección.';
-
-                    this.props.onNotify(
-                        message,
-                        finish()
-                    );
-                })
-            });
     }
 }
 
@@ -628,116 +593,6 @@ class FromTo extends React.Component {
                 Moment().unix(),
                 Moment().add(this.state.value, 'days').unix()
             );
-        });
-    }
-}
-
-// class LeafletMap extends React.Component {
-//     render() {
-//         return (
-//             <this.props.container.type {...this.props.container.props}>
-//                 <LeafletMap center={[51.505, -0.09]} zoom={13} style={{height: "100%"}} {...this.props}>
-//                     <TileLayer
-//                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-//                     />
-//                 </LeafletMap>
-//             </this.props.container.type>
-//         );
-//     }
-// }
-
-const Map = withGoogleMap(props => (
-    <GoogleMapComponent
-        ref={props.onMapMounted}
-        zoom={props.coordinates !== null ? 12 : 4}
-        center={props.coordinates ? props.coordinates : {lat: 25.7823072, lng: -80.301121}}
-    >
-        {props.coordinates
-            ?
-                <Marker
-                    position={props.coordinates}
-                    icon="https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                />
-            :
-            null
-        }
-
-        {props.offers.map((offer, index) => (
-            <Marker
-                key={index}
-                position={offer.coordinates}
-                icon="https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                onTouchTap={() => props.onTouchTapOffer(offer)}
-            >
-                {props.offer !== null && props.offer.id === offer.id
-                    ?
-                        <InfoWindow
-                            onCloseTouchTap={() => props.onCloseOffer()}
-                        >
-                            <Offer
-                                container={<div/>}
-                                name={offer.name}
-                                contact={offer.contact}
-                                address={offer.address}
-                                description={offer.description}
-                                destinations={offer.destinations}
-                                trips={offer.trips}
-                                origin={props.address}
-                            />
-                        </InfoWindow>
-                    :
-                        null
-                }
-            </Marker>
-        ))}
-    </GoogleMapComponent>
-));
-
-class GoogleMap extends React.Component {
-    static propTypes = {
-        container: React.PropTypes.element.isRequired,
-        coordinates: React.PropTypes.object,
-        address: React.PropTypes.string,
-        offers: React.PropTypes.array
-    };
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            offer: null
-        };
-
-        this._handleTouchTapOffer = this._handleTouchTapOffer.bind(this);
-        this._handleCloseOffer = this._handleCloseOffer.bind(this);
-    }
-
-    render() {
-        return (
-            <this.props.container.type {...this.props.container.props}>
-                <Map
-                    containerElement={<div style={{height: "100%"}}/>}
-                    mapElement={<div style={{height: "100%"}}/>}
-                    coordinates={this.props.coordinates}
-                    address={this.props.address}
-                    offers={this.props.offers || []}
-                    offer={this.state.offer}
-                    onTouchTapOffer={this._handleTouchTapOffer}
-                    onCloseOffer={this._handleCloseOffer}
-                />
-            </this.props.container.type>
-        );
-    }
-
-    _handleTouchTapOffer(offer) {
-        this.setState({
-            offer: offer,
-        });
-    }
-
-    _handleCloseOffer() {
-        this.setState({
-            offer: null,
         });
     }
 }
