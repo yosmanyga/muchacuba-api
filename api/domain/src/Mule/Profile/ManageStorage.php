@@ -69,7 +69,7 @@ class ManageStorage
                 ))
                     ->selectCollection(
                         $this->db,
-                        'muchacuba_mule_profiles'
+                        'mule_profiles'
                     );
         }
 

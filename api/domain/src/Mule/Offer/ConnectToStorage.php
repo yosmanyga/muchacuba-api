@@ -71,7 +71,7 @@ class ConnectToStorage
                 ))
                     ->selectCollection(
                         $this->db,
-                        'muchacuba_mule_offers'
+                        'mule_offers'
                     );
         }
 
