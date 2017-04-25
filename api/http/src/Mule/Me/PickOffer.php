@@ -3,8 +3,8 @@
 namespace Muchacuba\Http\Mule\Me;
 
 use Muchacuba\Mule\NonExistentOfferException;
-use Muchacuba\Mule\NonExistentProfileException;
 use Muchacuba\Mule\Me\PickOffer as DomainPickOffer;
+use Muchacuba\Mule\NonExistentProfileException;
 use Symsonte\Http\Server;
 
 /**
@@ -45,6 +45,10 @@ class PickOffer
         try {
             $profile = $this->pickOffer->pick($uniqueness);
         } catch (NonExistentProfileException $e) {
+            $this->server->sendResponse(null, 404);
+
+            return;
+        } catch (NonExistentOfferException $e) {
             $this->server->sendResponse(null, 404);
 
             return;
