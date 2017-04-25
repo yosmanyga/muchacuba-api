@@ -37,7 +37,7 @@ class ManageOffer
      * @param string $uniqueness
      *
      * @http\resolution({method: "POST", uri: "/mule/me/create-offer"})
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["mule_user"]})
      */
     public function create($uniqueness)
     {

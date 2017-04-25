@@ -25,6 +25,7 @@ class PopulateOffers
 
     /**
      * @http\resolution({method: "GET", uri: "/mule/populate-offers-in-miami"})
+     * @http\authorization({roles: ["mule_admin"]})
      */
     public function populateInMiami()
     {

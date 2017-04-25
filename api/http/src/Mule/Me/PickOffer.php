@@ -36,7 +36,7 @@ class PickOffer
 
     /**
      * @http\resolution({method: "GET", uri: "/mule/me/pick-offer"})
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["mule_user"]})
      *
      * @param string $uniqueness
      */

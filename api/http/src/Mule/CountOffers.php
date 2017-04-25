@@ -34,6 +34,7 @@ class CountOffers
 
     /**
      * @http\resolution({method: "GET", uri: "/mule/count-offers"})
+     * @http\authorization({roles: ["mule_admin"]})
      */
     public function count()
     {

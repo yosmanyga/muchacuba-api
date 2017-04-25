@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/privilege-profile.git",
-                "reference": "4851731a96809546ea2bf811a4366cdaddd89df4"
+                "reference": "2d2313c0f981440e2d8cd6ec0ebe497f2c92b901"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/4851731a96809546ea2bf811a4366cdaddd89df4",
-                "reference": "4851731a96809546ea2bf811a4366cdaddd89df4",
+                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/2d2313c0f981440e2d8cd6ec0ebe497f2c92b901",
+                "reference": "2d2313c0f981440e2d8cd6ec0ebe497f2c92b901",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                     "email": "mectwork@gmail.com"
                 }
             ],
-            "time": "2017-04-21 21:48:36"
+            "time": "2017-04-25 00:49:45"
         },
         {
             "name": "cubalider/unique",
