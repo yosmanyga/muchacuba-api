@@ -133,7 +133,8 @@ class ProcessRequest implements BaseProcessRequest
                     $this,
                     'Exception',
                     [
-                        'link' => $result['link']
+                        'link' => $result['link'],
+                        'exception' => $e->__toString()
                     ]
                 );
 
