@@ -19,8 +19,4 @@ services:
       - mongo
     working_dir: /var/www
     entrypoint: /root/cron/entrypoint.sh
-    environment:
-      PHP_IDE_CONFIG: "serverName=docker"
-      PHP_XDEBUG_ENABLED: 1
-      XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.18.0.1"
     restart: always
