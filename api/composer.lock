@@ -116,16 +116,16 @@
         },
         {
             "name": "beberlei/assert",
-            "version": "v2.7.4",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "3ee3bc468a3ce4bbfc3d74f53c6cdb5242d39d1a"
+                "reference": "2f688ee39ea9ce9e2c2164c9db62df3246b8fbff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/3ee3bc468a3ce4bbfc3d74f53c6cdb5242d39d1a",
-                "reference": "3ee3bc468a3ce4bbfc3d74f53c6cdb5242d39d1a",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/2f688ee39ea9ce9e2c2164c9db62df3246b8fbff",
+                "reference": "2f688ee39ea9ce9e2c2164c9db62df3246b8fbff",
                 "shasum": ""
             },
             "require": {
@@ -167,7 +167,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2017-03-14T18:06:52+00:00"
+            "time": "2017-04-26T09:32:13+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/privilege-profile.git",
-                "reference": "2d2313c0f981440e2d8cd6ec0ebe497f2c92b901"
+                "reference": "e084293b40d82d86ba1bad34c5412dd42a3085f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/2d2313c0f981440e2d8cd6ec0ebe497f2c92b901",
-                "reference": "2d2313c0f981440e2d8cd6ec0ebe497f2c92b901",
+                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/e084293b40d82d86ba1bad34c5412dd42a3085f4",
+                "reference": "e084293b40d82d86ba1bad34c5412dd42a3085f4",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                     "email": "mectwork@gmail.com"
                 }
             ],
-            "time": "2017-04-25 00:49:45"
+            "time": "2017-04-26 22:45:37"
         },
         {
             "name": "cubalider/unique",
