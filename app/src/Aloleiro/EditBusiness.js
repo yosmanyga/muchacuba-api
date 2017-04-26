@@ -79,11 +79,7 @@ export default class EditBusiness extends React.Component {
                 {...this.props.layout.props}
             >
                 <p>Saldo actual. Cada llamada descuenta de este saldo. Si llega a cero no se podrán hacer llamadas.</p>
-                <TextField
-                    name="balance"
-                    value={this.state.business.balance + ' Bf'}
-                    disabled={true}
-                />
+                <p><strong>{this.state.business.balance + ' Bf'}</strong></p>
                 <Button
                     label="Aumentar saldo"
                     icon="add"
@@ -92,7 +88,7 @@ export default class EditBusiness extends React.Component {
                 <br/><br/>
                 <p>Este es el número que tus clientes tienen que marcar desde las cabinas.</p>
                 <p><strong>02127710746</strong></p>
-                <br/><br/>
+                <br/>
                 <p>Esta casilla permite establecer la ganancia que se quiere obtener con las llamadas.</p>
                 <p>Por ejemplo, si el porciento de ganancia es 15 y una llamada cuesta 100 Bf por minuto, entonces se venderá a 115 Bf (costo + % de ganancia).</p>
                 <TextField
