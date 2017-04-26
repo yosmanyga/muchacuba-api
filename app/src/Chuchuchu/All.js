@@ -2,24 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as firebase from 'firebase';
 import Avatar from 'material-ui/Avatar';
-// import CircularProgress from 'material-ui/CircularProgress';
-// import Divider from 'material-ui/Divider';
-// import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import {List, ListItem} from 'material-ui/List';
 import LeftIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-// import Paper from 'material-ui/Paper';
-// import Subheader from 'material-ui/Subheader';
-// import {gre8en50} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
-// import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 // import Infinite from 'react-infinite';
 import _ from 'lodash';
 
 import ConnectToServer from '../ConnectToServer';
 import Button from '../Button';
 import Wait from '../Wait';
-// import Center from '../Center';
 
 import defaultPicture from './picture.jpg';
 
@@ -76,59 +69,6 @@ export default class All extends React.Component {
                 this._resolveTouches();
             }
         }
-
-        /*
-        if (prevState.token !== this.state.token) {
-            // Token won't change after set for first time
-            // It means that this preparation is executed just once
-
-            this._prepareFirebase();
-            this._prepareGeo();
-            this._loadContacts();
-            this._loadConversations();
-        }
-
-        if (
-            prevState.presence !== this.state.presence
-            && this.state.presence.firebaseToken !== null
-            && this.state.presence.geoLat !== null
-            && this.state.presence.geoLng !== null
-        ) {
-            this._loadPresences();
-            this._setPresence();
-        }
-
-        // Open conversation set by query
-        if (
-            typeof this.props.query.conversation !== 'undefined'
-            && this.state.conversation !== this.props.query.conversation
-        ) {
-            const conversation = _.find(
-                this.state.conversations,
-                {id: this.props.query.conversation}
-            );
-
-            // Conversation not found
-            if (typeof conversation === 'undefined') {
-                return;
-            }
-
-            this.setState({conversation: this.props.query.conversation});
-        }
-
-        // Did conversation change?
-        if (prevState.conversation !== this.state.conversation) {
-            const conversation = _.find(
-                this.state.conversations,
-                {id: this.state.conversation}
-            );
-
-            // Has not loaded messages from server?
-            if (typeof conversation.messages === 'undefined') {
-
-            }
-        }
-        */
     }
 
     _initFirebase() {
@@ -160,6 +100,77 @@ export default class All extends React.Component {
             .catch(function (err) {
                 console.log('Unable to get permission to notify.', err);
             });
+
+        this._firebaseMessaging.onMessage((payload) => {
+            const message = JSON.parse(payload.data.message);
+
+            // Is the conversation currently selected?
+            if (
+                this.state.selected !== null
+                && this.state.selected.type === 'conversation'
+                && this.state.selected.data.id === message.conversation
+            ) {
+                this.setState({
+                    selected: {
+                        ...this.state.selected,
+                        data: _.update(
+                            this.state.selected.data,
+                            'messages',
+                            (messages) => {
+                                return messages.concat([message]);
+                            }
+                        )
+                    }
+                });
+            } else {
+                const conversations = _.map(
+                    this.state.touches.conversations,
+                    (conversation) => {
+                        if (conversation.id === message.conversation) {
+                            if (typeof conversation.fresh === 'undefined') {
+                                conversation = _.set(
+                                    conversation,
+                                    'fresh',
+                                    1
+                                );
+                            } else {
+                                conversation = _.update(
+                                    conversation,
+                                    'fresh',
+                                    (fresh) => {
+                                        return fresh + 1;
+                                    }
+                                );
+                            }
+
+                            // Are messages already loaded?
+                            if (typeof conversation.messages !== 'undefined') {
+                                // Concat message
+                                conversation = _.update(
+                                    conversation,
+                                    'messages',
+                                    (messages) => {
+                                        return messages.concat([message]);
+                                    }
+                                );
+                            } else {
+                                // If messages are not yet loaded from server
+                                // then we can't do anything
+                            }
+                        }
+
+                        return conversation
+                    }
+                );
+
+                this.setState({
+                    touches: {
+                        ...this.state.touches,
+                        conversations: conversations
+                    }
+                });
+            }
+        });
     }
 
     _resolveTouches() {
@@ -249,31 +260,54 @@ export default class All extends React.Component {
                         this.setState({
                             selected: touch
                         }, () => {
-                            if (
-                                touch.type === 'conversation'
-                                && typeof touch.data.messages === 'undefined'
-                            ) {
-                                // Load messages on first time
-                                this._connectToServer
-                                    .get('/chuchuchu/collect-messages/' + touch.data.id)
-                                    .auth(this.props.profile.token)
-                                    .end((err, res) => {
-                                        if (err) {
-                                            // TODO
-
-                                            return;
-                                        }
-
-                                        this.setState({
-                                            selected: {
-                                                ...this.state.selected,
-                                                data: {
-                                                    ...this.state.selected.data,
-                                                    messages: res.body
+                            if (touch.type === 'conversation') {
+                                // Reset fresh
+                                this.setState({
+                                    touches: {
+                                        ...this.state.touches,
+                                        conversations: _.map(
+                                            this.state.touches.conversations,
+                                            (conversation) => {
+                                                if (conversation.id === touch.data.id) {
+                                                    conversation = _.set(
+                                                        conversation,
+                                                        'fresh',
+                                                        0
+                                                    );
                                                 }
+
+                                                return conversation;
                                             }
+                                        )
+                                    }
+                                });
+
+                                if (typeof touch.data.messages === 'undefined') {
+                                    // Load messages on first time
+                                    this._connectToServer
+                                        .get('/chuchuchu/collect-messages/' + touch.data.id)
+                                        .auth(this.props.profile.token)
+                                        .end((err, res) => {
+                                            if (err) {
+                                                this.props.onError(
+                                                    err.status,
+                                                    JSON.parse(err.response.text)
+                                                );
+
+                                                return;
+                                            }
+
+                                            this.setState({
+                                                selected: {
+                                                    ...this.state.selected,
+                                                    data: {
+                                                        ...this.state.selected.data,
+                                                        messages: res.body
+                                                    }
+                                                }
+                                            });
                                         });
-                                    });
+                                }
                             }
                         });
                     }}
@@ -286,7 +320,7 @@ export default class All extends React.Component {
             return (
                 <ShowConversation
                     layout={this.props.layout}
-                    receptors={[this.state.selected.user]}
+                    receptors={[this.state.selected.data]}
                     messages={this.state.selected.data.messages}
                     onSend={(message) => {
                         this.setState({
@@ -308,28 +342,36 @@ export default class All extends React.Component {
                                 })
                                 .end((err, res) => {
                                     if (err) {
-                                        // TODO
+                                        this.props.onError(
+                                            err.status,
+                                            JSON.parse(err.response.text)
+                                        );
 
                                         return;
                                     }
 
+                                    const conversation = {
+                                        id: res.body.conversation,
+                                        receptors: [this.state.selected.data],
+                                        messages: [message]
+                                    };
+
                                     this.setState({
                                         touches: {
-                                            ...this.state.touches,
                                             users: _.filter(
                                                 this.state.touches.users,
                                                 (user) => {
-                                                    return user !== this.state.selected.user
+                                                    return user.id !== this.state.selected.data.id
                                                 }
+                                            ),
+                                            conversations: _.concat(
+                                                this.state.touches.conversations,
+                                                [conversation]
                                             )
                                         },
                                         selected: {
                                             type: 'conversation',
-                                            data: {
-                                                id: res.body.conversation,
-                                                receptors: [this.state.selected.user],
-                                                messages: [message]
-                                            }
+                                            data: conversation
                                         }
                                     });
                                 });
@@ -369,7 +411,10 @@ export default class All extends React.Component {
                                 })
                                 .end((err, res) => {
                                     if (err) {
-                                        // TODO
+                                        this.props.onError(
+                                            err.status,
+                                            JSON.parse(err.response.text)
+                                        );
 
                                         return;
                                     }
@@ -401,170 +446,9 @@ export default class All extends React.Component {
                 />
             );
         }
-
-        /*
-
-        if (this.state.contacts === null
-            || this.state.presences === null
-            || this.state.conversations === null
-        ) {
-            return <Wait layout={this.props.layout}/>;
-        }
-
-        return (
-            <this.props.layout.type {...this.props.layout.props}>
-                <div
-                    style={{
-                        display: "flex",
-                        height: "calc(100% - 64px)"
-                    }}
-                >
-                    <Paper style={{
-                        width: "30%",
-                        padding: "10px"
-                    }}>
-                        <List>
-                            <Subheader>Conversaciones</Subheader>
-                            {this.state.conversations.map((conversation) => {
-                                const contact = _.find(
-                                    this.state.contacts,
-                                    (contact) => {
-                                        return typeof _.find(
-                                                conversation.receptors,
-                                                (receptor) => {
-                                                    return receptor === contact.id;
-                                                }
-                                            ) !== 'undefined'
-                                    }
-                                );
-
-                                return this._renderItem(
-                                    conversation.id,
-                                    contact.name,
-                                    contact.picture,
-                                    conversation.fresh
-                                );
-                            })}
-                            <Subheader>Vecinos</Subheader>
-                            {this.state.presences.map((presence) => {
-                                return this._renderItem(
-                                    presence.id,
-                                    presence.name,
-                                    presence.picture
-                                );
-                            })}
-                        </List>
-                    </Paper>
-                    {this.state.conversation !== null
-                        ? <Conversation
-                            layout={<Paper
-                                style={{
-                                    flexGrow: 1,
-                                    paddingLeft: "10px"
-                                }}
-                            />}
-                            token={this.props.profile.token}
-                            messages={_.find(
-                                this.state.conversations,
-                                {id: this.state.conversation}
-                            ).messages}
-                            onCompose={(text) => {
-                                const conversations = _.map(
-                                    this.state.conversations,
-                                    (conversation) => {
-                                        if (conversation.id === this.state.conversation) {
-                                            return _.update(
-                                                conversation,
-                                                'messages',
-                                                (messages) => {
-                                                    return messages.concat([{
-                                                        content: text
-                                                    }]);
-                                                }
-                                            );
-                                        }
-
-                                        return conversation;
-                                    }
-                                );
-
-                                this.setState({
-                                    conversations: conversations
-                                }, this._connectToServer
-                                    .post('/chuchuchu/insert-message')
-                                    .auth(this.props.profile.token)
-                                    .send({
-                                        conversation: this.state.conversation,
-                                        content: text
-                                    })
-                                    .end((err, res) => {
-                                        if (err) {
-                                            // TODO
-
-                                            return;
-                                        }
-                                    }));
-                            }}
-                        />
-                        : null
-                    }
-                </div>
-            </this.props.layout.type>
-        );
-        */
     }
 
     /*
-    _prepareFirebase() {
-        this._firebaseMessaging.onMessage((payload) => {
-            const message = JSON.parse(payload.data.message);
-
-            const conversations = _.map(
-                this.state.conversations,
-                (conversation) => {
-                    if (conversation.id === message.conversation) {
-                        // Not messages loaded from server yet?
-                        if (typeof conversation.messages === 'undefined') {
-                            if (typeof conversation.fresh === 'undefined') {
-                                return _.set(
-                                    conversation,
-                                    'fresh',
-                                    1
-                                );
-                            }
-
-                            return _.update(
-                                conversation,
-                                'fresh',
-                                (fresh) => {
-                                    return fresh + 1;
-                                }
-                            );
-                        }
-
-                        // Messages were already loaded from server
-                        // So then concat message
-                        conversation = _.update(
-                            conversation,
-                            'messages',
-                            (messages) => {
-                                return messages.concat([message]);
-                            }
-                        );
-
-                        return conversation;
-                    }
-
-                    return conversation
-                }
-            );
-
-            this.setState({
-                conversations: conversations
-            });
-        });
-    }
-
     _loadContacts() {
         this._connectToServer
             .get('/chuchuchu/collect-contacts')
@@ -776,8 +660,12 @@ class ListTouches extends React.Component {
                                         data: conversation
                                     });
                                 }}
-                                /*rightIcon={typeof fresh !== 'undefined' ? <CommunicationChatBubble /> : null}*/
-                                /*style={{backgroundColor: this.state.conversation === id ? green50 : null}}*/
+                                rightIcon={
+                                    typeof conversation.fresh !== 'undefined'
+                                    && conversation.fresh > 0
+                                        ? <CommunicationChatBubble />
+                                        : null
+                                }
                             />
                         );
                     })}

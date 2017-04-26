@@ -85,13 +85,15 @@ class KeepConversation
         }
 
         foreach ($conversation->getParticipants() as $participant) {
-            $this->notifyUser->notify(
-                $conversation->getId(),
-                $uniqueness,
-                $participant,
-                $notificationMessage,
-                $date
-            );
+            if ($participant != $uniqueness) {
+                $this->notifyUser->notify(
+                    $conversation->getId(),
+                    $uniqueness,
+                    $participant,
+                    $notificationMessage,
+                    $date
+                );
+            }
         }
     }
 }
