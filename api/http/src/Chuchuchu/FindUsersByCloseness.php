@@ -34,7 +34,7 @@ class FindUsersByCloseness
      * @param string $uniqueness
      *
      * @http\resolution({method: "GET", uri: "/chuchuchu/find-users-by-closeness"})
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["chuchuchu_user"]})
      */
     public function init($uniqueness)
     {

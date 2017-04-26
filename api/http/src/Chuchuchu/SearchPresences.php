@@ -33,7 +33,7 @@ class SearchPresences
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["chuchuchu_user"]})
      * @http\resolution({method: "POST", uri: "/chuchuchu/search-presences"})
      */
     public function search()

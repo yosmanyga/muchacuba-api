@@ -33,7 +33,7 @@ class UpdateProfile
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["chuchuchu_user"]})
      * @http\resolution({method: "POST", uri: "/firebase/update-profile"})
      *
      * @param string $uniqueness

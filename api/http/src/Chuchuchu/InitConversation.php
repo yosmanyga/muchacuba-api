@@ -42,7 +42,7 @@ class InitConversation
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["chuchuchu_user"]})
      * @http\resolution({method: "POST", uri: "/chuchuchu/init-conversation"})
      *
      * @param string $uniqueness

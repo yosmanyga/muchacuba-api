@@ -33,7 +33,7 @@ class ResolveTouches
     }
 
     /**
-     * @http\authorization({roles: ["user"]})
+     * @http\authorization({roles: ["chuchuchu_user"]})
      * @http\resolution({method: "GET", uri: "/chuchuchu/me/resolve-touches"})
      *
      * @param string $uniqueness
