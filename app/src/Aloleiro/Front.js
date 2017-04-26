@@ -177,7 +177,10 @@ export default class Front extends React.Component {
                 {
                     'url': '/forbidden',
                     'element': <Error message="No tienes permiso para acceder a esta página"/>,
-                    'def': this.state.profile.roles.length === 0
+                    'def':
+                        !_.includes(this.state.profile.roles, 'aloleiro_admin')
+                        && !_.includes(this.state.profile.roles, 'aloleiro_owner')
+                        && !_.includes(this.state.profile.roles, 'aloleiro_operator')
                 }
             ]
         );
