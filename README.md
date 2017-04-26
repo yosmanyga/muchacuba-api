@@ -51,13 +51,7 @@ php bin/app.php aloleiro.import-rates
 php bin/app.php aloleiro.update-venezuelan-currency-exchange
 
 https://localhost:3000/#/aloleiro/manage-businesses
-Add business
-
 https://localhost:3000/#/aloleiro/manage-approvals
-Add approvals for 
-yurijj2007@gmail.com
-jefe_vnzwhyy_del_negocio@tfbnw.net
-operador_hgvkurm_del_sistema@tfbnw.net
 
 ## Reset data
 1. Drop database;
