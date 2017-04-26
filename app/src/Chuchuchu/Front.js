@@ -18,13 +18,38 @@ export default class Front extends React.Component {
         // (url)
         onNavigate: React.PropTypes.func.isRequired,
         // (message, finish)
-        onNotify: React.PropTypes.func.isRequired
+        onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired,
     };
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            profile: null
+        };
+
         this._resolveElement = new ResolveElement();
+    }
+
+    componentDidMount() {
+        this.props.onBackAuth(
+            (profile) => {
+                if (profile.token === 'null') {
+                    this.props.onFrontAuth();
+
+                    return;
+                }
+
+                this.setState({
+                    profile: profile
+                });
+            },
+            () => {
+                this.props.onFrontAuth();
+            }
+        );
     }
 
     render() {
@@ -41,9 +66,11 @@ export default class Front extends React.Component {
                     'element': <All
                         query={this.props.query}
                         layout={layout}
+                        profile={this.state.profile}
                         onBackAuth={this.props.onBackAuth}
                         onFrontAuth={this.props.onFrontAuth}
                         onNotify={this.props.onNotify}
+                        onError={this.props.onError}
                     />,
                     'def': true
                 },

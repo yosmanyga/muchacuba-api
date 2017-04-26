@@ -27,19 +27,21 @@ export default class All extends React.Component {
     static propTypes = {
         query: React.PropTypes.object.isRequired,
         layout: React.PropTypes.element.isRequired,
+        profile: React.PropTypes.object,
         // (onSuccess(token), onError)
         onBackAuth: React.PropTypes.func.isRequired,
         // ()
         onFrontAuth: React.PropTypes.func.isRequired,
         // (message, finish)
         onNotify: React.PropTypes.func.isRequired,
+        // (status, response)
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
 
         this.state = {
-            token: null,
             //geo: false, // Whether user is geo located or not
             touches: null,
             selected: null
@@ -47,6 +49,9 @@ export default class All extends React.Component {
 
         this._firebaseMessaging = firebase.messaging();
         this._connectToServer = new ConnectToServer();
+
+        this._initFirebase = this._initFirebase.bind(this);
+        this._resolveTouches = this._resolveTouches.bind(this);
 
         // this._prepareFirebase = this._prepareFirebase.bind(this);
         // this._prepareGeo = this._prepareGeo.bind(this);
@@ -56,173 +61,19 @@ export default class All extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({
-            token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjNiYmJiM2VlYTU0NzU1YmJkNWFkM2FlOWY5OWQyNGY0N2IyYTdmODIifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY3ViYWxpZGVyLW11Y2hhY3ViYSIsIm5hbWUiOiJGaXJlZm94IFVzZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9zY29udGVudC54eC5mYmNkbi5uZXQvdi90MS4wLTEvczEwMHgxMDAvMTM3OTg0MV8xMDE1MDAwNDU1MjgwMTkwMV80NjkyMDk0OTY4OTUyMjE3NTdfbi5qcGc_b2g9YjhkMWFjOWQwYjk3MmUzMDljNTM3MmQ2MGNkMjhmODMmb2U9NTk2M0U3OTciLCJhdWQiOiJjdWJhbGlkZXItbXVjaGFjdWJhIiwiYXV0aF90aW1lIjoxNDkxNDMxNzc5LCJ1c2VyX2lkIjoiMXh1clFlM0hjVlR6Zlp0Z0RYT2NmZTdwaFhKMiIsInN1YiI6IjF4dXJRZTNIY1ZUemZadGdEWE9jZmU3cGhYSjIiLCJpYXQiOjE0OTE0MzE3ODAsImV4cCI6MTQ5MTQzNTM4MCwiZW1haWwiOiJmaXJlZm94X2Npc2NndXRfdXNlckB0ZmJudy5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZmFjZWJvb2suY29tIjpbIjQxMDkyMjkxMjYwMzIxNyJdLCJlbWFpbCI6WyJmaXJlZm94X2Npc2NndXRfdXNlckB0ZmJudy5uZXQiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJmYWNlYm9vay5jb20ifX0.eBR3B4dOZz7BM8a9AcqOkULNEgtsa644IduH4r7RX-pQZg2CVC_jYy4-quROh9FFsy8Hvc1CKNcmLnRaEwy9oPwt0iL0Knyoavk1gFcSbSHqp0_TBjjH6XMX1AcwUGiMA8lfTM3-6UE77dPP_HEa5EAw6vK7qc3mKNcdo_bSptIUc10O81F1NtCShW8swkSceOGOEABEmGAwWQvTWvM0eX5Zjk9Efs7pOh1xk8gA1yg7I6OlliB4uUbeXzNncc2viVv_r4YS_Gmafgf5aDD_m2EU2jFAnqV8nrVCFekWJ7t14I912I2tnt4pb7R8UNe9dJ0UxWOigIg9ot-kMeZLtg'
-        });
-
-        /*
-        this.props.onBackAuth(
-            (token) => {
-                if (token === 'null') {
-                    this.props.onFrontAuth();
-
-                    return;
-                }
-
-                this.setState({
-                    token: token
-                });
-            },
-            () => {
-                this.props.onFrontAuth();
-            }
-        );
-        */
+        if (this.props.profile !== null) {
+            this._resolveTouches();
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
         // Is authenticated?
-        if (this.state.token !== null) {
-            // Was authentication process?
-            if (prevState.token === null) {
-                /* This will be executed just at the beginning */
-
-                /*
-                this._firebaseMessaging.requestPermission()
-                    .then(() => {
-                        this._firebaseMessaging.getToken()
-                            .then((token) => {
-                                this._connectToServer
-                                    .post('/firebase/update-profile')
-                                    .auth(this.state.token)
-                                    .send({
-                                        token: token
-                                    })
-                                    .end((err, res) => {
-                                        if (err) {
-                                            // TODO
-
-                                            return;
-                                        }
-                                    });
-                            })
-                            .catch(function (err) {
-                                console.log('An error occurred while retrieving token. ', err);
-                            });
-                    })
-                    .catch(function (err) {
-                        console.log('Unable to get permission to notify.', err);
-                    });
-                */
-
-                this._connectToServer
-                    .get('/chuchuchu/me/resolve-touches')
-                    .auth(this.state.token)
-                    .send()
-                    .end((err, res) => {
-                        if (err) {
-                            // TODO
-
-                            return;
-                        }
-
-                        this.setState({
-                            touches: res.body
-                        });
-                    });
-            }
-
-            // Is in list?
-            if (this.state.selected === null) {
-                // Came from a conversation?
-                if (
-                    prevState.selected !== null
-                    && prevState.selected.type === 'conversation'
-                ) {
-                    // Update conversation on touches, using selected
-                    // conversation, because it contains new messages
-                    this.setState({
-                        touches: {
-                            ...this.state.touches,
-                            conversations: _.map(
-                                this.state.touches.conversations,
-                                (conversation) => {
-                                    if (conversation.id === prevState.selected.conversation.id) {
-                                        console.log('actualice conversation en touches');
-
-                                        return prevState.selected.conversation
-                                    }
-
-                                    return conversation;
-                                }
-                            )
-                        }
-                    });
-                }
-            } else {
-                // Is in a conversation?
-                if (this.state.selected.type === 'conversation') {
-                    console.log('selected conversation');
-
-                    // Came from a new conversation (init to keep)?
-                    if (
-                        prevState.selected !== null
-                        && prevState.selected.type === 'user'
-                    ) {
-                        // Delete user from touches
-                        this.setState({
-                            touches: {
-                                ...this.state.touches,
-                                users: _.filter(
-                                    this.state.touches.users,
-                                    (user) => {
-                                        return user !== prevState.selected.user
-                                    }
-                                )
-                            }
-                        }, () => {console.log(this.state.touches)});
-                    }
-
-                    if (typeof this.state.selected.conversation.messages === 'undefined') {
-                        console.log('conversation messages is undefined');
-
-                        this._connectToServer
-                            .get('/chuchuchu/collect-messages/' + this.state.selected.conversation.id)
-                            .auth(this.state.token)
-                            .end((err, res) => {
-                                if (err) {
-                                    // TODO
-
-                                    return;
-                                }
-
-                                this.setState({
-                                    selected: {
-                                        ...this.state.selected,
-                                        conversation: {
-                                            ...this.state.selected.conversation,
-                                            messages: res.body
-                                        }
-                                    }
-                                });
-                            });
-                    }
-                } else if (
-                    this.state.selected.type === 'user'
-                    && typeof this.state.selected.user.messages === 'undefined'
-                ) {
-                    console.log('user messages is undefined');
-
-                    this.setState({
-                        selected: {
-                            ...this.state.selected,
-                            user: {
-                                ...this.state.selected.user,
-                                messages: []
-                            }
-                        }
-                    });
-                }
+        if (this.props.profile !== null) {
+            // Was the update the authentication process?
+            if (prevProps.profile === null) {
+                // This will be execute once, just on authentication
+                this._initFirebase();
+                this._resolveTouches();
             }
         }
 
@@ -280,8 +131,60 @@ export default class All extends React.Component {
         */
     }
 
+    _initFirebase() {
+        this._firebaseMessaging.requestPermission()
+            .then(() => {
+                this._firebaseMessaging.getToken()
+                    .then((token) => {
+                        this._connectToServer
+                            .post('/firebase/update-profile')
+                            .auth(this.props.profile.token)
+                            .send({
+                                token: token
+                            })
+                            .end((err, res) => {
+                                if (err) {
+                                    this.props.onError(
+                                        err.status,
+                                        JSON.parse(err.response.text)
+                                    );
+
+                                    return;
+                                }
+                            });
+                    })
+                    .catch(function (err) {
+                        console.log('An error occurred while retrieving token. ', err);
+                    });
+            })
+            .catch(function (err) {
+                console.log('Unable to get permission to notify.', err);
+            });
+    }
+
+    _resolveTouches() {
+        this._connectToServer
+            .get('/chuchuchu/me/resolve-touches')
+            .auth(this.props.profile.token)
+            .send()
+            .end((err, res) => {
+                if (err) {
+                    this.props.onError(
+                        err.status,
+                        JSON.parse(err.response.text)
+                    );
+
+                    return;
+                }
+
+                this.setState({
+                    touches: res.body
+                });
+            });
+    }
+
     render() {
-        if (this.state.token === null) {
+        if (this.state.profile === null) {
             return <Wait />;
         }
 
@@ -296,7 +199,7 @@ export default class All extends React.Component {
                         }, () => {
                             this._connectToServer
                                 .post('/chuchuchu/set-geo')
-                                .auth(this.props.token)
+                                .auth(this.props.profile.token)
                                 .send({
                                     lat: lat,
                                     lng: lng
@@ -310,7 +213,7 @@ export default class All extends React.Component {
 
                                     this._connectToServer
                                         .get('/chuchuchu/find-users-by-closeness')
-                                        .auth(this.props.token)
+                                        .auth(this.props.profile.token)
                                         .send()
                                         .end((err, res) => {
                                             if (err) {
@@ -345,6 +248,33 @@ export default class All extends React.Component {
                     onSelectTouch={(touch) => {
                         this.setState({
                             selected: touch
+                        }, () => {
+                            if (
+                                touch.type === 'conversation'
+                                && typeof touch.data.messages === 'undefined'
+                            ) {
+                                // Load messages on first time
+                                this._connectToServer
+                                    .get('/chuchuchu/collect-messages/' + touch.data.id)
+                                    .auth(this.props.profile.token)
+                                    .end((err, res) => {
+                                        if (err) {
+                                            // TODO
+
+                                            return;
+                                        }
+
+                                        this.setState({
+                                            selected: {
+                                                ...this.state.selected,
+                                                data: {
+                                                    ...this.state.selected.data,
+                                                    messages: res.body
+                                                }
+                                            }
+                                        });
+                                    });
+                            }
                         });
                     }}
                     onNotify={this.props.onNotify}
@@ -357,13 +287,13 @@ export default class All extends React.Component {
                 <ShowConversation
                     layout={this.props.layout}
                     receptors={[this.state.selected.user]}
-                    messages={this.state.selected.user.messages}
+                    messages={this.state.selected.data.messages}
                     onSend={(message) => {
                         this.setState({
                             selected: {
                                 ...this.state.selected,
-                                user: {
-                                    ...this.state.selected.user,
+                                data: {
+                                    ...this.state.selected.data,
                                     // This property is temporal, just to update ui
                                     messages: [message]
                                 }
@@ -371,9 +301,9 @@ export default class All extends React.Component {
                         }, () => {
                             this._connectToServer
                                 .post('/chuchuchu/init-conversation')
-                                .auth(this.state.token)
+                                .auth(this.props.profile.token)
                                 .send({
-                                    receptors: [this.state.selected.user.id],
+                                    receptors: [this.state.selected.data.id],
                                     messages: [message]
                                 })
                                 .end((err, res) => {
@@ -384,9 +314,18 @@ export default class All extends React.Component {
                                     }
 
                                     this.setState({
+                                        touches: {
+                                            ...this.state.touches,
+                                            users: _.filter(
+                                                this.state.touches.users,
+                                                (user) => {
+                                                    return user !== this.state.selected.user
+                                                }
+                                            )
+                                        },
                                         selected: {
                                             type: 'conversation',
-                                            conversation: {
+                                            data: {
                                                 id: res.body.conversation,
                                                 receptors: [this.state.selected.user],
                                                 messages: [message]
@@ -409,23 +348,23 @@ export default class All extends React.Component {
             return (
                 <ShowConversation
                     layout={this.props.layout}
-                    receptors={this.state.selected.conversation.receptors}
-                    messages={this.state.selected.conversation.messages}
+                    receptors={this.state.selected.data.receptors}
+                    messages={this.state.selected.data.messages}
                     onSend={(message) => {
                         this.setState({
                             selected: {
                                 ...this.state.selected,
-                                conversation: {
-                                    ...this.state.selected.conversation,
-                                    messages: this.state.selected.conversation.messages.concat(message)
+                                data: {
+                                    ...this.state.selected.data,
+                                    messages: this.state.selected.data.messages.concat(message)
                                 }
                             }
                         }, () => {
                             this._connectToServer
                                 .post('/chuchuchu/keep-conversation')
-                                .auth(this.state.token)
+                                .auth(this.props.profile.token)
                                 .send({
-                                    'conversation': this.state.selected.conversation.id,
+                                    'conversation': this.state.selected.data.id,
                                     'messages': [message]
                                 })
                                 .end((err, res) => {
@@ -438,8 +377,25 @@ export default class All extends React.Component {
                         });
                     }}
                     onBack={() => {
+                        // Updated conversation
                         this.setState({
-                            selected: null
+                            touches: {
+                                ...this.state.touches,
+                                conversations: _.map(
+                                    this.state.touches.conversations,
+                                    (conversation) => {
+                                        if (conversation.id === this.state.selected.data.id) {
+                                            return this.state.selected.data
+                                        }
+
+                                        return conversation;
+                                    }
+                                )
+                            }
+                        }, () => {
+                            this.setState({
+                                selected: null
+                            });
                         });
                     }}
                 />
@@ -507,7 +463,7 @@ export default class All extends React.Component {
                                     paddingLeft: "10px"
                                 }}
                             />}
-                            token={this.state.token}
+                            token={this.props.profile.token}
                             messages={_.find(
                                 this.state.conversations,
                                 {id: this.state.conversation}
@@ -536,7 +492,7 @@ export default class All extends React.Component {
                                     conversations: conversations
                                 }, this._connectToServer
                                     .post('/chuchuchu/insert-message')
-                                    .auth(this.state.token)
+                                    .auth(this.props.profile.token)
                                     .send({
                                         conversation: this.state.conversation,
                                         content: text
@@ -557,6 +513,7 @@ export default class All extends React.Component {
         );
         */
     }
+
     /*
     _prepareFirebase() {
         this._firebaseMessaging.onMessage((payload) => {
@@ -611,7 +568,7 @@ export default class All extends React.Component {
     _loadContacts() {
         this._connectToServer
             .get('/chuchuchu/collect-contacts')
-            .auth(this.state.token)
+            .auth(this.props.profile.token)
             .end((err, res) => {
                 if (err) {
                     // TODO
@@ -628,7 +585,7 @@ export default class All extends React.Component {
     _loadPresences() {
         this._connectToServer
             .post('/chuchuchu/search-presences')
-            .auth(this.state.token)
+            .auth(this.props.profile.token)
             .send({
                 geoLat: this.state.presence.geoLat,
                 geoLng: this.state.presence.geoLng,
@@ -649,7 +606,7 @@ export default class All extends React.Component {
     _loadConversations() {
         this._connectToServer
             .get('/chuchuchu/collect-conversations')
-            .auth(this.state.token)
+            .auth(this.props.profile.token)
             .end((err, res) => {
                 if (err) {
                     // TODO
@@ -816,8 +773,8 @@ class ListTouches extends React.Component {
                                 onTouchTap={() => {
                                     this.props.onSelectTouch({
                                         type: 'conversation',
-                                        conversation: conversation
-                                    })
+                                        data: conversation
+                                    });
                                 }}
                                 /*rightIcon={typeof fresh !== 'undefined' ? <CommunicationChatBubble /> : null}*/
                                 /*style={{backgroundColor: this.state.conversation === id ? green50 : null}}*/
@@ -836,7 +793,10 @@ class ListTouches extends React.Component {
                                 onTouchTap={() => {
                                     this.props.onSelectTouch({
                                         type: 'user',
-                                        user: user
+                                        data: {
+                                            ...user,
+                                            messages: []
+                                        }
                                     })
                                 }}
                             />
@@ -857,16 +817,26 @@ class ShowConversation extends React.Component {
         onBack: React.PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        if (typeof this.props.messages !== 'undefined') {
+            this._scrollToLast(this._listEl);
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.messages !== this.props.messages) {
-            /* Scroll to last */
-            const list = ReactDOM.findDOMNode(this._listEl);
-            const scrollHeight = list.scrollHeight;
-            const height = list.clientHeight;
-            const maxScrollTop = scrollHeight - height;
-
-            list.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+            this._scrollToLast(this._listEl);
         }
+    }
+
+    _scrollToLast(listEl) {
+        /* Scroll to last */
+        const list = ReactDOM.findDOMNode(listEl);
+        const scrollHeight = list.scrollHeight;
+        const height = list.clientHeight;
+        const maxScrollTop = scrollHeight - height;
+
+        list.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     }
 
     render() {
@@ -879,17 +849,16 @@ class ShowConversation extends React.Component {
                 {...this.props.layout.props}
                 bar={
                     <span>
-                    {this.props.receptors.map((receptor, i) => {
-                        return receptor.name;
-                    }).join(', ')}
-                </span>
+                        {this.props.receptors.map((receptor, i) => {
+                            return receptor.name;
+                        }).join(', ')}
+                    </span>
                 }
                 iconElementLeft={<IconButton onTouchTap={this.props.onBack}><LeftIcon/></IconButton>}
                 style={{
                     ...this.props.layout.props.style,
                     display: "flex",
                     flexDirection: "column",
-                    height: "100%",
                 }}
             >
                 <List
@@ -897,7 +866,9 @@ class ShowConversation extends React.Component {
                     style={{
                         flexGrow: 1,
                         overflowY: "auto",
-                        padding: "10px"
+                        overflowX: "hidden",
+                        padding: "10px",
+                        height: "100%"
                     }}
                 >
                     {this.props.messages.map((message, i) => {
@@ -966,18 +937,22 @@ class Composer extends React.Component {
                     <Button
                         label="Enviar"
                         icon="send"
-                        onTouchTap={this._handleSend}
+                        onTouchTap={(finish) => {
+                            finish(this._handleSend)
+                        }}
                     />
                 </div>
             </this.props.layout.type>
         );
     }
 
-    _handleSend() {
+    _handleSend(finish) {
         const text = this.state.text;
 
         this.setState(
-            {text: ''},
+            {
+                text: ''
+            },
             this.props.onSend(text)
         );
     }

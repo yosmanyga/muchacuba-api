@@ -60,9 +60,7 @@ class Layout extends React.Component {
     render() {
         return (
             <DocumentTitle title={this.props.title ? this.props.title : ''}>
-                <div style={{
-                    ...this.props.style,
-                }}>
+                <div style={{height: "100%"}}>
                     <AppBar
                         title={this.props.bar}
                         onTitleTouchTap={this.props.onTitleTouchTap}
@@ -72,7 +70,12 @@ class Layout extends React.Component {
                             this.setState({drawer: true});
                         }}
                     />
-                    {this.props.children}
+                    <div style={{
+                        height: "calc(100% - 64px)",
+                        ...this.props.style
+                    }}>
+                        {this.props.children}
+                    </div>
                     {typeof this.props.drawer !== 'undefined'
                         ?
                             <this.props.drawer.type
@@ -222,6 +225,7 @@ export default class Front extends React.Component {
                                 onFrontAuth={this._handleFrontAuth}
                                 onNavigate={(url) => this._handleNavigate('/chuchuchu' + url)}
                                 onNotify={this._handleNotify}
+                                onError={this._handleError}
                             />
                         },
                         {
