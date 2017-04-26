@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import * as firebase from 'firebase';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
+import SendIcon from 'material-ui/svg-icons/content/send';
 import {List, ListItem} from 'material-ui/List';
 import LeftIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import TextField from 'material-ui/TextField';
@@ -11,7 +12,6 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import _ from 'lodash';
 
 import ConnectToServer from '../ConnectToServer';
-import Button from '../Button';
 import Wait from '../Wait';
 
 import defaultPicture from './picture.jpg';
@@ -822,13 +822,10 @@ class Composer extends React.Component {
                     }}
                 />
                 <div style={{marginLeft: "10px"}}>
-                    <Button
-                        label="Enviar"
-                        icon="send"
-                        onTouchTap={(finish) => {
-                            finish(this._handleSend)
-                        }}
-                    />
+                    <IconButton
+                        title="Enviar mensaje"
+                        onTouchTap={this._handleSend}
+                    ><SendIcon/></IconButton>
                 </div>
             </this.props.layout.type>
         );
