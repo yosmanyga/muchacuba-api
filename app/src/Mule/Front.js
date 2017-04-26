@@ -281,7 +281,7 @@ class HelpDialog extends React.Component {
 
 class FeedbackDialog extends React.Component {
     static propTypes = {
-        // (feedback, success(finish()))
+        // (feedback)
         onSend: React.PropTypes.func.isRequired,
         // ()
         onCancel: React.PropTypes.func.isRequired
