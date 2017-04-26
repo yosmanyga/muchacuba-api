@@ -51,7 +51,7 @@ class NotifyPayment
             'muchacuba.com',
             [
                 'from' => 'sistema@holapana.com',
-                'to' => 'yosmanyga@gmail.com', // admin@jimenezsolutions.com.ve,
+                'to' => 'yosmanyga@gmail.com,admin@jimenezsolutions.com.ve',
                 'subject' => 'Pago de un cliente en Holapana',
                 'text' => sprintf(
                     "El cliente %s (%s) ha hecho un pago en Holapana.\r\nEl códifo de la transferencia es %s",
