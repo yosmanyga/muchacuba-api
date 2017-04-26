@@ -4,6 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import FontIcon from 'material-ui/FontIcon';
 import MenuItem from 'material-ui/MenuItem';
 import drawerBackground from './drawerBackground.png';
+import Subheader from 'material-ui/Subheader';
 import {yellow50} from 'material-ui/styles/colors';
 // import containerBackground from './containerBackground.png';
 import _ from 'lodash';
@@ -277,6 +278,12 @@ class Layout extends React.Component {
                                 </MenuItem>
                             : null
                         }
+                        {
+                            _.includes(this.props.profile.roles, 'aloleiro_owner')
+                            && _.includes(this.props.profile.roles, 'aloleiro_operator')
+                                ? <Subheader>Dueño</Subheader>
+                                : null
+                        }
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
                                 <MenuItem
@@ -324,6 +331,12 @@ class Layout extends React.Component {
                                     Reportes
                                 </MenuItem>
                             : null
+                        }
+                        {
+                            _.includes(this.props.profile.roles, 'aloleiro_owner')
+                            && _.includes(this.props.profile.roles, 'aloleiro_operator')
+                                ? <Subheader>Operador</Subheader>
+                                : null
                         }
                         {_.includes(this.props.profile.roles, 'aloleiro_operator')
                             ?
