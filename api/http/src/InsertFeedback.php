@@ -35,7 +35,7 @@ class InsertFeedback
     /**
      * @http\resolution({method: "POST", uri: "/insert-feedback"})
      */
-    public function search()
+    public function insert()
     {
         $post = $this->server->resolveBody();
 

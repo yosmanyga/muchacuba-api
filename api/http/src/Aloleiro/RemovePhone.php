@@ -47,7 +47,7 @@ class RemovePhone
      *
      * @param string $uniqueness
      */
-    public function search($uniqueness)
+    public function remove($uniqueness)
     {
         $post = $this->server->resolveBody();
 
