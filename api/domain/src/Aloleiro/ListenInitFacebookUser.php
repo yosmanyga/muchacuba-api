@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Privilege\Profile\ExistentRoleException;
 use Muchacuba\ListenInitFacebookUser as BaseListenInitFacebookUser;
 use Muchacuba\Aloleiro\CreateProfile as CreateAloleiroProfile;
 use Cubalider\Privilege\PromoteProfile as PromotePrivilegeProfile;
@@ -114,10 +115,13 @@ class ListenInitFacebookUser implements BaseListenInitFacebookUser
             );
         } catch (ExistentPrivilegeProfileException $e) {
             foreach ($approval->getRoles() as $role) {
-                $this->promotePrivilegeProfile->promote(
-                    $uniqueness,
-                    $role
-                );
+                try {
+                    $this->promotePrivilegeProfile->promote(
+                        $uniqueness,
+                        $role
+                    );
+                } catch (ExistentRoleException $e) {
+                }
             }
         }
 
@@ -153,10 +157,13 @@ class ListenInitFacebookUser implements BaseListenInitFacebookUser
                 [$adminApproval->getRole()]
             );
         } catch (ExistentPrivilegeProfileException $e) {
-            $this->promotePrivilegeProfile->promote(
-                $uniqueness,
-                $adminApproval->getRole()
-            );
+            try {
+                $this->promotePrivilegeProfile->promote(
+                    $uniqueness,
+                    $adminApproval->getRole()
+                );
+            } catch (ExistentRoleException $e) {
+            }
         }
 
         /* Remove adminApproval after finish */
