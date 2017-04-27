@@ -17,26 +17,33 @@ class CreateAdminApproval
     private $manageStorage;
 
     /**
+     * @var string
+     */
+    private $adminEmail;
+
+    /**
      * @param ManageStorage $manageStorage
+     * @param string        $adminEmail
+     *
+     * @di\arguments({
+     *     adminEmail: "%aloleiro_admin_email%",
+     * })
      */
     public function __construct(
-        ManageStorage $manageStorage
+        ManageStorage $manageStorage,
+        $adminEmail
     ) {
         $this->manageStorage = $manageStorage;
+        $this->adminEmail = $adminEmail;
     }
 
     /**
-     * @param string $email
-     * @param string $role
      */
-    public function create(
-        $email,
-        $role
-    )
+    public function create()
     {
         $this->manageStorage->connect()->insertOne(new AdminApproval(
-            $email,
-            $role
+            $this->adminEmail,
+            'aloleiro_admin'
         ));
     }
 }

@@ -24,6 +24,11 @@ google_cx_lyrics: ''
 google_cx_horoscope: ''
 algolia_user_index: 'dev_users'
 # Aloleiro
+aloleiro_admin_email: ''
+aloleiro_test_owner_uniqueness: '1xurQe3HcVTzfZtgDXOcfe7phXJ2'
+aloleiro_test_owner_email: 'dueno_eehjzbp_del_sistema@tfbnw.net'
+aloleiro_test_operator_uniqueness: '6sfhOpoku9Pz1rPIHAsaBQ7CzKo1'
+aloleiro_test_operator_email: 'operador_eyqekhb_del_sistema@tfbnw.net'
 sinch_app_key: ''
 sinch_app_secret: ''
 profit_percent: '30' # Profit in percent

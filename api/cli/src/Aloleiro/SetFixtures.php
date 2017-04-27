@@ -42,7 +42,9 @@ class SetFixtures
 
         $this->setFixtures->set(
             $input->get('2'),
-            $input->get('3')
+            $input->get('3'),
+            $input->get('4'),
+            $input->get('5')
         );
     }
 }

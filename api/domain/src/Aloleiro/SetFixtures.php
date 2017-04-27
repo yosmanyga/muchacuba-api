@@ -3,14 +3,15 @@
 namespace Muchacuba\Aloleiro;
 
 use Faker\Generator;
+use Muchacuba\Aloleiro\Rate\ManageStorage as ManageRateStorage;
 use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
 use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
+use Muchacuba\Aloleiro\Approval\ManageStorage as ManageApprovalStorage;
+use Muchacuba\Aloleiro\AdminApproval\ManageStorage as ManageAdminApprovalStorage;
 use Cubalider\Call\Provider\Log\ManageStorage as ManageLogStorage;
 use Cubalider\Call\Provider\Sinch\ProcessEvent;
-use Cubalider\Unique\CreateUniqueness;
-use Cubalider\Privilege\CreateProfile as CreatePrivilegeProfile;
 use Faker\Factory;
 
 /**
@@ -20,6 +21,31 @@ use Faker\Factory;
  */
 class SetFixtures
 {
+    /**
+     * @var ImportRates
+     */
+    private $importRates;
+
+    /**
+     * @var UpdateVenezuelanCurrencyExchange
+     */
+    private $updateVenezuelanCurrencyExchange;
+
+    /**
+     * @var ManageRateStorage
+     */
+    private $manageRateStorage;
+
+    /**
+     * @var ManageAdminApprovalStorage
+     */
+    private $manageAdminApprovalStorage;
+
+    /**
+     * @var ManageApprovalStorage
+     */
+    private $manageApprovalStorage;
+    
     /**
      * @var ManageBusinessStorage
      */
@@ -46,25 +72,25 @@ class SetFixtures
     private $manageLogStorage;
 
     /**
+     * @var CreateAdminApproval
+     */
+    private $createAdminApproval;
+
+    /**
      * @var AddBusiness
      */
     private $addBusiness;
+    
+    /**
+     * @var CreateApproval
+     */
+    private $createApproval;
 
     /**
-     * @var CreatePrivilegeProfile
+     * @var ListenInitFacebookUser
      */
-    private $createPrivilegeProfile;
-
-    /**
-     * @var CreateUniqueness
-     */
-    private $createUniqueness;
-
-    /**
-     * @var PromoteUser
-     */
-    private $promoteUser;
-
+    private $listenInitFacebookUser;
+    
     /**
      * @var AddPhone
      */
@@ -81,109 +107,174 @@ class SetFixtures
     private $processEvent;
 
     /**
+     * @var string
+     */
+    private $testOwnerUniqueness;
+
+    /**
+     * @var string
+     */
+    private $testOwnerEmail;
+
+    /**
+     * @var string
+     */
+    private $testOperatorUniqueness;
+
+    /**
+     * @var string
+     */
+    private $testOperatorEmail;
+    
+    /**
+     * @var Generator
+     */
+    private $faker;
+
+    /**
+     * @param ImportRates $importRates
+     * @param UpdateVenezuelanCurrencyExchange $updateVenezuelanCurrencyExchange
+     * @param ManageRateStorage $manageRateStorage
+     * @param ManageAdminApprovalStorage $manageAdminApprovalStorage
+     * @param ManageApprovalStorage $manageApprovalStorage
      * @param ManageBusinessStorage $manageBusinessStorage
      * @param ManageProfileStorage $manageProfileStorage
      * @param ManagePhoneStorage $managePhoneStorage
      * @param ManageCallStorage $manageCallStorage
      * @param ManageLogStorage $manageLogStorage
+     * @param CreateAdminApproval $createAdminApproval
      * @param AddBusiness $addBusiness
-     * @param CreateUniqueness $createUniqueness
-     * @param CreatePrivilegeProfile $createPrivilegeProfile
-     * @param PromoteUser $promoteUser
+     * @param CreateApproval $createApproval
+     * @param ListenInitFacebookUser $listenInitFacebookUser
      * @param AddPhone $addPhone
      * @param PrepareCall $prepareCall
      * @param ProcessEvent $processEvent
+     * @param $testOwnerUniqueness
+     * @param $testOwnerEmail
+     * @param $testOperatorUniqueness
+     * @param $testOperatorEmail
+     *
+     * @di\arguments({
+     *     testOwnerUniqueness:    "%aloleiro_test_owner_uniqueness%",
+     *     testOwnerEmail:         "%aloleiro_test_owner_email%",
+     *     testOperatorUniqueness: "%aloleiro_test_operator_uniqueness%",
+     *     testOperatorEmail:      "%aloleiro_test_operator_email%",
+     * })
      */
     public function __construct(
+        ImportRates $importRates,
+        UpdateVenezuelanCurrencyExchange $updateVenezuelanCurrencyExchange,
+        ManageRateStorage $manageRateStorage,
+        ManageAdminApprovalStorage $manageAdminApprovalStorage,
+        ManageApprovalStorage $manageApprovalStorage,
         ManageBusinessStorage $manageBusinessStorage,
         ManageProfileStorage $manageProfileStorage,
         ManagePhoneStorage $managePhoneStorage,
         ManageCallStorage $manageCallStorage,
         ManageLogStorage $manageLogStorage,
+        CreateAdminApproval $createAdminApproval,
         AddBusiness $addBusiness,
-        CreateUniqueness $createUniqueness,
-        CreatePrivilegeProfile $createPrivilegeProfile,
-        PromoteUser $promoteUser,
+        CreateApproval $createApproval,
+        ListenInitFacebookUser $listenInitFacebookUser,
         AddPhone $addPhone,
         PrepareCall $prepareCall,
-        ProcessEvent $processEvent
+        ProcessEvent $processEvent,
+        $testOwnerUniqueness,
+        $testOwnerEmail,
+        $testOperatorUniqueness,
+        $testOperatorEmail
     )
     {
+        $this->importRates = $importRates;
+        $this->updateVenezuelanCurrencyExchange = $updateVenezuelanCurrencyExchange;
+        $this->manageRateStorage = $manageRateStorage;
+        $this->manageAdminApprovalStorage = $manageAdminApprovalStorage;
+        $this->manageApprovalStorage = $manageApprovalStorage;
         $this->manageBusinessStorage = $manageBusinessStorage;
         $this->manageProfileStorage = $manageProfileStorage;
         $this->managePhoneStorage = $managePhoneStorage;
         $this->manageCallStorage = $manageCallStorage;
         $this->manageLogStorage = $manageLogStorage;
+        $this->createAdminApproval = $createAdminApproval;
         $this->addBusiness = $addBusiness;
-        $this->createUniqueness = $createUniqueness;
-        $this->createPrivilegeProfile = $createPrivilegeProfile;
-        $this->promoteUser = $promoteUser;
+        $this->createApproval = $createApproval;
+        $this->listenInitFacebookUser = $listenInitFacebookUser;
         $this->addPhone = $addPhone;
         $this->prepareCall = $prepareCall;
         $this->processEvent = $processEvent;
+        $this->testOwnerUniqueness = $testOwnerUniqueness;
+        $this->testOwnerEmail = $testOwnerEmail;
+        $this->testOperatorEmail = $testOperatorEmail;
+        $this->testOperatorUniqueness = $testOperatorUniqueness;
+        $this->faker = Factory::create('es_ES');
     }
 
     /**
-     * @param string $owner
-     * @param string $operator
      */
-    public function set($owner, $operator)
+    public function set()
     {
         $this->purge();
 
-        $this->setBusiness($owner, $operator);
+        $this->importRates->import();
+        $this->updateVenezuelanCurrencyExchange->update();
 
-        for ($i = 1; $i <= 10; $i++) {
-            $owner = $this->createUniqueness->create();
-            $this->createPrivilegeProfile->create($owner, []);
-            $operator = $this->createUniqueness->create();
-            $this->createPrivilegeProfile->create($operator, []);
+        $this->createAdminApproval->create();
+        
+        $business = $this->addBusiness->add(
+            500000,
+            15,
+            'Test',
+            'USA'
+        );
+        
+        $this->createApproval->create(
+            $this->testOwnerEmail,
+            $business,
+            ['aloleiro_owner']
+        );
 
-            $this->setBusiness($owner, $operator);
-        }
+        $this->createApproval->create(
+            $this->testOperatorEmail,
+            $business,
+            ['aloleiro_operator']
+        );
+
+        $this->listenInitFacebookUser->listen(
+            $this->testOwnerUniqueness,
+            $this->testOwnerEmail
+        );
+
+        $this->listenInitFacebookUser->listen(
+            $this->testOperatorUniqueness,
+            $this->testOperatorEmail
+        );
+        
+        $this->setCalls(
+            $this->testOwnerUniqueness,
+            $this->testOperatorUniqueness
+        );
     }
 
     /**
-     * @param string $owner
-     * @param string $operator
+     * @param string $ownerUniqueness
+     * @param string $operatorUniqueness
      */
-    private function setBusiness($owner, $operator)
+    private function setCalls($ownerUniqueness, $operatorUniqueness)
     {
-        $faker = Factory::create('es_ES');
-
-        $business = $this->addBusiness->add(
-            1000000,
-            rand(1, 15),
-            ucfirst($faker->domainName),
-            $faker->address
+        $phones = $this->addPhones(
+            $ownerUniqueness,
+            rand(1, 10)
         );
-
-        $this->promoteUser->promote($owner, $business, 'aloleiro_owner');
-
-        $this->promoteUser->promote($operator, $business, 'aloleiro_operator');
-
-        $phones = [];
-        $c = rand(1, 10);
-        for ($j = 1; $j <= $c; $j++) {
-            $phone = $this->generatePhoneNumber($faker);
-            $phones[$j] = $phone;
-
-            $this->addPhone->add(
-                $owner,
-                $phone,
-                ucfirst($faker->colorName)
-            );
-        }
 
         $time = new \DateTime("now", new \DateTimeZone('America/Caracas') );
         $time->modify('first day of this year');
 
         for ($j = 1; $j <= 100; $j++) {
             $from = $phones[rand(1, count($phones))];
-            $to = $this->generatePhoneNumber($faker);
+            $to = $this->generatePhoneNumber();
 
             $this->prepareCall->prepare(
-                $operator,
+                $operatorUniqueness,
                 $from,
                 $to
             );
@@ -227,6 +318,9 @@ class SetFixtures
 
     private function purge()
     {
+        $this->manageRateStorage->purge();
+        $this->manageAdminApprovalStorage->purge();
+        $this->manageApprovalStorage->purge();
         $this->manageBusinessStorage->purge();
         $this->manageProfileStorage->purge();
         $this->managePhoneStorage->purge();
@@ -235,12 +329,35 @@ class SetFixtures
     }
 
     /**
-     * @param Generator $faker
-     *
+     * @param string $uniqueness
+     * @param int    $amount
+     * 
+     * @return string[]
+     */
+    private function addPhones($uniqueness, $amount)
+    {
+        $phones = [];
+
+        for ($i = 1; $i <= $amount; $i++) {
+            $phone = $this->generatePhoneNumber();
+
+            $this->addPhone->add(
+                $uniqueness,
+                $phone,
+                ucfirst($this->faker->colorName)
+            );
+
+            $phones[$i] = $phone;
+        }
+
+        return $phones;
+    }
+
+    /**
      * @return string
      */
-    private function generatePhoneNumber(Generator $faker)
+    private function generatePhoneNumber()
     {
-        return '+' . str_replace(['+', '-', ' '], [''], $faker->phoneNumber);
+        return '+' . str_replace(['+', '-', ' '], [''], $this->faker->phoneNumber);
     }
 }

@@ -38,13 +38,6 @@ class CreateAdminApproval
      */
     public function create()
     {
-        $input = $this->server->resolveInput();
-
-        $this->createAdminApproval->create(
-            $input->get('2'),
-            $input->get('3')
-        );
-
-        $this->server->resolveOutput()->outln('Success');
+        $this->createAdminApproval->create();
     }
 }
