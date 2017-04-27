@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Muchacuba\Aloleiro\Business\InvalidDataException;
 use Muchacuba\Aloleiro\Business\ManageStorage;
 
 /**
@@ -26,13 +27,15 @@ class AddBusiness
     }
 
     /**
-     * @param float       $balance
+     * @param int         $balance
      * @param int         $profitPercent
      * @param string      $name
      * @param string      $address
      * @param string|null $id
      *
      * @return string
+     *
+     * @throws InvalidDataException
      */
     public function add(
         $balance,
@@ -41,11 +44,15 @@ class AddBusiness
         $address,
         $id = null)
     {
+        if ($balance != floatval($balance)) {
+            throw new InvalidDataException(InvalidDataException::FIELD_BALANCE);
+        }
+
         $id = $id ?: uniqid();
 
         $this->manageStorage->connect()->insertOne(new Business(
             $id,
-            $balance,
+            floatval($balance),
             $profitPercent,
             $name,
             $address

@@ -104,12 +104,14 @@ class Context implements BaseContext, ContainerAwareContext
     {
         $item = json_decode($string->getRaw(), true);
 
-        /** @var CreateBusiness $createBusiness */
-        $createBusiness = $this->container->get('muchacuba.aloleiro.create_business');
+        /** @var AddBusiness $addBusiness */
+        $addBusiness = $this->container->get('muchacuba.aloleiro.add_business');
 
-        $createBusiness->create(
+        $addBusiness->add(
             $item['balance'],
             $item['profitPercent'],
+            '',
+            '',
             $id
         );
     }

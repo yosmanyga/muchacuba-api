@@ -4,6 +4,7 @@ namespace Muchacuba\Aloleiro\Business;
 
 class InvalidDataException extends \Exception
 {
+    const FIELD_BALANCE = 'balance';
     const FIELD_PROFIT_PERCENT = 'profitPercent';
 
     /**

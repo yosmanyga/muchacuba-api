@@ -37,25 +37,31 @@ class CollectClientCalls
     }
 
     /**
-     * @param string $uniqueness
-     * @param int    $from
-     * @param int    $to
+     * @param string    $uniqueness
+     * @param int|null  $from
+     * @param int |null $to
      *
      * @return ClientCall[]
      */
-    public function collect($uniqueness, $from, $to)
+    public function collect($uniqueness, $from = null, $to = null)
     {
         $profile = $this->pickProfile->pick($uniqueness);
 
+        $criteria = [];
+
+        $criteria['business'] = $profile->getBusiness();
+
+        if (!is_null($from)) {
+            $criteria['instances.timestamp']['$gte'] = new UTCDateTime($from * 1000);
+        }
+
+        if (!is_null($to)) {
+            $criteria['instances.timestamp']['$lt'] = new UTCDateTime($to * 1000);
+        }
+
         /** @var Call[] $calls */
         $calls = $this->manageStorage->connect()->find(
-            [
-                'business' => $profile->getBusiness(),
-                'instances.timestamp' => [
-                    '$gte' => new UTCDateTime($from * 1000),
-                    '$lt' => new UTCDatetime($to * 1000),
-                ]
-            ],
+            $criteria,
             [
                 'sort' => [
                     '_id' => -1
@@ -69,7 +75,7 @@ class CollectClientCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new ClientInstance(
-                    (string) $instance['timestamp'] / 1000, //$instance->getTimestamp(),
+                    $instance['timestamp'] ? (string) $instance['timestamp'] / 1000 : null, //$instance->getTimestamp(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessSale'] //$instance->getBusinessSale()
                 );

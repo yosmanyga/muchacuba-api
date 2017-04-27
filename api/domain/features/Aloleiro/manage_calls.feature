@@ -12,7 +12,7 @@ Feature: Manage calls
     And there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": 10000,
       "profitPercent": "15"
     }
     """
@@ -51,11 +51,12 @@ Feature: Manage calls
     ]
     """
 
+    @this
   Scenario: Process incoming call event (ICE)
     Given there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": 10000,
       "profitPercent": "15"
     }
     """
@@ -206,7 +207,7 @@ Feature: Manage calls
     Given there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": 10000,
       "profitPercent": "15"
     }
     """
@@ -338,7 +339,7 @@ Feature: Manage calls
     And there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": "10000",
       "profitPercent": "15"
     }
     """
@@ -529,7 +530,7 @@ Feature: Manage calls
     And there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": 10000,
       "profitPercent": "15"
     }
     """
@@ -655,7 +656,7 @@ Feature: Manage calls
     And there is the business "b1":
     """
     {
-      "balance": "0.0",
+      "balance": 10000,
       "profitPercent": "15"
     }
     """
