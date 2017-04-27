@@ -129,7 +129,7 @@ export default class ViewStats extends React.Component {
                                 return 'Día '+ label;
                             }}/>
                             <Legend />
-                            <Line name="Total de llamadas" dataKey="total" unit=" Bf" type="monotone" stroke={totalColor} activeDot={{r: 8}}/>
+                            <Line name="Total de llamadas" dataKey="total" type="monotone" stroke={totalColor} activeDot={{r: 8}}/>
                         </LineChart>
                     </div>
                 </div>
