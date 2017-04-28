@@ -10,17 +10,25 @@ namespace Muchacuba\Aloleiro;
 class ComputeDailyBusinessCalls
 {
     /**
+     * @var PickProfile
+     */
+    private $pickProfile;
+
+    /**
      * @var ComputeCalls
      */
     private $computeCalls;
 
     /**
+     * @param PickProfile  $pickProfile
      * @param ComputeCalls $computeCalls
      */
     public function __construct(
+        PickProfile $pickProfile,
         ComputeCalls $computeCalls
     )
     {
+        $this->pickProfile = $pickProfile;
         $this->computeCalls = $computeCalls;
     }
 
@@ -33,14 +41,16 @@ class ComputeDailyBusinessCalls
      */
     public function compute($uniqueness)
     {
-        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+        $profile = $this->pickProfile->pick($uniqueness);
+
+        $now = new \DateTime("now", new \DateTimeZone('America/Caracas'));
         $from = clone $now;
         $from->modify('today');
         $to = clone $from;
         $to->modify('tomorrow');
 
         $stats = $this->computeCalls->compute(
-            $uniqueness,
+            $profile->getBusiness(),
             $from->getTimestamp(),
             $to->getTimestamp(),
             ComputeCalls::GROUP_BY_DAY
