@@ -92,6 +92,7 @@ export default class ViewSystemStats extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Reportes"
                 style={{
                     ...this.props.layout.style,
                     textAlign: "center"
