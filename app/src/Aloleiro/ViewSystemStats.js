@@ -4,6 +4,7 @@ import {
     Legend,
     LineChart,
     Line,
+    ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
@@ -98,39 +99,39 @@ export default class ViewSystemStats extends React.Component {
                 >
                     <div style={{textAlign: "center"}}>
                         <h1>Ganancias en el mes actual</h1>
-                        <LineChart
-                            width={600}
-                            height={300}
-                            data={this.state.stats}
-                            margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                        >
-                            <XAxis name="Día" dataKey="day"/>
-                            <YAxis/>
-                            <CartesianGrid strokeDasharray="3 3"/>
-                            <Tooltip labelFormatter={(label) => {
-                                return 'Día '+ label;
-                            }}/>
-                            <Legend />
-                            <Line name="Ganancias" dataKey="profit" unit=" USD" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
-                        </LineChart>
+                        <ResponsiveContainer width="100%" aspect={2}>
+                            <LineChart
+                                data={this.state.stats}
+                                margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                            >
+                                <XAxis name="Día" dataKey="day"/>
+                                <YAxis/>
+                                <CartesianGrid strokeDasharray="3 3"/>
+                                <Tooltip labelFormatter={(label) => {
+                                    return 'Día '+ label;
+                                }}/>
+                                <Legend />
+                                <Line name="Ganancias" dataKey="profit" unit=" USD" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
                     <div style={{textAlign: "center"}}>
                         <h1>Total de llamadas en el mes actual</h1>
-                        <LineChart
-                            width={600}
-                            height={300}
-                            data={this.state.stats}
-                            margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                        >
-                            <XAxis name="Día" dataKey="day"/>
-                            <YAxis/>
-                            <CartesianGrid strokeDasharray="3 3"/>
-                            <Tooltip labelFormatter={(label) => {
-                                return 'Día '+ label;
-                            }}/>
-                            <Legend />
-                            <Line name="Total de llamadas" dataKey="total" type="monotone" stroke={totalColor} activeDot={{r: 8}}/>
-                        </LineChart>
+                        <ResponsiveContainer width="100%" aspect={2}>
+                            <LineChart
+                                data={this.state.stats}
+                                margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                            >
+                                <XAxis name="Día" dataKey="day"/>
+                                <YAxis/>
+                                <CartesianGrid strokeDasharray="3 3"/>
+                                <Tooltip labelFormatter={(label) => {
+                                    return 'Día '+ label;
+                                }}/>
+                                <Legend />
+                                <Line name="Total de llamadas" dataKey="total" type="monotone" stroke={totalColor} activeDot={{r: 8}}/>
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
