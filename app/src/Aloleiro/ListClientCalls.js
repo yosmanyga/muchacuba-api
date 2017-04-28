@@ -207,8 +207,8 @@ export default class ListClientCalls extends React.Component {
                                     />
                                     <CardActions>
                                         <Button
-                                            label="Cancelar"
-                                            labelAfterTouchTap="Cancelando"
+                                            label="Borrar"
+                                            labelAfterTouchTap="Borrando"
                                             icon="delete"
                                             onTouchTap={() => {
                                                 this._connectToServer

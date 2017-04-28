@@ -116,6 +116,24 @@ export default class ViewBusinessStats extends React.Component {
                         <Line name="Ganancias" dataKey="profit" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
                     </LineChart>
                 </ResponsiveContainer>
+                <p><strong>Ventas en el mes actual</strong></p>
+                <ResponsiveContainer width="100%" aspect={2}>
+                    <LineChart
+                        width={600}
+                        height={300}
+                        data={this.state.stats}
+                        margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                    >
+                        <XAxis name="Día" dataKey="day"/>
+                        <YAxis/>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <Tooltip labelFormatter={(label) => {
+                            return 'Día '+ label;
+                        }}/>
+                        <Legend />
+                        <Line name="Ventas" dataKey="sale" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
+                    </LineChart>
+                </ResponsiveContainer>
                 <p><strong>Total de llamadas en el mes actual</strong></p>
                 <ResponsiveContainer width="100%" aspect={2}>
                     <LineChart
