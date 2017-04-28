@@ -17,12 +17,13 @@ import Wait from '../Wait';
 import ListSystemRates from './ListSystemRates';
 import ManageBusinesses from './ManageBusinesses';
 import ManageApprovals from './ManageApprovals';
+import ViewSystemStats from './ViewSystemStats';
 import ListLogs from './ListLogs';
 // Owner
 import EditBusiness from './EditBusiness';
 import ListBusinessRates from './ListBusinessRates';
 import ListPhones from './ListPhones';
-import ViewStats from './ViewStats';
+import ViewBusinessStats from './ViewBusinessStats';
 // Operator
 import ListClientCalls from './ListClientCalls';
 import ListClientRates from './ListClientRates';
@@ -113,6 +114,14 @@ export default class Front extends React.Component {
                     />
                 },
                 {
+                    'url': '/view-system-stats',
+                    'element': <ViewSystemStats
+                        layout={layout}
+                        profile={this.state.profile}
+                        onError={this.props.onError}
+                    />
+                },
+                {
                     'url': '/list-logs',
                     'element': <ListLogs
                         layout={layout}
@@ -140,8 +149,8 @@ export default class Front extends React.Component {
                     />
                 },
                 {
-                    'url': '/view-stats',
-                    'element': <ViewStats
+                    'url': '/view-business-stats',
+                    'element': <ViewBusinessStats
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
@@ -243,6 +252,19 @@ class Layout extends React.Component {
                         }
                         {_.includes(this.props.profile.roles, 'aloleiro_admin')
                             ?
+                            <MenuItem
+                                key="view-system-stats"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/view-system-stats')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">assessment</FontIcon>}
+                            >
+                                Reportes
+                            </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
+                            ?
                                 <MenuItem
                                     key="list-logs"
                                     onTouchTap={() => {this.props.onNavigate('/list-logs')}}
@@ -322,9 +344,9 @@ class Layout extends React.Component {
                         {_.includes(this.props.profile.roles, 'aloleiro_owner')
                             ?
                                 <MenuItem
-                                    key="view-stats"
+                                    key="view-business-stats"
                                     onTouchTap={() => {
-                                        this.props.onNavigate('/view-stats')
+                                        this.props.onNavigate('/view-business-stats')
                                     }}
                                     leftIcon={<FontIcon className="material-icons">assessment</FontIcon>}
                                 >

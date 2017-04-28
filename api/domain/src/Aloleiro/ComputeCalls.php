@@ -17,42 +17,44 @@ class ComputeCalls
     const GROUP_BY_YEAR = 3;
 
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManageStorage
      */
     private $manageStorage;
 
     /**
-     * @param PickProfile   $pickProfile
      * @param ManageStorage $manageStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManageStorage $manageStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->manageStorage = $manageStorage;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $from
-     * @param string $to
-     * @param int    $group
+     * @param string|null $business
+     * @param string|null $from
+     * @param string|null $to
+     * @param int|null    $group
      *
      * @return array
-     *
-     * @throws \Exception
      */
-    public function compute($uniqueness, $from, $to, $group)
+    public function compute($business = null, $from = null, $to = null, $group = null)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
-        
+        $criteria = [];
+
+        if (!is_null($business)) {
+            $criteria['business'] = $business;
+        }
+
+        if (!is_null($from)) {
+            $criteria['instances.timestamp']['$gte'] = new UTCDateTime($from * 1000);
+        }
+
+        if (!is_null($to)) {
+            $criteria['instances.timestamp']['$lt'] = new UTCDatetime($to * 1000);
+        }
+
         switch ($group) {
             case self::GROUP_BY_DAY:
                 $instanceTimestamp = [
@@ -76,19 +78,17 @@ class ComputeCalls
 
                 break;
             default:
-                throw new \Exception();
+                $instanceTimestamp = [
+                    'year' => ['$year' => '$instances.timestamp'],
+                    'month' => ['$month' => '$instances.timestamp'],
+                    'day' => ['$dayOfMonth' => '$instances.timestamp']
+                ];
         }
 
         $response = $this->manageStorage->connect()
             ->aggregate(
                 [
-                    ['$match' => [
-                        'business' => $profile->getBusiness(),
-                        'instances.timestamp' => [
-                            '$gte' => new UTCDatetime($from * 1000),
-                            '$lt' => new UTCDatetime($to * 1000),
-                        ]
-                    ]],
+                    ['$match' => $criteria],
                     ['$unwind' => '$instances'],
                     ['$group' => [
                         '_id' => $instanceTimestamp,
