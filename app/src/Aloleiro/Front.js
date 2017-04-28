@@ -237,6 +237,49 @@ class Layout extends React.Component {
                             <Avatar src={this.props.profile.picture}/>
                             <p>{this.props.profile.name}</p>
                         </div>
+                        {_.includes(this.props.profile.roles, 'aloleiro_god')
+                            ?
+                            <MenuItem
+                                key="list-logs"
+                                onTouchTap={() => {this.props.onNavigate('/list-logs')}}
+                                leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
+                            >
+                                Logs
+                            </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_god')
+                            ?
+                            <MenuItem
+                                key="manage-businesses"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/manage-businesses')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                            >
+                                Negocios
+                            </MenuItem>
+                            : null
+                        }
+                        {_.includes(this.props.profile.roles, 'aloleiro_god')
+                            ?
+                            <MenuItem
+                                key="manage-approvals"
+                                onTouchTap={() => {
+                                    this.props.onNavigate('/manage-approvals')
+                                }}
+                                leftIcon={<FontIcon className="material-icons">card_membership</FontIcon>}
+                            >
+                                Aprovaciones
+                            </MenuItem>
+                            : null
+                        }
+                        {
+                            this._countRoles(this.props.profile.roles) > 1
+                            && _.includes(this.props.profile.roles, 'aloleiro_admin')
+                                ? <Subheader>Administrador</Subheader>
+                                : null
+                        }
                         {_.includes(this.props.profile.roles, 'aloleiro_admin')
                             ?
                                 <MenuItem
@@ -263,46 +306,9 @@ class Layout extends React.Component {
                             </MenuItem>
                             : null
                         }
-                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
-                            ?
-                                <MenuItem
-                                    key="list-logs"
-                                    onTouchTap={() => {this.props.onNavigate('/list-logs')}}
-                                    leftIcon={<FontIcon className="material-icons">compare_arrows</FontIcon>}
-                                >
-                                    Logs
-                                </MenuItem>
-                            : null
-                        }
-                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
-                            ?
-                            <MenuItem
-                                key="manage-businesses"
-                                onTouchTap={() => {
-                                    this.props.onNavigate('/manage-businesses')
-                                }}
-                                leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                            >
-                                Negocios
-                            </MenuItem>
-                            : null
-                        }
-                        {_.includes(this.props.profile.roles, 'aloleiro_admin')
-                            ?
-                                <MenuItem
-                                    key="manage-approvals"
-                                    onTouchTap={() => {
-                                        this.props.onNavigate('/manage-approvals')
-                                    }}
-                                    leftIcon={<FontIcon className="material-icons">card_membership</FontIcon>}
-                                >
-                                    Aprovaciones
-                                </MenuItem>
-                            : null
-                        }
                         {
-                            _.includes(this.props.profile.roles, 'aloleiro_owner')
-                            && _.includes(this.props.profile.roles, 'aloleiro_operator')
+                            this._countRoles(this.props.profile.roles) > 1
+                            && _.includes(this.props.profile.roles, 'aloleiro_owner')
                                 ? <Subheader>Dueño</Subheader>
                                 : null
                         }
@@ -355,7 +361,7 @@ class Layout extends React.Component {
                             : null
                         }
                         {
-                            _.includes(this.props.profile.roles, 'aloleiro_owner')
+                            this._countRoles(this.props.profile.roles) > 1
                             && _.includes(this.props.profile.roles, 'aloleiro_operator')
                                 ? <Subheader>Operador</Subheader>
                                 : null
@@ -395,5 +401,11 @@ class Layout extends React.Component {
                 </div>
             </layout.type>
         );
+    }
+
+    _countRoles(roles) {
+        return roles.filter((role) => {
+            return role.startsWith('aloleiro_');
+        }).length;
     }
 }
