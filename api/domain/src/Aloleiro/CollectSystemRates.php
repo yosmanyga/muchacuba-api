@@ -88,8 +88,6 @@ class CollectSystemRates
             $sale = $rate->getValue();
             // Plus profit
             $sale += $sale * $this->profitPercent / 100;
-            // Sale can't be less than 0.1
-            $sale = max($sale, 0.1);
             // Round
             $sale = round($sale, 4);
 
