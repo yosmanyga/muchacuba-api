@@ -76,6 +76,7 @@ export default class ManageBusinesses extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Administrar negocios"
             >
                 <Button
                     label="Agregar negocio"

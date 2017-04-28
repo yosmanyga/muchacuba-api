@@ -70,6 +70,7 @@ export default class ListLogs extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Logs"
             >
                 {this.state.logs.length !== 0
                     ? <Table style={{background: "transparent"}}>

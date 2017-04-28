@@ -74,6 +74,7 @@ export default class ListBusinessRates extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Precios y ganancias"
             >
                 {this.state.rates.length !== 0
                     ? [

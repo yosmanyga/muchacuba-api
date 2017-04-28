@@ -162,6 +162,7 @@ export default class ListClientCalls extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Llamadas"
             >
                 <Button
                     label="Preparar llamada"

@@ -107,6 +107,7 @@ export default class ManageApprovals extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Aprovaciones"
             >
                 <Button
                     label="Agregar aprovación"

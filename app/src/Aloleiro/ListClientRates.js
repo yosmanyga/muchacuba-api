@@ -74,6 +74,7 @@ export default class ListClientRates extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Precios"
             >
                 {this.state.rates.length !== 0
                     ? [

@@ -37,7 +37,7 @@ const muiTheme = getMuiTheme({
 class Layout extends React.Component {
     static propTypes = {
         title: React.PropTypes.string,
-        bar: React.PropTypes.element,
+        bar: React.PropTypes.node,
         drawer: React.PropTypes.element,
         iconElementLeft: React.PropTypes.element,
         iconElementRight: React.PropTypes.element,
@@ -77,28 +77,29 @@ class Layout extends React.Component {
                         {this.props.children}
                     </div>
                     {typeof this.props.drawer !== 'undefined'
-                        ?
-                            <this.props.drawer.type
-                                {...this.props.drawer.props}
-                                docked={false}
-                                open={this.state.drawer}
-                                onRequestChange={(open) => this.setState({drawer: open})}
-                            >
-                                {this.props.drawer.props.children}
-                            </this.props.drawer.type>
+                        ? <this.props.drawer.type
+                            {...this.props.drawer.props}
+                            docked={false}
+                            open={this.state.drawer}
+                            onRequestChange={(open) => this.setState({drawer: open})}
+                        >
+                            {this.props.drawer.props.children}
+                        </this.props.drawer.type>
                         : null
                     }
-                    {this.props.notification && this.props.notification.message !== null
-                        ? <Snackbar
-                            open={true}
-                            message={this.props.notification.message}
-                            autoHideDuration={4000}
-                            onRequestClose={typeof this.props.notification.finish !== 'undefined'
-                                ? this.props.notification.finish
-                                : null
-                            }
-                        />
-                        : null
+                    {
+                        this.props.notification
+                        && this.props.notification.message !== null
+                            ? <Snackbar
+                                open={true}
+                                message={this.props.notification.message}
+                                autoHideDuration={4000}
+                                onRequestClose={typeof this.props.notification.finish !== 'undefined'
+                                    ? this.props.notification.finish
+                                    : null
+                                }
+                            />
+                            : null
                     }
                 </div>
             </DocumentTitle>

@@ -82,6 +82,7 @@ export default class ViewSystemStats extends React.Component {
             return (
                 <this.props.layout.type
                     {...this.props.layout.props}
+                    bar="Reportes"
                 >
                     <p>No hay datos para hacer reporte.</p>
                 </this.props.layout.type>

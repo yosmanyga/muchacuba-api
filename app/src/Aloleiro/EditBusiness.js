@@ -77,6 +77,7 @@ export default class EditBusiness extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Mi cuenta"
             >
                 <p>Saldo actual. Cada llamada descuenta de este saldo. Si llega a cero no se podrán hacer llamadas.</p>
                 <p><strong>{this.state.business.balance + ' Bf'}</strong></p>

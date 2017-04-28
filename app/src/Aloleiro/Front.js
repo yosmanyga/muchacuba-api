@@ -202,13 +202,13 @@ class Layout extends React.Component {
         layout: React.PropTypes.element.isRequired,
         profile: React.PropTypes.object,
         onNavigate: React.PropTypes.func.isRequired,
+        bar: React.PropTypes.node
     };
 
     render() {
         const layout = <this.props.layout.type
-            {...this.props.layout.props}
             title="Holapana"
-            onTitleTouchTap={() => {this.props.onNavigate('/')}}
+            bar={this.props.bar}
             style={{
                 ...this.props.layout.props.style,
                 backgroundColor: yellow50

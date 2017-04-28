@@ -76,6 +76,7 @@ export default class ListPhones extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
+                bar="Cabinas"
             >
                 <Button
                     label="Agregar cabina"
