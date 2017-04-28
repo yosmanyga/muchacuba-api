@@ -387,7 +387,12 @@ class Layout extends React.Component {
                     </Drawer>
                 }
             >
-                <div style={{padding: "10px"}}>{this.props.children}</div>
+                <div style={{
+                    padding: "10px",
+                    ...this.props.style
+                }}>
+                    {this.props.children}
+                </div>
             </layout.type>
         );
     }
