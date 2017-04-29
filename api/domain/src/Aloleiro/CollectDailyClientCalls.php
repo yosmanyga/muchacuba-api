@@ -29,7 +29,7 @@ class CollectDailyClientCalls
      */
     public function collect($uniqueness)
     {
-        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+        $now = new \DateTime("now");
         $from = clone $now;
         $from->modify('today');
         $to = clone $from;

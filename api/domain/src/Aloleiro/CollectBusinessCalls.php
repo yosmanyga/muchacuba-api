@@ -62,7 +62,8 @@ class CollectBusinessCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new BusinessInstance(
-                    $instance['timestamp'] ? (string) $instance['timestamp'] / 1000 : null, //$instance->getTimestamp(),
+                    $instance['start'] ? (string) $instance['start'] / 1000 : null, //$instance->getStart(),
+                    $instance['end'] ? (string) $instance['end'] / 1000 : null, //$instance->getEnd(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessPurchase'], //$instance->getBusinessPurchase(),
                     $instance['businessSale'], //$instance->getBusinessSale()

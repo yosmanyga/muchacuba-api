@@ -7,7 +7,12 @@ class BusinessInstance implements \JsonSerializable
     /**
      * @var int
      */
-    private $timestamp;
+    private $start;
+
+    /**
+     * @var int
+     */
+    private $end;
 
     /**
      * @var int
@@ -30,21 +35,24 @@ class BusinessInstance implements \JsonSerializable
     private $profit;
 
     /**
-     * @param int    $timestamp
+     * @param int    $start
+     * @param int    $end
      * @param int    $duration
      * @param int    $purchase
      * @param float  $sale
      * @param float  $profit
      */
     public function __construct(
-        $timestamp,
+        $start,
+        $end,
         $duration,
         $purchase,
         $sale,
         $profit
     )
     {
-        $this->timestamp = $timestamp;
+        $this->start = $start;
+        $this->end = $end;
         $this->duration = $duration;
         $this->purchase = $purchase;
         $this->sale = $sale;
@@ -54,9 +62,17 @@ class BusinessInstance implements \JsonSerializable
     /**
      * @return int
      */
-    public function getTimestamp()
+    public function getStart()
     {
-        return $this->timestamp;
+        return $this->start;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEnd()
+    {
+        return $this->end;
     }
 
     /**
@@ -97,7 +113,8 @@ class BusinessInstance implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'timestamp' => $this->timestamp,
+            'start' => $this->start,
+            'end' => $this->end,
             'duration' => $this->duration,
             'purchase' => $this->purchase,
             'sale' => $this->sale,

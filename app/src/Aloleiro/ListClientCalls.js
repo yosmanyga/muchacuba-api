@@ -9,11 +9,6 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
-Moment.updateLocale('es', {
-    longDateFormat : {
-        LLLL : 'dddd D MMMM YYYY h:mm a'
-    },
-});
 
 import ConnectToServer from '../ConnectToServer';
 import Error from '../Error';
@@ -32,6 +27,7 @@ export default class ListClientCalls extends React.Component {
         super(props);
 
         this.state = {
+            timestamp: null,
             phones: null,
             preparedCalls: null,
             calls: null,
@@ -54,6 +50,12 @@ export default class ListClientCalls extends React.Component {
             this._collectPreparedCalls();
             this._collectCalls();
         }
+
+        window.setInterval(() => {
+            this.setState({
+                timestamp: Math.floor(Date.now() / 1000)
+            });
+        }, 1000);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -265,7 +267,7 @@ export default class ListClientCalls extends React.Component {
                                                         <TableHeaderColumn
                                                             style={{
                                                                 textAlign: 'left',
-                                                                width: "160px"
+                                                                width: "15%"
                                                             }}
                                                         >
                                                             Duración
@@ -273,28 +275,63 @@ export default class ListClientCalls extends React.Component {
                                                         <TableHeaderColumn
                                                             style={{
                                                                 textAlign: 'right',
-                                                                width: '60px'
+                                                                width: '25%'
                                                             }}
                                                         >
                                                             Costo
                                                         </TableHeaderColumn>
                                                         <TableHeaderColumn
                                                             style={{
-                                                                textAlign: 'left'
+                                                                width: '25%'
+                                                            }}
+                                                        />
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'left',
+                                                                width: '15%'
                                                             }}
                                                         >
-                                                            Fecha y hora
+                                                            Día
+                                                        </TableHeaderColumn>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'right',
+                                                                width: '10%'
+                                                            }}
+                                                        >
+                                                            Comienzo
+                                                        </TableHeaderColumn>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'right',
+                                                                width: '10%'
+                                                            }}
+                                                        >
+                                                            Final
                                                         </TableHeaderColumn>
                                                     </TableRow>
                                                 </TableHeader>
                                                 <TableBody displayRowCheckbox={false}>
                                                     {call.instances.map((instance, i) => {
+                                                        if (instance.duration === null) {
+                                                            return (
+                                                                <TableRow key={i}>
+                                                                    <TableRowColumn>
+                                                                        {this._buildDuration(
+                                                                            this.state.timestamp
+                                                                            - instance.start
+                                                                        )}
+                                                                    </TableRowColumn>
+                                                                </TableRow>
+                                                            );
+                                                        }
+
                                                         return (
                                                             <TableRow key={i}>
                                                                 <TableRowColumn
                                                                     style={{
                                                                         textAlign: 'left',
-                                                                        width: "160px"
+                                                                        width: "15%"
                                                                     }}
                                                                 >
                                                                     {this._buildDuration(instance.duration)}
@@ -302,17 +339,40 @@ export default class ListClientCalls extends React.Component {
                                                                 <TableRowColumn
                                                                     style={{
                                                                         textAlign: 'right',
-                                                                        width: '60px'
+                                                                        width: '25%'
                                                                     }}
                                                                 >
                                                                     {instance.charge} Bf
                                                                 </TableRowColumn>
                                                                 <TableRowColumn
                                                                     style={{
-                                                                        textAlign: 'left'
+                                                                        textAlign: 'left',
+                                                                        width: '25%'
+                                                                    }}
+                                                                />
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'left',
+                                                                        width: '15%'
                                                                     }}
                                                                 >
-                                                                    {Moment.unix(instance.timestamp).format('LLLL')}
+                                                                    {Moment.unix(instance.start).format('dddd D MMMM YYYY')}
+                                                                </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'right',
+                                                                        width: '10%'
+                                                                    }}
+                                                                >
+                                                                    {Moment.unix(instance.start).format('h:mm:ss a')}
+                                                                </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'right',
+                                                                        width: '10%'
+                                                                    }}
+                                                                >
+                                                                    {Moment.unix(instance.end).format('h:mm:ss a')}
                                                                 </TableRowColumn>
                                                             </TableRow>
                                                         );
@@ -321,7 +381,7 @@ export default class ListClientCalls extends React.Component {
                                                         <TableRowColumn
                                                             style={{
                                                                 textAlign: 'left',
-                                                                width: "160px"
+                                                                width: "15%"
                                                             }}
                                                         >
                                                             <strong>Total</strong>
@@ -329,7 +389,7 @@ export default class ListClientCalls extends React.Component {
                                                         <TableRowColumn
                                                             style={{
                                                                 textAlign: 'right',
-                                                                width: '60px'
+                                                                width: '25%'
                                                             }}
                                                         >
                                                             <strong>
@@ -436,14 +496,21 @@ export default class ListClientCalls extends React.Component {
     }
 
     _buildDuration(duration) {
-        const remainder = duration % 60;
+        const seconds = duration % 60;
+        const minutes = (duration - seconds) / 60;
 
-        let string = (duration - remainder) / 60;
-        string += string === 1 ? ' minuto' : ' minutos';
+        let string = '';
 
-        if (remainder !== 0) {
-            string += ' y ' + remainder;
-            string += remainder === 1 ? ' segundo' : ' segundos';
+        if (minutes > 0) {
+            string += minutes + (minutes === 1 ? ' minuto' : ' minutos');
+        }
+
+        if (minutes > 0 && seconds > 0) {
+            string += ' y ';
+        }
+
+        if (seconds > 0) {
+            string += seconds + (seconds === 1 ? ' segundo' : ' segundos');
         }
 
         return string;

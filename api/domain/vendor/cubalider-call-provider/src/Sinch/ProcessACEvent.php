@@ -48,7 +48,8 @@ class ProcessACEvent implements ProcessEvent
 
         foreach ($this->listenAnswerEventServices as $listenAnswerEventService) {
             $r = $listenAnswerEventService->listen(
-                $payload['callid']
+                $payload['callid'],
+                strtotime($payload['timestamp'])
             );
 
             if ($r instanceof Response) {

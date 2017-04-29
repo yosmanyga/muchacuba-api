@@ -48,40 +48,40 @@ class ComputeCalls
         }
 
         if (!is_null($from)) {
-            $criteria['instances.timestamp']['$gte'] = new UTCDateTime($from * 1000);
+            $criteria['instances.start']['$gte'] = new UTCDateTime($from * 1000);
         }
 
         if (!is_null($to)) {
-            $criteria['instances.timestamp']['$lt'] = new UTCDatetime($to * 1000);
+            $criteria['instances.start']['$lt'] = new UTCDatetime($to * 1000);
         }
 
         switch ($group) {
             case self::GROUP_BY_DAY:
-                $instanceTimestamp = [
-                    'year' => ['$year' => '$instances.timestamp'],
-                    'month' => ['$month' => '$instances.timestamp'],
-                    'day' => ['$dayOfMonth' => '$instances.timestamp']
+                $instanceStart = [
+                    'year' => ['$year' => '$instances.start'],
+                    'month' => ['$month' => '$instances.start'],
+                    'day' => ['$dayOfMonth' => '$instances.start']
                 ];
 
                 break;
             case self::GROUP_BY_MONTH:
-                $instanceTimestamp = [
-                    'year' => ['$year' => '$instances.timestamp'],
-                    'month' => ['$month' => '$instances.timestamp']
+                $instanceStart = [
+                    'year' => ['$year' => '$instances.start'],
+                    'month' => ['$month' => '$instances.start']
                 ];
 
                 break;
             case self::GROUP_BY_YEAR:
-                $instanceTimestamp = [
-                    'year' => ['$year' => '$instances.timestamp']
+                $instanceStart = [
+                    'year' => ['$year' => '$instances.start']
                 ];
 
                 break;
             default:
-                $instanceTimestamp = [
-                    'year' => ['$year' => '$instances.timestamp'],
-                    'month' => ['$month' => '$instances.timestamp'],
-                    'day' => ['$dayOfMonth' => '$instances.timestamp']
+                $instanceStart = [
+                    'year' => ['$year' => '$instances.start'],
+                    'month' => ['$month' => '$instances.start'],
+                    'day' => ['$dayOfMonth' => '$instances.start']
                 ];
         }
 
@@ -91,7 +91,7 @@ class ComputeCalls
                     ['$match' => $criteria],
                     ['$unwind' => '$instances'],
                     ['$group' => [
-                        '_id' => $instanceTimestamp,
+                        '_id' => $instanceStart,
                         'duration' => [
                             '$sum' => '$instances.duration'
                         ],

@@ -51,7 +51,6 @@ Feature: Manage calls
     ]
     """
 
-    @this
   Scenario: Process incoming call event (ICE)
     Given there is the business "b1":
     """
@@ -114,7 +113,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": null,
+            "start": null,
+            "end": null,
             "duration": null,
             "purchase": null,
             "sale": null,
@@ -249,7 +249,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "1"
+      "callid": "1",
+      "timestamp": "2017-04-07T03:47:47Z"
     }
     """
     Then I should send the response:
@@ -269,7 +270,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": null,
+            "start": 1491536867,
+            "end": null,
             "duration": null,
             "purchase": null,
             "sale": null,
@@ -311,7 +313,8 @@ Feature: Manage calls
         "type": "event-from-sinch",
         "payload": {
           "event": "ace",
-          "callid": "1"
+          "callid": "1",
+          "timestamp": "2017-04-07T03:47:47Z"
         },
         "date": "@integer@"
       },
@@ -381,7 +384,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "1"
+      "callid": "1",
+      "timestamp": "2017-04-07T03:47:47Z"
     }
     """
     And I process the sinch event:
@@ -406,7 +410,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": 1491536905,
+            "start": 1491536867,
+            "end": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,
@@ -425,7 +430,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": 1491536905,
+            "start": 1491536867,
+            "end": 1491536905,
             "duration": 30,
             "purchase": 574,
             "sale": 660,
@@ -444,7 +450,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": 1491536905,
+            "start": 1491536867,
+            "end": 1491536905,
             "duration": 30,
             "charge": 660
           }
@@ -484,7 +491,8 @@ Feature: Manage calls
         "type": "event-from-sinch",
         "payload": {
           "event": "ace",
-          "callid": "1"
+          "callid": "1",
+          "timestamp": "2017-04-07T03:47:47Z"
         },
         "date": "@integer@"
       },
@@ -572,7 +580,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "1"
+      "callid": "1",
+      "timestamp": "2017-04-07T03:47:47Z"
     }
     """
     And I process the sinch event:
@@ -602,7 +611,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "2"
+      "callid": "2",
+      "timestamp": "2017-04-07T03:57:47Z"
     }
     """
     And I process the sinch event:
@@ -610,7 +620,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
-      "timestamp": "2017-04-07T03:56:25Z",
+      "timestamp": "2017-04-07T03:58:25Z",
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -626,14 +636,16 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": 1491537385,
+            "start": 1491537467,
+            "end": 1491537505,
             "duration": 60,
             "purchase": 0.2,
             "sale": 0.26,
             "profit": 0.06
           },
           {
-            "timestamp": 1491536905,
+            "start": 1491536867,
+            "end": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,
@@ -698,7 +710,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "1"
+      "callid": "1",
+      "timestamp": "2017-04-07T03:47:47Z"
     }
     """
     And I process the sinch event:
@@ -735,7 +748,8 @@ Feature: Manage calls
     """
     {
       "event": "ace",
-      "callid": "2"
+      "callid": "2",
+      "timestamp": "2017-04-07T03:57:47Z"
     }
     """
     And I process the sinch event:
@@ -743,7 +757,7 @@ Feature: Manage calls
     {
       "event": "dice",
       "callid": "2",
-      "timestamp": "2017-04-07T03:56:25Z",
+      "timestamp": "2017-04-07T03:58:25Z",
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -759,7 +773,8 @@ Feature: Manage calls
         "to": "+2021",
         "instances": [
           {
-            "timestamp": 1491537385,
+            "start": 1491537467,
+            "end": 1491537505,
             "duration": 60,
             "purchase": 0.2,
             "sale": 0.26,
@@ -772,7 +787,8 @@ Feature: Manage calls
         "to": "+1011",
         "instances": [
           {
-            "timestamp": 1491536905,
+            "start": 1491536867,
+            "end": 1491536905,
             "duration": 30,
             "purchase": 0.1,
             "sale": 0.13,

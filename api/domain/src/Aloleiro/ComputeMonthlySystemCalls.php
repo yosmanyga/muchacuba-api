@@ -31,7 +31,7 @@ class ComputeMonthlySystemCalls
      */
     public function compute()
     {
-        $now = new \DateTime("now", new \DateTimeZone('America/Caracas') );
+        $now = new \DateTime("now");
         $from = clone $now;
         $from->modify('first day of this month');
         $from->modify('midnight');

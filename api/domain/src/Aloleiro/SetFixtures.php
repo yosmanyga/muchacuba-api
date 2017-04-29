@@ -221,7 +221,7 @@ class SetFixtures
         $this->createAdminApproval->create();
         
         $business = $this->addBusiness->add(
-            500000,
+            5000000,
             15,
             'Test',
             'USA'
@@ -266,10 +266,25 @@ class SetFixtures
             rand(1, 10)
         );
 
-        $time = new \DateTime("now", new \DateTimeZone('America/Caracas') );
-        $time->modify('first day of this year');
+        $time = new \DateTime("now");
 
-        for ($j = 1; $j <= 100; $j++) {
+        /** @var \DateTime[][] $days */
+        $days = [];
+        for ($i = 1; $i <= 100; $i++) {
+            $minutes = [];
+            $amount = rand(0, 4); // 0 means that it's a prepared call with no instances
+            for ($j = 1; $j <= $amount; $j++) {
+                $time->modify(sprintf('- %s minutes', rand(1, 10)));
+
+                $minutes[] = clone $time;
+            }
+            $days[] = array_reverse($minutes);
+
+            $time->modify(sprintf('- %s days', rand(0, 1)));
+        }
+        $days = array_reverse($days);
+
+        foreach ($days as $day) {
             $from = $phones[rand(1, count($phones))];
             $to = $this->generatePhoneNumber();
 
@@ -279,11 +294,7 @@ class SetFixtures
                 $to
             );
 
-            $time->modify(sprintf('+ %s days', rand(1, 5)));
-
-            for ($k = 1; $k <= rand(0, 4); $k++) {
-                $time->modify(sprintf('+ %s minutes', rand(1, 400)));
-
+            foreach ($day as $time) {
                 $cid = uniqid();
 
                 $this->processEvent->process([
@@ -295,23 +306,32 @@ class SetFixtures
                     ]
                 ]);
 
-                $this->processEvent->process([
-                    'event' => 'ace',
-                    'callid' => $cid
-                ]);
+                $duration = rand(1, 120);
 
                 $this->processEvent->process([
-                    'event' => 'dice',
+                    'event' => 'ace',
                     'callid' => $cid,
                     'timestamp' => date(
                         DATE_ISO8601,
                         $time->getTimestamp()
-                    ),
-                    'duration' => rand(0, 120),
-                    'debit' => [
-                        'amount' => rand(0, 100) / 100
-                    ]
+                    )
                 ]);
+
+                // Some calls will be in progress
+                if (rand(0, 1) == 1) {
+                    $this->processEvent->process([
+                        'event' => 'dice',
+                        'callid' => $cid,
+                        'timestamp' => date(
+                            DATE_ISO8601,
+                            $time->getTimestamp() + $duration
+                        ),
+                        'duration' => $duration,
+                        'debit' => [
+                            'amount' => rand(1, 100) / 100
+                        ]
+                    ]);
+                }
             }
         }
     }

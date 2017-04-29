@@ -52,11 +52,11 @@ class CollectClientCalls
         $criteria['business'] = $profile->getBusiness();
 
         if (!is_null($from)) {
-            $criteria['instances.timestamp']['$gte'] = new UTCDateTime($from * 1000);
+            $criteria['instances.start']['$gte'] = new UTCDateTime($from * 1000);
         }
 
         if (!is_null($to)) {
-            $criteria['instances.timestamp']['$lt'] = new UTCDateTime($to * 1000);
+            $criteria['instances.start']['$lt'] = new UTCDateTime($to * 1000);
         }
 
         /** @var Call[] $calls */
@@ -75,7 +75,8 @@ class CollectClientCalls
             $instances = [];
             foreach ($call->getInstances() as $instance) {
                 $instances[] = new ClientInstance(
-                    $instance['timestamp'] ? (string) $instance['timestamp'] / 1000 : null, //$instance->getTimestamp(),
+                    $instance['start'] ? (string) $instance['start'] / 1000 : null, //$instance->getStart(),
+                    $instance['end'] ? (string) $instance['end'] / 1000 : null, //$instance->getEnd(),
                     $instance['duration'], //$instance->getDuration(),
                     $instance['businessSale'] //$instance->getBusinessSale()
                 );

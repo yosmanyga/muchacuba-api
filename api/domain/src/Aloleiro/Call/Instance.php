@@ -12,11 +12,14 @@ class Instance implements Persistable, \JsonSerializable
     private $id;
 
     /**
-     * Init timestamp
-     *
      * @var int
      */
-    private $timestamp;
+    private $start;
+
+    /**
+     * @var int
+     */
+    private $end;
 
     /**
      * @var int
@@ -55,7 +58,8 @@ class Instance implements Persistable, \JsonSerializable
 
     /**
      * @param string     $id
-     * @param int|null   $timestamp
+     * @param int|null   $start
+     * @param int|null   $end
      * @param int|null   $duration
      * @param int|null   $systemPurchase
      * @param float|null $systemSale
@@ -66,7 +70,8 @@ class Instance implements Persistable, \JsonSerializable
      */
     public function __construct(
         $id,
-        $timestamp = null,
+        $start = null,
+        $end = null,
         $duration = null,
         $systemPurchase = null,
         $systemSale = null,
@@ -77,7 +82,8 @@ class Instance implements Persistable, \JsonSerializable
     )
     {
         $this->id = $id;
-        $this->timestamp = $timestamp;
+        $this->start = $start;
+        $this->end = $end;
         $this->duration = $duration;
         $this->systemPurchase = $systemPurchase;
         $this->systemSale = $systemSale;
@@ -98,9 +104,17 @@ class Instance implements Persistable, \JsonSerializable
     /**
      * @return int
      */
-    public function getTimestamp()
+    public function getStart()
     {
-        return $this->timestamp;
+        return $this->start;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEnd()
+    {
+        return $this->end;
     }
 
     /**
@@ -166,7 +180,8 @@ class Instance implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'timestamp' => $this->timestamp,
+            'start' => $this->start,
+            'end' => $this->end,
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
@@ -183,7 +198,8 @@ class Instance implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['id'];
-        $this->timestamp = $data['timestamp'];
+        $this->start = $data['start'];
+        $this->end = $data['end'];
         $this->duration = $data['duration'];
         $this->systemPurchase = $data['systemPurchase'];
         $this->systemSale = $data['systemSale'];
@@ -199,7 +215,8 @@ class Instance implements Persistable, \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'timestamp' => $this->timestamp,
+            'start' => $this->start,
+            'end' => $this->end,
             'duration' => $this->duration,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,

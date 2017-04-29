@@ -116,7 +116,7 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
         $result = $this->manageCallStorage->connect()->updateOne(
             ['instances.id' => $cid],
             ['$set' => [
-                'instances.$.timestamp' => new UTCDateTime($timestamp * 1000),
+                'instances.$.end' => new UTCDateTime($timestamp * 1000),
                 'instances.$.duration' => $duration,
                 'instances.$.systemPurchase' => $systemPurchase,
                 'instances.$.systemSale' => $systemSale,
