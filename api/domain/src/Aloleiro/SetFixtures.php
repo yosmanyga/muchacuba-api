@@ -326,6 +326,7 @@ class SetFixtures
                             DATE_ISO8601,
                             $time->getTimestamp() + $duration
                         ),
+                        'result' => 'ANSWERED',
                         'duration' => $duration,
                         'debit' => [
                             'amount' => rand(1, 100) / 100
