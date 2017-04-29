@@ -202,7 +202,7 @@ export default class ListClientCalls extends React.Component {
                                     }}
                                 >
                                     <CardHeader
-                                        avatar={<FontIcon className="material-icons">phone_in_talk</FontIcon>}
+                                        avatar={<FontIcon className="material-icons">local_phone</FontIcon>}
                                         title={'Desde: ' + this._resolvePhoneName(preparedCall.from)}
                                         subtitle={'Hasta: ' + preparedCall.to}
                                         actAsExpander={true}
