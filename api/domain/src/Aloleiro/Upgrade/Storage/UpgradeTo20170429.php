@@ -85,20 +85,20 @@ class UpgradeTo20170429
                     'instances.id' => $log->getPayload()['callid']
                 ],
                 ['$set' => [
-                    'instances.$' => new Instance(
-                        $instances[0]['id'],
-                        new UTCDateTime(
+                    'instances.$' => [
+                        'id' => $instances[0]['id'],
+                        'start' => new UTCDateTime(
                             strtotime($log->getPayload()['timestamp']) * 1000
                         ),
-                        $instances[0]['timestamp'],
-                        $instances[0]['duration'],
-                        $instances[0]['systemPurchase'],
-                        $instances[0]['systemSale'],
-                        $instances[0]['systemProfit'],
-                        $instances[0]['businessPurchase'],
-                        $instances[0]['businessSale'],
-                        $instances[0]['businessProfit']
-                    )
+                        'end' => $instances[0]['timestamp'],
+                        'duration' => $instances[0]['duration'],
+                        'systemPurchase' => $instances[0]['systemPurchase'],
+                        'systemSale' => $instances[0]['systemSale'],
+                        'systemProfit' => $instances[0]['systemProfit'],
+                        'businessPurchase' => $instances[0]['businessPurchase'],
+                        'businessSale' => $instances[0]['businessSale'],
+                        'businessProfit' => $instances[0]['businessProfit']
+                    ]
                 ]]
             );
         }
