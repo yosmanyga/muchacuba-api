@@ -330,7 +330,7 @@ Feature: Manage calls
     ]
     """
 
-  Scenario: Process disconnected call event (DICE)
+  Scenario: Process disconnected call event (DICE) with no speaking
     Given there is the rate:
     """
     {
@@ -394,9 +394,9 @@ Feature: Manage calls
       "event": "dice",
       "callid": "1",
       "timestamp": "2017-04-07T03:48:25Z",
-      "duration": 30,
+      "result": "NOANSWER",
       "debit": {
-        "amount": 0.1
+        "amount": 0
       }
     }
     """
@@ -409,14 +409,6 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "instances": [
-          {
-            "start": 1491536867,
-            "end": 1491536905,
-            "duration": 30,
-            "purchase": 0.1,
-            "sale": 0.13,
-            "profit": 0.03
-          }
         ]
       }
     ]
@@ -429,14 +421,6 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "instances": [
-          {
-            "start": 1491536867,
-            "end": 1491536905,
-            "duration": 30,
-            "purchase": 574,
-            "sale": 660,
-            "profit": 86
-          }
         ]
       }
     ]
@@ -449,12 +433,6 @@ Feature: Manage calls
         "from": "+123",
         "to": "+1011",
         "instances": [
-          {
-            "start": 1491536867,
-            "end": 1491536905,
-            "duration": 30,
-            "charge": 660
-          }
         ]
       }
     ]
@@ -511,9 +489,9 @@ Feature: Manage calls
           "event": "dice",
           "callid": "1",
           "timestamp": "2017-04-07T03:48:25Z",
-          "duration": 30,
+          "result": "NOANSWER",
           "debit": {
-            "amount": 0.1
+            "amount": 0
           }
         },
         "date": "@integer@"
@@ -590,6 +568,7 @@ Feature: Manage calls
       "event": "dice",
       "callid": "1",
       "timestamp": "2017-04-07T03:48:25Z",
+      "result": "ANSWERED",
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -621,6 +600,7 @@ Feature: Manage calls
       "event": "dice",
       "callid": "2",
       "timestamp": "2017-04-07T03:58:25Z",
+      "result": "ANSWERED",
       "duration": 60,
       "debit": {
         "amount": 0.2
@@ -720,6 +700,7 @@ Feature: Manage calls
       "event": "dice",
       "callid": "1",
       "timestamp": "2017-04-07T03:48:25Z",
+      "result": "ANSWERED",
       "duration": 30,
       "debit": {
         "amount": 0.1
@@ -758,6 +739,7 @@ Feature: Manage calls
       "event": "dice",
       "callid": "2",
       "timestamp": "2017-04-07T03:58:25Z",
+      "result": "ANSWERED",
       "duration": 60,
       "debit": {
         "amount": 0.2

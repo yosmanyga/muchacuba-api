@@ -5,6 +5,7 @@ namespace Muchacuba\Aloleiro;
 use Cubalider\Call\Provider\NullResponse;
 use Cubalider\Call\Provider\ListenDisconnectCallEvent as BaseListenDisconnectCallEvent;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\DeleteResult;
 use MongoDB\UpdateResult;
 use Muchacuba\Aloleiro\Business\DecreaseBalance;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
@@ -74,8 +75,24 @@ class ListenDisconnectCallEvent implements BaseListenDisconnectCallEvent
     /**
      * {@inheritdoc}
      */
-    public function listen($cid, $timestamp, $duration, $cost)
+    public function listen($cid, $timestamp, $result, $duration, $cost)
     {
+        if ($result != BaseListenDisconnectCallEvent::RESULT_ANSWERED) {
+            /** @var UpdateResult $result */
+            $result = $this->manageCallStorage->connect()->updateOne(
+                ['instances.id' => $cid],
+                ['$pull' => [
+                    'instances' => ['id' => $cid]
+                ]]
+            );
+
+            if ($result->getModifiedCount() == 0) {
+                throw new \Exception(sprintf("Instance '%s' does not exist", $cid));
+            }
+
+            return new NullResponse();
+        }
+
         /** @var Call $call */
         $call = $this->manageCallStorage->connect()->findOne([
             'instances.id' => $cid

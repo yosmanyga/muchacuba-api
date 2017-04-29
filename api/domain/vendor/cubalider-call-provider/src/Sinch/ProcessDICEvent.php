@@ -50,7 +50,8 @@ class ProcessDICEvent implements ProcessEvent
             $r = $listenDisconnectEventService->listen(
                 $payload['callid'],
                 strtotime($payload['timestamp']),
-                $payload['duration'],
+                $payload['result'],
+                isset($payload['duration']) ? $payload['duration'] : null,
                 $payload['debit']['amount']
             );
 
