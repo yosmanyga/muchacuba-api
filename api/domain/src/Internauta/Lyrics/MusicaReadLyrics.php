@@ -36,7 +36,7 @@ class MusicaReadLyrics implements ReadLyrics
         }
 
         parse_str(parse_url($link, PHP_URL_QUERY), $query);
-        if (!isset($query['id'])) {
+        if (!isset($query['id']) && !isset($query['letra'])) {
             throw new UnsupportedLinkException();
         }
 
