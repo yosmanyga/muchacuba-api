@@ -70,7 +70,7 @@ class MusixmatchReadLyrics implements ReadLyrics
         $crawler = $crawler->filter('h1');
 
         $title = $crawler->first()->getNode(0)->textContent;
-        $title = str_replace('Lyrics', '', $title);
+        $title = str_replace('Letra', '', $title);
         $title = trim($title);
 
         return $title;
