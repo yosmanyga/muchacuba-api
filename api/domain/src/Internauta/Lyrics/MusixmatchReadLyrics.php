@@ -6,10 +6,9 @@ use Cubalider\Navigation\RequestPage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Disabled for now because our server was blocked and proxies don't work
- *
  * @di\service({
  *     deductible: true,
+ *     tags: [{name: 'internauta.lyrics.read_lyrics', key: 'musixmatch'}]
  * })
  */
 class MusixmatchReadLyrics implements ReadLyrics
@@ -35,6 +34,8 @@ class MusixmatchReadLyrics implements ReadLyrics
         if (parse_url($link, PHP_URL_HOST) !== 'www.musixmatch.com') {
             throw new UnsupportedLinkException();
         }
+
+        $link = sprintf('http://webcache.googleusercontent.com/search?q=cache:%s', $link);
 
         $crawler = $this->requestPage->request($link);
 
