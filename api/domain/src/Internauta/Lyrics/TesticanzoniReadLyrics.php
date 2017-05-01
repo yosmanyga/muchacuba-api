@@ -6,13 +6,12 @@ use Cubalider\Navigation\RequestPage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Disabled for now because our server was blocked and proxies don't work
- *
  * @di\service({
  *     deductible: true,
+ *     tags: [{name: 'internauta.lyrics.read_lyrics', key: 'testicanzoni'}]
  * })
  */
-class MusixmatchReadLyrics implements ReadLyrics
+class TesticanzoniReadLyrics implements ReadLyrics
 {
     /**
      * @var RequestPage
@@ -32,7 +31,7 @@ class MusixmatchReadLyrics implements ReadLyrics
      */
     public function read($link)
     {
-        if (parse_url($link, PHP_URL_HOST) !== 'www.musixmatch.com') {
+        if (parse_url($link, PHP_URL_HOST) !== 'testicanzoni.mtv.it') {
             throw new UnsupportedLinkException();
         }
 
@@ -54,9 +53,9 @@ class MusixmatchReadLyrics implements ReadLyrics
      */
     private function resolveAuthor(Crawler $crawler)
     {
-        $crawler = $crawler->filter('h2');
+        $crawler = $crawler->filter('ol li');
 
-        $author = $crawler->first()->getNode(0)->textContent;
+        $author = $crawler->eq(1)->getNode(0)->textContent;
 
         return $author;
     }
@@ -68,10 +67,9 @@ class MusixmatchReadLyrics implements ReadLyrics
      */
     private function resolveTitle(Crawler $crawler)
     {
-        $crawler = $crawler->filter('h1');
+        $crawler = $crawler->filter('ol li');
 
-        $title = $crawler->first()->getNode(0)->textContent;
-        $title = str_replace('Letra', '', $title);
+        $title = $crawler->eq(2)->getNode(0)->textContent;
         $title = trim($title);
 
         return $title;
@@ -84,9 +82,9 @@ class MusixmatchReadLyrics implements ReadLyrics
      */
     private function resolveLyrics(Crawler $crawler)
     {
-        $crawler = $crawler->filter('.mxm-lyrics__content');
+        $crawler = $crawler->filter('blockquote');
 
-        $lyrics = $crawler->eq(1)->getNode(0)->textContent;
+        $lyrics = $crawler->text();
         $lyrics = trim($lyrics);
 
         return $lyrics;
