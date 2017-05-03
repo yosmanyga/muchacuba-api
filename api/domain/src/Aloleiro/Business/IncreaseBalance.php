@@ -38,7 +38,7 @@ class IncreaseBalance
         /** @var UpdateResult $result */
         $result = $this->manageStorage->connect()->updateOne(
             ['_id' => $business],
-            ['$inc' => ['balance' => $amount]]
+            ['$inc' => ['balance' => (int) $amount]]
         );
 
         if ($result->getMatchedCount() == 0) {
