@@ -12,6 +12,7 @@ import Horoscope_ProcessRequest from './Log/Horoscope_ProcessRequest';
 import Horoscope_ProcessRequest_NotFound from './Log/Horoscope_ProcessRequest_NotFound';
 import Image_ProcessRequest_Heavy from './Log/Image_ProcessRequest_Heavy';
 import Image_ProcessRequest_Invalid from './Log/Image_ProcessRequest_Invalid';
+import Lyrics_ProcessRequest_BigBody from './Log/Lyrics_ProcessRequest_BigBody';
 import Lyrics_ProcessRequest_Exception from './Log/Lyrics_ProcessRequest_Exception';
 import Lyrics_ProcessRequest_HtmlIncluded from './Log/Lyrics_ProcessRequest_HtmlIncluded';
 import Lyrics_ProcessRequest_NotFound from './Log/Lyrics_ProcessRequest_NotFound';
@@ -40,6 +41,7 @@ export default class ViewLogs extends React.Component {
             new Horoscope_ProcessRequest_NotFound(),
             new Image_ProcessRequest_Heavy(),
             new Image_ProcessRequest_Invalid(),
+            new Lyrics_ProcessRequest_BigBody(),
             new Lyrics_ProcessRequest_Exception(),
             new Lyrics_ProcessRequest_HtmlIncluded(),
             new Lyrics_ProcessRequest_NotFound(),

@@ -146,12 +146,26 @@ class ProcessRequest implements BaseProcessRequest
         if (isset($author, $title, $lyrics)) {
             $body = sprintf("%s\n%s\n\n%s", $author, $title, $lyrics);
 
+            if (strlen($body) > 5000) {
+                $events[] = new Event(
+                    $this,
+                    'BigBody',
+                    [
+                        'body' => $body
+                    ]
+                );
+
+                return new ProcessResult([], $events);
+            }
+
             if (strpos($body, '<') !== false) {
                 $events[] = new Event(
                     $this,
                     'HtmlIncluded',
                     []
                 );
+
+                return new ProcessResult([], $events);
             }
         } else {
             // Google didn't find lyrics?

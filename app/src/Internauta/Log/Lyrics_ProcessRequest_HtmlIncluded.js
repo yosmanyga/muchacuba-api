@@ -3,7 +3,7 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
 Moment.locale('es');
-import {yellow50} from 'material-ui/styles/colors';
+import {red100} from 'material-ui/styles/colors';
 
 class LyricsProcessRequestHtmlIncluded extends React.Component {
     static propTypes = {
@@ -12,7 +12,7 @@ class LyricsProcessRequestHtmlIncluded extends React.Component {
 
     render() {
         return (
-            <Card style={{backgroundColor: yellow50}}>
+            <Card style={{backgroundColor: red100}}>
                 <CardHeader
                     title="Lyrics :: Process Request :: Html Included"
                     subtitle={Moment.unix(this.props.log.date).format('LLLL')}
@@ -37,6 +37,6 @@ export default class InstantiateLyricsProcessRequestHtmlIncluded
     }
 
     level() {
-        return 'w';
+        return 'e';
     }
 }
