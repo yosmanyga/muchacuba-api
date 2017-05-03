@@ -31,7 +31,11 @@ class LetrasReadLyrics implements ReadLyrics
      */
     public function read($link)
     {
-        if (parse_url($link, PHP_URL_HOST) !== 'www.letras.com') {
+        if (
+            parse_url($link, PHP_URL_HOST) !== 'www.letras.com'
+            // Top lyrics pages
+            || strpos($link, 'mais-acessadas') !== false
+        ) {
             throw new UnsupportedLinkException();
         }
 
