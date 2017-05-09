@@ -2,8 +2,9 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\CancelCall as DomainCancelCall;
-use Muchacuba\Aloleiro\CollectPreparedCalls as DomainCollectPreparedCalls;
+use Muchacuba\Aloleiro\CollectCalls as DomainCollectCalls;
 use Symsonte\Http\Server;
 
 /**
@@ -22,41 +23,41 @@ class CancelCall
     private $cancelCall;
 
     /**
-     * @var DomainCollectPreparedCalls
+     * @var DomainCollectCalls
      */
-    private $collectPreparedCalls;
+    private $collectCalls;
 
     /**
      * @param Server                     $server
      * @param DomainCancelCall           $cancelCall
-     * @param DomainCollectPreparedCalls $collectPreparedCalls
+     * @param DomainCollectCalls $collectCalls
      */
     public function __construct(
         Server $server,
         DomainCancelCall $cancelCall,
-        DomainCollectPreparedCalls $collectPreparedCalls
+        DomainCollectCalls $collectCalls
     ) {
         $this->server = $server;
         $this->cancelCall = $cancelCall;
-        $this->collectPreparedCalls = $collectPreparedCalls;
+        $this->collectCalls = $collectCalls;
     }
 
     /**
      * @http\authorization({roles: ["aloleiro_operator"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/cancel-call"})
+     * @http\resolution({method: "POST", path: "/aloleiro/cancel-call"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function cancel($uniqueness)
+    public function cancel(Business $business)
     {
         $post = $this->server->resolveBody();
 
         $this->cancelCall->cancel(
-            $uniqueness,
+            $business,
             $post['id']
         );
 
-        $calls = $this->collectPreparedCalls->collect($uniqueness);
+        $calls = $this->collectCalls->collectPrepared($business);
 
         $this->server->sendResponse($calls);
     }

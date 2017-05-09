@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Voip\Nexmo\LoadRates;
 use Goutte\Client;
 use Muchacuba\Aloleiro\Rate\ManageStorage;
 use Symfony\Component\DomCrawler\Crawler;
@@ -14,6 +15,16 @@ use Symfony\Component\DomCrawler\Crawler;
 class ImportRates
 {
     /**
+     * @var LoadRates
+     */
+    private $loadRates;
+
+    /**
+     * @var PickCurrency
+     */
+    private $pickCurrency;
+
+    /**
      * @var ManageStorage
      */
     private $manageStorage;
@@ -24,14 +35,20 @@ class ImportRates
     private $addRate;
 
     /**
+     * @param LoadRates     $loadRates
+     * @param PickCurrency  $pickCurrency
      * @param ManageStorage $manageStorage
      * @param AddRate       $addRate
      */
     public function __construct(
-        ManageStorage $manageStorage,
+        LoadRates $loadRates,
+        PickCurrency $pickCurrency,
+        ManageStorage $manageStorage, 
         AddRate $addRate
     )
     {
+        $this->loadRates = $loadRates;
+        $this->pickCurrency = $pickCurrency;
         $this->manageStorage = $manageStorage;
         $this->addRate = $addRate;
     }
@@ -40,29 +57,29 @@ class ImportRates
      */
     public function import()
     {
-        // Purge to start from scratch
-
-        $this->manageStorage->purge();
+        $rates = $this->loadRates->load();
 
         $translations = $this->loadCountryTranslations();
 
-        $rates = $this->loadRates();
+        $eurValue = $this->pickCurrency->pickEUR();
+
+        // Purge to start from scratch
+        $this->manageStorage->purge();
 
         foreach ($rates as $rate) {
             $countryTranslation = $this->translate(
-                $rate['country'],
+                $rate['countryName'],
                 $translations
             );
 
-            $type = $this->translateType($rate['type']);
+            $network = $this->translateNetwork($rate['networkName']);
 
             $this->addRate->add(
-                $rate['country'],
+                $rate['countryName'],
                 $countryTranslation,
-                null,
-                $type,
-                $rate['code'],
-                $rate['value']
+                $network,
+                $rate['prefix'],
+                round($rate['price'] / $eurValue, 4)
             );
         }
     }
@@ -105,44 +122,6 @@ class ImportRates
     }
 
     /**
-     * @return array
-     */
-    private function loadRates()
-    {
-        $excel = sprintf('%s/excel.xls', sys_get_temp_dir());
-
-        file_put_contents(
-            $excel,
-            fopen('https://www.sinch.com/voice-price-list', 'r')
-        );
-
-        $objPHPExcel = \PHPExcel_IOFactory::load($excel);
-
-        $rates = [];
-        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-            foreach ($worksheet->getRowIterator() as $i => $row) {
-                if ($i == 1) {
-                    continue;
-                }
-
-                /** @var \PHPExcel_Worksheet_RowCellIterator $rowIterator */
-                $rowIterator = $row->getCellIterator();
-
-                $rates[] = [
-                    'country' => $rowIterator->seek('A')->current()->getValue(),
-                    'type' => $rowIterator->seek('B')->current()->getValue(),
-                    'code' => $rowIterator->seek('C')->current()->getValue(),
-                    'value' => $rowIterator->seek('D')->current()->getValue(),
-                ];
-            }
-        }
-
-        unlink($excel);
-
-        return $rates;
-    }
-
-    /**
      * @param string $country
      * @param string[] $translations
      *
@@ -160,6 +139,7 @@ class ImportRates
         $translations['Belarus'] = 'Bielorrusia';
         $translations['Bermuda'] = 'Bermudas';
         $translations['Bhutan'] = 'Bután';
+        $translations['Bonaire, Sint Eustatius and Saba'] = 'Bonaire, Sint Eustatius and Saba';
         $translations['Bosnia and Herzegovina'] = 'Bosnia y Herzegovina';
         $translations['British Virgin Islands'] = 'Islas Vírgenes Británicas';
         $translations['Brunei Darussalam'] = 'Brunei Darussalam';
@@ -229,16 +209,16 @@ class ImportRates
     }
 
     /**
-     * @param string $type
+     * @param string $network
      *
      * @return string
      */
-    private function translateType($type)
+    private function translateNetwork($network)
     {
         return str_replace(
-            ['Fixed', 'Mobile', 'Other'],
-            ['Fijo', 'Móvil', 'Otro'],
-            $type
+            ['Landline'],
+            ['Fijo'],
+            $network
         );
     }
 }

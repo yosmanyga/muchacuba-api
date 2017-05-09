@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
-use Cubalider\Call\Provider\CollectLogs as DomainCollectLogs;
+use Cubalider\Voip\CollectLogs as DomainCollectLogs;
 use Symsonte\Http\Server;
 
 /**
@@ -34,7 +34,7 @@ class CollectLogs
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-logs"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-logs"})
      */
     public function collect()
     {

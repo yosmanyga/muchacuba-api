@@ -207,6 +207,7 @@ class Layout extends React.Component {
 
     render() {
         const layout = <this.props.layout.type
+            {...this.props.layout.props}
             title="Holapana"
             bar={this.props.bar}
             style={{
@@ -289,7 +290,7 @@ class Layout extends React.Component {
                                     }}
                                     leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
                                 >
-                                    Precios del sistema
+                                    Tarifas del sistema
                                 </MenuItem>
                             : null
                         }
@@ -343,7 +344,7 @@ class Layout extends React.Component {
                                     }}
                                     leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
                                 >
-                                    Precios y ganancias
+                                    Tarifas
                                 </MenuItem>
                             : null
                         }
@@ -386,7 +387,7 @@ class Layout extends React.Component {
                                     }}
                                     leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
                                 >
-                                    Precios
+                                    Tarifas
                                 </MenuItem>
                             : null
                         }

@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\RemovePhone as DomainRemovePhone;
 use Muchacuba\Aloleiro\CollectPhones as DomainCollectPhones;
 use Symsonte\Http\Server;
@@ -43,19 +44,19 @@ class RemovePhone
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/remove-phone"})
+     * @http\resolution({method: "POST", path: "/aloleiro/remove-phone"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function remove($uniqueness)
+    public function remove(Business $business)
     {
         $post = $this->server->resolveBody();
 
         $this->removePhone->remove(
-            $uniqueness,
+            $business,
             $post['number']
         );
 
-        $this->server->sendResponse($this->collectPhones->collect($uniqueness));
+        $this->server->sendResponse($this->collectPhones->collect($business));
     }
 }

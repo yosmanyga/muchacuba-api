@@ -14,37 +14,71 @@ use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 class AddPhone
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @param PickProfile $pickProfile
      * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManagePhoneStorage $managePhoneStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $number
-     * @param string $name
+     * @param Business $business
+     * @param string   $number
+     * @param string   $name
+     *
+     * @return Phone
      *
      * @throws InvalidDataException
      * @throws ExistentPhoneException
      */
-    public function add($uniqueness, $number, $name)
+    public function add(Business $business, $number, $name)
+    {
+        try {
+            $number = $this->validateNumber($number);
+        } catch (InvalidDataException $e) {
+            throw $e;
+        }
+
+        if (empty($name)) {
+            throw new InvalidDataException(
+                InvalidDataException::FIELD_NAME
+            );
+        }
+
+        $phone = new Phone(
+            $business->getId(),
+            $number,
+            $name
+        );
+
+        try {
+            $this->managePhoneStorage->connect()->insertOne($phone);
+        } catch (BulkWriteException $e) {
+            if ($e->getWriteResult()->getWriteErrors()[0]->getCode() == 11000) {
+                throw new ExistentPhoneException();
+            }
+
+            throw $e;
+        }
+
+        return $phone;
+    }
+
+    /**
+     * @param string $number
+     *
+     * @return string
+     *
+     * @throws InvalidDataException
+     */
+    private function validateNumber($number)
     {
         $number = str_replace(['+', '-', ' '], [''], $number);
 
@@ -56,26 +90,6 @@ class AddPhone
 
         $number = '+' . $number;
 
-        if (empty($name)) {
-            throw new InvalidDataException(
-                InvalidDataException::FIELD_NAME
-            );
-        }
-
-        $profile = $this->pickProfile->pick($uniqueness);
-
-        try {
-            $this->managePhoneStorage->connect()->insertOne(new Phone(
-                $number,
-                $profile->getBusiness(),
-                $name
-            ));
-        } catch (BulkWriteException $e) {
-            if ($e->getWriteResult()->getWriteErrors()[0]->getCode() == 11000) {
-                throw new ExistentPhoneException();
-            }
-
-            throw $e;
-        }
+        return $number;
     }
 }

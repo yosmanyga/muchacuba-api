@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Muchacuba\Aloleiro\Phone\InvalidDataException;
 use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 use MongoDB\UpdateResult;
 
@@ -13,44 +14,51 @@ use MongoDB\UpdateResult;
 class UpdatePhone
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @param PickProfile $pickProfile
-     * @param ManagePhoneStorage  $managePhoneStorage
+     * @var PickPhone
+     */
+    private $pickPhone;
+
+    /**
+     * @param ManagePhoneStorage $managePhoneStorage
+     * @param PickPhone          $pickPhone
      */
     public function __construct(
-        PickProfile $pickProfile,
-        ManagePhoneStorage $managePhoneStorage
+        ManagePhoneStorage $managePhoneStorage,
+        PickPhone $pickPhone
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
+        $this->pickPhone = $pickPhone;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $number
-     * @param string $name
+     * @param Business $business
+     * @param string   $number
+     * @param string   $name
      *
+     * @return Phone
+     *
+     * @throws InvalidDataException
      * @throws NonExistentPhoneException
      */
-    public function update($uniqueness, $number, $name)
+    public function update(Business $business, $number, $name)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
+        if (empty($name)) {
+            throw new InvalidDataException(
+                InvalidDataException::FIELD_NAME
+            );
+        }
 
         /** @var UpdateResult $result */
         $result = $this->managePhoneStorage->connect()->updateOne(
             [
                 '_id' => $number,
-                'business' => $profile->getBusiness()
+                'business' => $business->getId()
             ],
             ['$set' => ['name' => $name]]
         );
@@ -58,5 +66,7 @@ class UpdatePhone
         if ($result->getMatchedCount() === 0) {
             throw new NonExistentPhoneException();
         }
+
+        return $this->pickPhone->pick($business, $number);
     }
 }

@@ -43,7 +43,7 @@ class CreateApproval
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/add-approval"})
+     * @http\resolution({method: "POST", path: "/aloleiro/add-approval"})
      */
     public function add()
     {

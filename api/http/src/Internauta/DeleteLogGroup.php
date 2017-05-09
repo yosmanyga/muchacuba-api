@@ -43,7 +43,7 @@ class DeleteLogGroup
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/internauta/delete-log-group/{id}"})
+     * @http\resolution({method: "GET", path: "/internauta/delete-log-group/{id}"})
      *
      * @param string $id
      */

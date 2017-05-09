@@ -11,7 +11,7 @@ services:
       - ../app:/app
     working_dir: /app/
     environment:
-      - HTTPS=true
+      - HTTPS=false
     restart: always
     command: "npm start"
   nginx:

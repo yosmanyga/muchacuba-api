@@ -9,6 +9,11 @@ class ClientCall implements \JsonSerializable
     /**
      * @var string
      */
+    private $id;
+
+    /**
+     * @var string
+     */
     private $from;
 
     /**
@@ -22,19 +27,30 @@ class ClientCall implements \JsonSerializable
     private $instances;
 
     /**
+     * @param string           $id
      * @param string           $from
      * @param string           $to
      * @param ClientInstance[] $instances
      */
     public function __construct(
+        $id,
         $from,
         $to,
         array $instances
     )
     {
+        $this->id = $id;
         $this->from = $from;
         $this->to = $to;
         $this->instances = $instances;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -67,6 +83,7 @@ class ClientCall implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'id' => $this->id,
             'from' => $this->from,
             'to' => $this->to,
             'instances' => $this->instances,

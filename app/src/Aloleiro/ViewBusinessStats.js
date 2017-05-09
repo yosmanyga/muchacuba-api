@@ -12,7 +12,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import Moment from 'moment';
+import Moment from 'moment-timezone';
 import {} from 'moment/locale/es';
 
 import ConnectToServer from '../ConnectToServer';
@@ -62,10 +62,12 @@ export default class ViewBusinessStats extends React.Component {
 
                 if (this.state.interval === 'last_month') {
                     from = Moment()
+                        .tz('America/Caracas')
                         .startOf('month')
                         .subtract(1, 'month')
                         .unix();
                     to = Moment()
+                        .tz('America/Caracas')
                         .endOf('month')
                         .subtract(1, 'month')
                         .unix();
@@ -73,9 +75,11 @@ export default class ViewBusinessStats extends React.Component {
 
                 if (this.state.interval === 'current_month') {
                     from = Moment()
+                        .tz('America/Caracas')
                         .startOf('month')
                         .unix();
                     to = Moment()
+                        .tz('America/Caracas')
                         .endOf('month')
                         .unix();
                 }
@@ -165,7 +169,7 @@ export default class ViewBusinessStats extends React.Component {
                                             return 'Día '+ label;
                                         }}/>
                                         <Legend />
-                                        <Line name="Ganancias" dataKey="profit" unit=" USD" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
+                                        <Line name="Ganancias" dataKey="profit" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
                                     </LineChart>
                                 </ResponsiveContainer>,
                                 <p
@@ -192,7 +196,7 @@ export default class ViewBusinessStats extends React.Component {
                                             return 'Día '+ label;
                                         }}/>
                                         <Legend />
-                                        <Line name="Ventas" dataKey="sale" unit=" USD" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
+                                        <Line name="Ventas" dataKey="sale" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
                                     </LineChart>
                                 </ResponsiveContainer>,
                                 <p

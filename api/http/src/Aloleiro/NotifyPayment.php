@@ -34,7 +34,7 @@ class NotifyPayment
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/notify-payment"})
+     * @http\resolution({method: "POST", path: "/aloleiro/notify-payment"})
      *
      * @param string $uniqueness
      */

@@ -33,10 +33,13 @@ class SearchOffers
     }
 
     /**
-     * @http\resolution({method: "POST", uri: "/mule/search-offers"})
+     * @http\resolution({method: "POST", path: "/mule/search-offers"})
      */
     public function search()
     {
+        file_put_contents('/tmp/' . uniqid(), print_r($_POST, true));
+        return;
+
         $post = $this->server->resolveBody();
 
         $offers = $this->searchOffers->search(

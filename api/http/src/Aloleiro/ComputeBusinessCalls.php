@@ -2,8 +2,10 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\ComputeBusinessCalls as DomainComputeBusinessCalls;
 use Symsonte\Http\Server;
+use Muchacuba\Aloleiro\PickProfile as DomainPickProfile;
 
 /**
  * @di\controller({deductible: true})
@@ -16,34 +18,42 @@ class ComputeBusinessCalls
     private $server;
 
     /**
+     * @var DomainPickProfile
+     */
+    private $pickProfile;
+
+    /**
      * @var DomainComputeBusinessCalls
      */
     private $computeBusinessCalls;
 
     /**
      * @param Server                            $server
+     * @param DomainPickProfile          $pickProfile
      * @param DomainComputeBusinessCalls $computeBusinessCalls
      */
     public function __construct(
         Server $server,
+        DomainPickProfile $pickProfile,
         DomainComputeBusinessCalls $computeBusinessCalls
     ) {
         $this->server = $server;
+        $this->pickProfile = $pickProfile;
         $this->computeBusinessCalls = $computeBusinessCalls;
     }
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/compute-business-calls/{from}/{to}"})
+     * @http\resolution({method: "GET", path: "/aloleiro/compute-business-calls/{from}/{to}"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      * @param string $from
      * @param string $to
      */
-    public function compute($uniqueness, $from, $to)
+    public function compute(Business $business, $from, $to)
     {
         $stats = $this->computeBusinessCalls->compute(
-            $uniqueness,
+            $business,
             $from, 
             $to
         );

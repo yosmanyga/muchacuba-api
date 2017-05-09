@@ -10,43 +10,33 @@ namespace Muchacuba\Aloleiro;
 class ComputeBusinessCalls
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ComputeCalls
      */
     private $computeCalls;
 
     /**
-     * @param PickProfile  $pickProfile
      * @param ComputeCalls $computeCalls
      */
     public function __construct(
-        PickProfile $pickProfile,
         ComputeCalls $computeCalls
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->computeCalls = $computeCalls;
     }
 
     /**
-     * @param string $uniqueness
-     * @param int    $from
-     * @param int    $to
+     * @param Business $business
+     * @param int      $from
+     * @param int      $to
      *
      * @return array
      *
      * @throws \Exception
      */
-    public function compute($uniqueness, $from, $to)
+    public function compute(Business $business, $from, $to)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
-
         $stats = $this->computeCalls->compute(
-            $profile->getBusiness(),
+            $business,
             $from,
             $to,
             ComputeCalls::GROUP_BY_DAY

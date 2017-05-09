@@ -2,15 +2,17 @@
 
 namespace Muchacuba\Aloleiro\Call;
 
+use Cubalider\PurgeStorage;
 use MongoDB\Client;
 use MongoDB\Collection;
 
 /**
  * @di\service({
- *   private: true
+ *     private: true,
+ *     tags: ['muchacuba.aloleiro.purge_storage']
  * })
  */
-class ManageStorage
+class ManageStorage implements PurgeStorage
 {
     /**
      * @var string
@@ -86,7 +88,7 @@ class ManageStorage
     }
 
     /**
-     * Purges storage.
+     * {@inheritdoc}
      */
     public function purge()
     {

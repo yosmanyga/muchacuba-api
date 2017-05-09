@@ -74,7 +74,7 @@ export default class ListBusinessRates extends React.Component {
         return (
             <this.props.layout.type
                 {...this.props.layout.props}
-                bar="Precios y ganancias"
+                bar="Tarifas"
             >
                 {this.state.rates.length !== 0
                     ? [
@@ -106,8 +106,8 @@ export default class ListBusinessRates extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>País</TableHeaderColumn>
-                                    <TableHeaderColumn>Tipo</TableHeaderColumn>
-                                    <TableHeaderColumn>Código</TableHeaderColumn>
+                                    <TableHeaderColumn>Prefijo</TableHeaderColumn>
+                                    <TableHeaderColumn>Red</TableHeaderColumn>
                                     <TableHeaderColumn>Precio de compra</TableHeaderColumn>
                                     <TableHeaderColumn>Precio de venta</TableHeaderColumn>
                                 </TableRow>
@@ -130,8 +130,8 @@ export default class ListBusinessRates extends React.Component {
                                     return (
                                         <TableRow key={i}>
                                             <TableRowColumn>{rate.country}</TableRowColumn>
-                                            <TableRowColumn>{rate.type}</TableRowColumn>
-                                            <TableRowColumn>{rate.code}</TableRowColumn>
+                                            <TableRowColumn>{rate.prefix}</TableRowColumn>
+                                            <TableRowColumn>{rate.network}</TableRowColumn>
                                             <TableRowColumn>{rate.purchase} Bf</TableRowColumn>
                                             <TableRowColumn>{rate.sale} Bf</TableRowColumn>
                                         </TableRow>

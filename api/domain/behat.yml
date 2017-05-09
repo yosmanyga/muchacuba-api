@@ -20,3 +20,6 @@ default:
       paths: [%paths.base%/features/Aloleiro]
       contexts:
         - Muchacuba\Aloleiro\Context
+        - Muchacuba\Aloleiro\PhoneContext
+        - Muchacuba\Aloleiro\CallContext
+        - Muchacuba\Aloleiro\BusinessContext

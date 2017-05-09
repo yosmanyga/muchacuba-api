@@ -12,12 +12,12 @@ class BusinessRate implements \JsonSerializable
     /**
      * @var string
      */
-    private $type;
+    private $network;
 
     /**
-     * @var int
+     * @var string
      */
-    private $code;
+    private $prefix;
 
     /**
      * @var bool
@@ -36,24 +36,24 @@ class BusinessRate implements \JsonSerializable
 
     /**
      * @param string $country
-     * @param string $type
-     * @param int    $code
+     * @param string $network
+     * @param string $prefix
      * @param bool   $favorite
      * @param float  $purchase
      * @param float  $sale
      */
     public function __construct(
         $country,
-        $type,
-        $code,
+        $network,
+        $prefix,
         $favorite,
         $purchase,
         $sale
     )
     {
         $this->country = $country;
-        $this->type = $type;
-        $this->code = $code;
+        $this->network = $network;
+        $this->prefix = $prefix;
         $this->favorite = $favorite;
         $this->purchase = $purchase;
         $this->sale = $sale;
@@ -70,17 +70,17 @@ class BusinessRate implements \JsonSerializable
     /**
      * @return string
      */
-    public function getType()
+    public function getNetwork()
     {
-        return $this->type;
+        return $this->network;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getCode()
+    public function getPrefix()
     {
-        return $this->code;
+        return $this->prefix;
     }
 
     /**
@@ -114,8 +114,8 @@ class BusinessRate implements \JsonSerializable
     {
         return [
             'country' => $this->country,
-            'type' => $this->type,
-            'code' => $this->code,
+            'network' => $this->network,
+            'prefix' => $this->prefix,
             'favorite' => $this->favorite,
             'purchase' => $this->purchase,
             'sale' => $this->sale,

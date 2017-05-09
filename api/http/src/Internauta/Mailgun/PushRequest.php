@@ -34,7 +34,7 @@ class PushRequest
     }
 
     /**
-     * @http\resolution({method: "POST", uri: "/internauta/mailgun/push-request"})
+     * @http\resolution({method: "POST", path: "/internauta/mailgun/push-request"})
      */
     public function push()
     {

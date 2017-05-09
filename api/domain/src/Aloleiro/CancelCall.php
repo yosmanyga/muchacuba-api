@@ -13,42 +13,32 @@ use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 class CancelCall
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManageCallStorage
      */
     private $manageCallStorage;
 
     /**
-     * @param PickProfile       $pickProfile
      * @param ManageCallStorage $manageCallStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManageCallStorage $manageCallStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->manageCallStorage = $manageCallStorage;
     }
 
     /**
-     * @param string $uniqueness
+     * @param Business $business
      * @param string $id
      *
      * @throws NonExistentCallException
      */
-    public function cancel($uniqueness, $id)
+    public function cancel(Business $business, $id)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
-
         /** @var DeleteResult $result */
         $result = $this->manageCallStorage->connect()->deleteOne([
             '_id' => $id,
-            'business' => $profile->getBusiness(),
+            'business' => $business->getId(),
             'instances' => []
         ]);
 

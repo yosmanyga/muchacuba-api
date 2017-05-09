@@ -34,7 +34,7 @@ class CollectUsers
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "GET", uri: "/chuchuchu/collect-users"})
+     * @http\resolution({method: "GET", path: "/chuchuchu/collect-users"})
      */
     public function collect()
     {

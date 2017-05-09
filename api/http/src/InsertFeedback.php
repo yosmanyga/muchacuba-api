@@ -33,7 +33,7 @@ class InsertFeedback
     }
 
     /**
-     * @http\resolution({method: "POST", uri: "/insert-feedback"})
+     * @http\resolution({method: "POST", path: "/insert-feedback"})
      */
     public function insert()
     {

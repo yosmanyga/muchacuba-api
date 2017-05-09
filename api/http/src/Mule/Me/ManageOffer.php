@@ -36,7 +36,7 @@ class ManageOffer
     /**
      * @param string $uniqueness
      *
-     * @http\resolution({method: "POST", uri: "/mule/me/create-offer"})
+     * @http\resolution({method: "POST", path: "/mule/me/create-offer"})
      * @http\authorization({roles: ["mule_user"]})
      */
     public function create($uniqueness)
@@ -74,7 +74,7 @@ class ManageOffer
     /**
      * @param string $uniqueness
      *
-     * @http\resolution({method: "POST", uri: "/mule/me/update-offer"})
+     * @http\resolution({method: "POST", path: "/mule/me/update-offer"})
      * @http\authorization({roles: ["mule_user"]})
      */
     public function update($uniqueness)

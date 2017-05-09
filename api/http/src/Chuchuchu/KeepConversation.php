@@ -43,7 +43,7 @@ class KeepConversation
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "POST", uri: "/chuchuchu/keep-conversation"})
+     * @http\resolution({method: "POST", path: "/chuchuchu/keep-conversation"})
      *
      * @param string $uniqueness
      */

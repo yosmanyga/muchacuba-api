@@ -35,7 +35,7 @@ class CollectReceptors
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "GET", uri: "/chuchuchu/collect-receptors/{conversation}"})
+     * @http\resolution({method: "GET", path: "/chuchuchu/collect-receptors/{conversation}"})
      *
      * @param string $uniqueness
      * @param string $conversation

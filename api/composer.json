@@ -29,7 +29,7 @@
         "yosmanyga/validation": "@dev",
         "kreait/firebase-tokens": "^1.5",
         "phpoffice/phpexcel": "^1.8",
-        "dompdf/dompdf": "^0.8.0"
+        "phpunit/phpunit": "^6.1"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",
@@ -54,8 +54,8 @@
                 "cli/setup",
                 "cli/src"
             ],
-            "Cubalider\\Call\\Provider\\": [
-                "domain/vendor/cubalider-call-provider/src"
+            "Cubalider\\": [
+                "domain/vendor/cubalider-storage/src"
             ],
             "Cubalider\\Facebook\\": [
                 "domain/vendor/cubalider-facebook/src"
@@ -65,6 +65,12 @@
             ],
             "Cubalider\\Navigation\\": [
                 "domain/vendor/cubalider-navigation/src"
+            ],
+            "Cubalider\\Voip\\": [
+                "domain/vendor/cubalider-voip/src"
+            ],
+            "Cubalider\\Voip\\Tests\\": [
+                "domain/vendor/cubalider-voip/tests"
             ]
         }
     },

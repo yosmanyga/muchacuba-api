@@ -6,6 +6,9 @@ use MongoDB\BSON\Persistable;
 
 class Instance implements Persistable, \JsonSerializable
 {
+    const RESULT_DID_SPEAK = 'did_speak';
+    const RESULT_DID_NOT_SPEAK = 'did_not_speak';
+
     /**
      * @var string The provider call id
      */
@@ -25,6 +28,11 @@ class Instance implements Persistable, \JsonSerializable
      * @var int
      */
     private $duration;
+
+    /**
+     * @var string
+     */
+    private $result;
 
     /**
      * @var float
@@ -57,22 +65,24 @@ class Instance implements Persistable, \JsonSerializable
     private $businessProfit;
 
     /**
-     * @param string     $id
-     * @param int|null   $start
-     * @param int|null   $end
-     * @param int|null   $duration
-     * @param int|null   $systemPurchase
-     * @param float|null $systemSale
-     * @param float|null $systemProfit
-     * @param int|null   $businessPurchase
-     * @param float|null $businessSale
-     * @param float|null $businessProfit
+     * @param string      $id
+     * @param int|null    $start
+     * @param int|null    $end
+     * @param int|null    $duration
+     * @param string|null $result
+     * @param int|null    $systemPurchase
+     * @param float|null  $systemSale
+     * @param float|null  $systemProfit
+     * @param int|null    $businessPurchase
+     * @param float|null  $businessSale
+     * @param float|null  $businessProfit
      */
     public function __construct(
         $id,
         $start = null,
         $end = null,
         $duration = null,
+        $result = null,
         $systemPurchase = null,
         $systemSale = null,
         $systemProfit = null,
@@ -82,6 +92,7 @@ class Instance implements Persistable, \JsonSerializable
     )
     {
         $this->id = $id;
+        $this->result = $result;
         $this->start = $start;
         $this->end = $end;
         $this->duration = $duration;
@@ -123,6 +134,14 @@ class Instance implements Persistable, \JsonSerializable
     public function getDuration()
     {
         return $this->duration;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 
     /**
@@ -183,6 +202,7 @@ class Instance implements Persistable, \JsonSerializable
             'start' => $this->start,
             'end' => $this->end,
             'duration' => $this->duration,
+            'result' => $this->result,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
             'systemProfit' => $this->systemProfit,
@@ -201,6 +221,7 @@ class Instance implements Persistable, \JsonSerializable
         $this->start = $data['start'];
         $this->end = $data['end'];
         $this->duration = $data['duration'];
+        $this->result = $data['result'];
         $this->systemPurchase = $data['systemPurchase'];
         $this->systemSale = $data['systemSale'];
         $this->systemProfit = $data['systemProfit'];
@@ -215,9 +236,11 @@ class Instance implements Persistable, \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'id' => $this->id,
             'start' => $this->start,
             'end' => $this->end,
             'duration' => $this->duration,
+            'result' => $this->result,
             'systemPurchase' => $this->systemPurchase,
             'systemSale' => $this->systemSale,
             'systemProfit' => $this->systemProfit,

@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\CollectPhones as DomainCollectPhones;
 use Symsonte\Http\Server;
 
@@ -34,13 +35,13 @@ class CollectPhones
 
     /**
      * @http\authorization({roles: ["aloleiro_owner", "aloleiro_operator"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-phones"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-phones"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function collect($uniqueness)
+    public function collect(Business $business)
     {
-        $phones = $this->collectPhones->collect($uniqueness);
+        $phones = $this->collectPhones->collect($business);
 
         $this->server->sendResponse($phones);
     }

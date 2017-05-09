@@ -34,7 +34,7 @@ class CollectBusinesses
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-businesses"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-businesses"})
      */
     public function collect()
     {

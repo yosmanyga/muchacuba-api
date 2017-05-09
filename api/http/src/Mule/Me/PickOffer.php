@@ -35,7 +35,7 @@ class PickOffer
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/mule/me/pick-offer"})
+     * @http\resolution({method: "GET", path: "/mule/me/pick-offer"})
      * @http\authorization({roles: ["mule_user"]})
      *
      * @param string $uniqueness

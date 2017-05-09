@@ -34,7 +34,7 @@ class CollectLogs
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/internauta/collect-logs"})
+     * @http\resolution({method: "GET", path: "/internauta/collect-logs"})
      */
     public function collect()
     {

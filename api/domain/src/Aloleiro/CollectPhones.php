@@ -12,40 +12,34 @@ use Muchacuba\Aloleiro\Phone\ManageStorage;
 class CollectPhones
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManageStorage
      */
     private $manageStorage;
 
     /**
-     * @param PickProfile $pickProfile
      * @param ManageStorage       $manageStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManageStorage $manageStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->manageStorage = $manageStorage;
     }
 
     /**
-     * @param string $uniqueness
+     * @param Business|null $business
      *
      * @return Phone[]
      */
-    public function collect($uniqueness)
+    public function collect(Business $business = null)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
+        $criteria = [];
 
-        $phones = $this->manageStorage->connect()->find([
-            'business' => $profile->getBusiness()
-        ]);
+        if (!is_null($business)) {
+            $criteria['business'] = $business->getId();
+        }
+
+        $phones = $this->manageStorage->connect()->find($criteria);
 
         return iterator_to_array($phones);
     }

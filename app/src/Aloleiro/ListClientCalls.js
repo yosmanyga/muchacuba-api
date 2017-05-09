@@ -1,4 +1,5 @@
 import React from 'react';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -51,11 +52,15 @@ export default class ListClientCalls extends React.Component {
             this._collectCalls();
         }
 
-        window.setInterval(() => {
+        this._intervalId = window.setInterval(() => {
             this.setState({
                 timestamp: Math.floor(Date.now() / 1000)
             });
         }, 1000);
+    }
+
+    componentWillUnmount() {
+        window.clearInterval(this._intervalId);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -243,10 +248,10 @@ export default class ListClientCalls extends React.Component {
                 }
                 {this.state.calls.length !== 0
                     ?
-                        this.state.calls.map((call, i) => {
+                        this.state.calls.map((call) => {
                             return (
                                 <Card
-                                    key={i}
+                                    key={call.id}
                                     style={{
                                         marginTop: "10px",
                                         background: "transparent"
@@ -275,14 +280,14 @@ export default class ListClientCalls extends React.Component {
                                                         <TableHeaderColumn
                                                             style={{
                                                                 textAlign: 'right',
-                                                                width: '25%'
+                                                                width: '15%'
                                                             }}
                                                         >
                                                             Costo
                                                         </TableHeaderColumn>
                                                         <TableHeaderColumn
                                                             style={{
-                                                                width: '25%'
+                                                                width: '20%'
                                                             }}
                                                         />
                                                         <TableHeaderColumn
@@ -309,13 +314,22 @@ export default class ListClientCalls extends React.Component {
                                                         >
                                                             Final
                                                         </TableHeaderColumn>
+                                                        <TableHeaderColumn
+                                                            style={{
+                                                                textAlign: 'left',
+                                                                width: '15%'
+                                                            }}
+                                                        />
                                                     </TableRow>
                                                 </TableHeader>
-                                                <TableBody displayRowCheckbox={false}>
-                                                    {call.instances.map((instance, i) => {
+                                                <TableBody
+                                                    displayRowCheckbox={false}
+                                                    stripedRows={true}
+                                                >
+                                                    {call.instances.map((instance) => {
                                                         if (instance.duration === null) {
                                                             return (
-                                                                <TableRow key={i}>
+                                                                <TableRow key={instance.id}>
                                                                     <TableRowColumn>
                                                                         {this._buildDuration(
                                                                             this.state.timestamp
@@ -327,7 +341,7 @@ export default class ListClientCalls extends React.Component {
                                                         }
 
                                                         return (
-                                                            <TableRow key={i}>
+                                                            <TableRow key={instance.id}>
                                                                 <TableRowColumn
                                                                     style={{
                                                                         textAlign: 'left',
@@ -339,7 +353,10 @@ export default class ListClientCalls extends React.Component {
                                                                 <TableRowColumn
                                                                     style={{
                                                                         textAlign: 'right',
-                                                                        width: '25%'
+                                                                        width: '15%',
+                                                                        textDecoration: instance.result === 'did_not_speak'
+                                                                            ? 'line-through'
+                                                                            : 'none'
                                                                     }}
                                                                 >
                                                                     {instance.charge} Bf
@@ -347,7 +364,7 @@ export default class ListClientCalls extends React.Component {
                                                                 <TableRowColumn
                                                                     style={{
                                                                         textAlign: 'left',
-                                                                        width: '25%'
+                                                                        width: '20%'
                                                                     }}
                                                                 />
                                                                 <TableRowColumn
@@ -374,6 +391,52 @@ export default class ListClientCalls extends React.Component {
                                                                 >
                                                                     {Moment.unix(instance.end).format('h:mm:ss a')}
                                                                 </TableRowColumn>
+                                                                <TableRowColumn
+                                                                    style={{
+                                                                        textAlign: 'left',
+                                                                        width: '15%'
+                                                                    }}
+                                                                >
+                                                                    <RadioButtonGroup
+                                                                        name="result"
+                                                                        defaultSelected={instance.result}
+                                                                        onChange={(e, value) => {
+                                                                            this._connectToServer
+                                                                                .post(value === 'did_speak'
+                                                                                    ? '/aloleiro/call/mark-instance-as-did-speak'
+                                                                                    : '/aloleiro/call/mark-instance-as-did-not-speak'
+                                                                                )
+                                                                                .auth(this.props.profile.token)
+                                                                                .send({
+                                                                                    call: call.id,
+                                                                                    id: instance.id
+                                                                                })
+                                                                                .end((err, res) => {
+                                                                                    if (err) {
+                                                                                        this.props.onError(
+                                                                                            err.status,
+                                                                                            JSON.parse(err.response.text)
+                                                                                        );
+
+                                                                                        return;
+                                                                                    }
+
+                                                                                    this.setState({
+                                                                                        calls: res.body
+                                                                                    });
+                                                                                });
+                                                                        }}
+                                                                    >
+                                                                        <RadioButton
+                                                                            value="did_speak"
+                                                                            label="Habló"
+                                                                        />
+                                                                        <RadioButton
+                                                                            value="did_not_speak"
+                                                                            label="No habló"
+                                                                        />
+                                                                    </RadioButtonGroup>
+                                                                </TableRowColumn>
                                                             </TableRow>
                                                         );
                                                     })}
@@ -394,6 +457,11 @@ export default class ListClientCalls extends React.Component {
                                                         >
                                                             <strong>
                                                                 {call.instances.reduce((total, instance) => {
+                                                                    if (instance.result === 'did_not_speak') {
+                                                                        // Don't sum if client did not speak
+                                                                        return total;
+                                                                    }
+
                                                                     return total + instance.charge;
                                                                 }, 0)} Bf
                                                             </strong>

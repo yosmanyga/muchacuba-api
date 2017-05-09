@@ -14,36 +14,28 @@ use MongoDB\UpdateResult;
 class UpdateBusiness
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManageBusinessStorage
      */
     private $manageBusinessStorage;
 
     /**
-     * @param PickProfile           $pickProfile
      * @param ManageBusinessStorage $manageBusinessStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManageBusinessStorage $manageBusinessStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->manageBusinessStorage = $manageBusinessStorage;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $profitPercent
+     * @param Business $business
+     * @param string   $profitPercent
      *
      * @throws InvalidDataException
      * @throws \Exception
      */
-    public function update($uniqueness, $profitPercent)
+    public function update(Business $business, $profitPercent)
     {
         if (!filter_var($profitPercent, FILTER_VALIDATE_INT)) {
             throw new InvalidDataException(
@@ -51,12 +43,10 @@ class UpdateBusiness
             );
         }
 
-        $profile = $this->pickProfile->pick($uniqueness);
-
         /** @var UpdateResult $result */
         $result = $this->manageBusinessStorage->connect()->updateOne(
             [
-                '_id' => $profile->getBusiness(),
+                '_id' => $business->getId(),
             ],
             ['$set' => [
                 'profitPercent' => $profitPercent
@@ -64,7 +54,7 @@ class UpdateBusiness
         );
 
         if ($result->getMatchedCount() === 0) {
-            throw new \Exception(sprintf("Business with id '%s' does not exist", $profile->getBusiness()));
+            throw new \Exception(sprintf("Business with id '%s' does not exist", $business->getId()));
         }
     }
 }

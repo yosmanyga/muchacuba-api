@@ -1,3 +1,0 @@
-#!/bin/sh
-
-php /var/www/bin/app.php aloleiro.update-venezuelan-currency-exchange >> /var/log/cron.log 2>&1

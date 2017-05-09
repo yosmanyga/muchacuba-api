@@ -23,11 +23,11 @@ class CollectDailyClientCalls
     }
 
     /**
-     * @param string $uniqueness
+     * @param Business $business
      *
      * @return ClientCall[]
      */
-    public function collect($uniqueness)
+    public function collect(Business $business)
     {
         $now = new \DateTime("now");
         $from = clone $now;
@@ -36,7 +36,7 @@ class CollectDailyClientCalls
         $to->modify('tomorrow');
 
         return $this->collectClientCalls->collect(
-            $uniqueness,
+            $business,
             $from->getTimestamp(),
             $to->getTimestamp()
         );

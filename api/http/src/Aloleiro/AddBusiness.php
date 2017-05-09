@@ -43,7 +43,7 @@ class AddBusiness
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/add-business"})
+     * @http\resolution({method: "POST", path: "/aloleiro/add-business"})
      */
     public function add()
     {

@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\PrepareClientRates as DomainPrepareClientRates;
 use Symsonte\Http\Server;
 
@@ -34,13 +35,13 @@ class DownloadClientRates
 
     /**
      * @http\authorization({roles: ["aloleiro_operator"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/download-client-rates"})
+     * @http\resolution({method: "POST", path: "/aloleiro/download-client-rates"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function download($uniqueness)
+    public function download(Business $business)
     {
-        $file = $this->prepareRates->prepare($uniqueness);
+        $file = $this->prepareRates->prepare($business);
 
         $this->server->sendResponse(
             file_get_contents($file),

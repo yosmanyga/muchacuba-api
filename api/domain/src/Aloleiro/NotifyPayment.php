@@ -2,7 +2,6 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Mailgun\Mailgun;
 use Cubalider\Facebook\PickProfile as PickFacebookProfile;
 
 /**
@@ -20,23 +19,19 @@ class NotifyPayment
     /**
      * @var string
      */
-    private $mailgunApiKey;
+    private $sendEmail;
 
     /**
      * @param PickFacebookProfile $pickFacebookProfile
-     * @param string              $mailgunApiKey
-     *
-     * @di\arguments({
-     *     mailgunApiKey: '%mailgun_api_key%'
-     * })
+     * @param SendEmail           $sendEmail
      */
     public function __construct(
         PickFacebookProfile $pickFacebookProfile,
-        $mailgunApiKey
+        SendEmail $sendEmail
     )
     {
         $this->pickFacebookProfile = $pickFacebookProfile;
-        $this->mailgunApiKey = $mailgunApiKey;
+        $this->sendEmail = $sendEmail;
     }
 
     /**
@@ -47,19 +42,15 @@ class NotifyPayment
     {
         $profile = $this->pickFacebookProfile->pick($uniqueness);
 
-        (new Mailgun($this->mailgunApiKey))->sendMessage(
-            'muchacuba.com',
-            [
-                'from' => 'Holapana <sistema@holapana.com>',
-                'to' => 'yosmanyga@gmail.com,admin@jimenezsolutions.com.ve',
-                'subject' => 'Pago de un cliente en Holapana',
-                'text' => sprintf(
-                    "El cliente %s (%s) ha hecho un pago en Holapana.\r\nEl código de la transferencia es %s",
-                    $profile->getName(),
-                    $profile->getEmail(),
-                    $reference
-                )
-            ]
+        $this->sendEmail->send(
+            'yosmanyga@gmail.com, admin@jimenezsolutions.com.ve',
+            'Pago de un cliente en Holapana',
+            sprintf(
+                "El cliente %s (%s) ha hecho un pago en Holapana.\r\nEl código de la transferencia es %s",
+                $profile->getName(),
+                $profile->getEmail(),
+                $reference
+            )
         );
     }
 }

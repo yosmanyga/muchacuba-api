@@ -13,42 +13,32 @@ use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
 class RemovePhone
 {
     /**
-     * @var PickProfile
-     */
-    private $pickProfile;
-
-    /**
      * @var ManagePhoneStorage
      */
     private $managePhoneStorage;
 
     /**
-     * @param PickProfile $pickProfile
      * @param ManagePhoneStorage  $managePhoneStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
         ManagePhoneStorage $managePhoneStorage
     )
     {
-        $this->pickProfile = $pickProfile;
         $this->managePhoneStorage = $managePhoneStorage;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $number
+     * @param Business $business
+     * @param string   $number
      *
      * @throws NonExistentPhoneException
      */
-    public function remove($uniqueness, $number)
+    public function remove(Business $business, $number)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
-
         /** @var DeleteResult $result */
         $result = $this->managePhoneStorage->connect()->deleteOne([
             '_id' => $number,
-            'business' => $profile->getBusiness()
+            'business' => $business->getId()
         ]);
 
         if ($result->getDeletedCount() === 0) {

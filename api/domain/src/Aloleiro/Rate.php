@@ -4,7 +4,7 @@ namespace Muchacuba\Aloleiro;
 
 use MongoDB\BSON\Persistable;
 
-class Rate implements Persistable, \JsonSerializable
+class Rate implements Persistable
 {
     /**
      * @var string
@@ -22,51 +22,43 @@ class Rate implements Persistable, \JsonSerializable
     private $countryTranslation;
 
     /**
-     * @var float
-     */
-    private $countryCurrencyExchange;
-
-    /**
      * @var string
      */
-    private $type;
+    private $network;
 
     /**
      * @var int
      */
-    private $code;
+    private $prefix;
 
     /**
-     * @var float
+     * @var string
      */
-    private $value;
+    private $price;
 
     /**
      * @param string $id
      * @param string $countryName
      * @param string $countryTranslation
-     * @param string $countryCurrencyExchange
-     * @param string $type
-     * @param int    $code
-     * @param float  $value
+     * @param string $network
+     * @param int    $prefix
+     * @param string  $price
      */
     public function __construct(
         $id,
         $countryName,
         $countryTranslation,
-        $countryCurrencyExchange,
-        $type,
-        $code,
-        $value
+        $network,
+        $prefix,
+        $price
     )
     {
         $this->id = $id;
         $this->countryName = $countryName;
         $this->countryTranslation = $countryTranslation;
-        $this->countryCurrencyExchange = $countryCurrencyExchange;
-        $this->type = $type;
-        $this->code = $code;
-        $this->value = $value;
+        $this->network = $network;
+        $this->prefix = $prefix;
+        $this->price = $price;
     }
 
     /**
@@ -96,33 +88,25 @@ class Rate implements Persistable, \JsonSerializable
     /**
      * @return string
      */
-    public function getCountryCurrencyExchange()
+    public function getNetwork()
     {
-        return $this->countryCurrencyExchange;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        return $this->network;
     }
 
     /**
      * @return int
      */
-    public function getCode()
+    public function getPrefix()
     {
-        return $this->code;
+        return $this->prefix;
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getValue()
+    public function getPrice()
     {
-        return $this->value;
+        return $this->price;
     }
 
     /**
@@ -134,10 +118,9 @@ class Rate implements Persistable, \JsonSerializable
             '_id' => $this->id,
             'countryName' => $this->countryName,
             'countryTranslation' => $this->countryTranslation,
-            'countryCurrencyExchange' => $this->countryCurrencyExchange,
-            'type' => $this->type,
-            'code' => $this->code,
-            'value' => $this->value,
+            'network' => $this->network,
+            'prefix' => $this->prefix,
+            'price' => $this->price,
         ];
     }
 
@@ -149,25 +132,8 @@ class Rate implements Persistable, \JsonSerializable
         $this->id = $data['_id'];
         $this->countryName = $data['countryName'];
         $this->countryTranslation = $data['countryTranslation'];
-        $this->countryCurrencyExchange = $data['countryCurrencyExchange'];
-        $this->type = $data['type'];
-        $this->code = $data['code'];
-        $this->value = $data['value'];
-    }
-
-    /**
-     * @return string
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'countryName' => $this->countryName,
-            'countryTranslation' => $this->countryTranslation,
-            'countryCurrencyExchange' => $this->countryCurrencyExchange,
-            'type' => $this->type,
-            'code' => $this->code,
-            'value' => $this->value,
-        ];
+        $this->network = $data['network'];
+        $this->prefix = $data['prefix'];
+        $this->price = $data['price'];
     }
 }

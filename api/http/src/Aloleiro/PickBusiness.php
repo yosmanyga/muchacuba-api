@@ -52,7 +52,7 @@ class PickBusiness
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/pick-business"})
+     * @http\resolution({method: "GET", path: "/aloleiro/pick-business"})
      *
      * @param string $uniqueness
      */

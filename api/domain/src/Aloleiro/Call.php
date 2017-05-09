@@ -7,6 +7,9 @@ use Muchacuba\Aloleiro\Call\Instance;
 
 class Call implements Persistable, \JsonSerializable
 {
+    const STATUS_ACTIVE = 1;
+    const STATUS_ARCHIVED = 2;
+
     /**
      * @var string
      */
@@ -33,18 +36,25 @@ class Call implements Persistable, \JsonSerializable
     private $instances;
 
     /**
+     * @var int
+     */
+    private $status;
+
+    /**
      * @param string          $id
      * @param string          $business
      * @param string          $from
      * @param string          $to
      * @param Instance[]|null $instances
+     * @param int|null        $status
      */
     public function __construct(
         $id,
         $business,
         $from,
         $to,
-        array $instances = []
+        array $instances = [],
+        $status = null
     )
     {
         $this->id = $id;
@@ -52,6 +62,7 @@ class Call implements Persistable, \JsonSerializable
         $this->from = $from;
         $this->to = $to;
         $this->instances = $instances;
+        $this->status = $status ?: self::STATUS_ACTIVE;
     }
 
     /**
@@ -95,6 +106,14 @@ class Call implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -104,7 +123,8 @@ class Call implements Persistable, \JsonSerializable
             'business' => $this->business,
             'from' => $this->from,
             'to' => $this->to,
-            'instances' => $this->instances
+            'instances' => $this->instances,
+            'status' => $this->status
         ];
     }
 
@@ -118,6 +138,7 @@ class Call implements Persistable, \JsonSerializable
         $this->from = $data['from'];
         $this->to = $data['to'];
         $this->instances = $data['instances'];
+        $this->status = $data['status'];
     }
 
     /**
@@ -130,6 +151,7 @@ class Call implements Persistable, \JsonSerializable
             'from' => $this->from,
             'to' => $this->to,
             'instances' => $this->instances,
+            'status' => $this->status
         ];
     }
 }

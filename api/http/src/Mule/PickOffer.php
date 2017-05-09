@@ -34,7 +34,7 @@ class PickOffer
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/mule/pick-offer/{id}"})
+     * @http\resolution({method: "GET", path: "/mule/pick-offer/{id}"})
      *
      * @param string $id
      */

@@ -3,6 +3,7 @@
 namespace Muchacuba\Aloleiro;
 
 use MongoDB\BSON\UTCDateTime;
+use Muchacuba\Aloleiro\Call\Instance;
 use Muchacuba\Aloleiro\Call\ManageStorage;
 
 /**
@@ -32,19 +33,19 @@ class ComputeCalls
     }
 
     /**
-     * @param string|null $business
-     * @param string|null $from
-     * @param string|null $to
-     * @param int|null    $group
+     * @param Business|null $business
+     * @param string|null   $from
+     * @param string|null   $to
+     * @param int|null      $group
      *
      * @return array
      */
-    public function compute($business = null, $from = null, $to = null, $group = null)
+    public function compute(Business $business = null, $from = null, $to = null, $group = null)
     {
         $criteria = [];
 
         if (!is_null($business)) {
-            $criteria['business'] = $business;
+            $criteria['business'] = $business->getId();
         }
 
         if (!is_null($from)) {
@@ -54,6 +55,8 @@ class ComputeCalls
         if (!is_null($to)) {
             $criteria['instances.start']['$lt'] = new UTCDatetime($to * 1000);
         }
+
+        $criteria['instances.result']['$eq'] = Instance::RESULT_DID_SPEAK;
 
         switch ($group) {
             case self::GROUP_BY_DAY:
@@ -88,8 +91,8 @@ class ComputeCalls
         $response = $this->manageStorage->connect()
             ->aggregate(
                 [
-                    ['$match' => $criteria],
                     ['$unwind' => '$instances'],
+                    ['$match' => $criteria],
                     ['$group' => [
                         '_id' => $instanceStart,
                         'duration' => [

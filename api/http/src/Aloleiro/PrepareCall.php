@@ -2,12 +2,13 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
-use Muchacuba\Aloleiro\NonExistentPhoneException;
 use Muchacuba\Aloleiro\PrepareCall as DomainPrepareCall;
-use Muchacuba\Aloleiro\CollectPreparedCalls as DomainCollectPreparedCalls;
+use Muchacuba\Aloleiro\CollectCalls as DomainCollectCalls;
 use Symsonte\Http\Server;
+use Muchacuba\Aloleiro\PickPhone as DomainPickPhone;
 
 /**
  * @di\controller({deductible: true})
@@ -20,44 +21,54 @@ class PrepareCall
     private $server;
 
     /**
+     * @var DomainPickPhone
+     */
+    private $pickPhone;
+
+    /**
      * @var DomainPrepareCall
      */
     private $prepareCall;
 
     /**
-     * @var DomainCollectPreparedCalls
+     * @var DomainCollectCalls
      */
-    private $collectPreparedCalls;
+    private $collectCalls;
     
     /**
      * @param Server                     $server
+     * @param DomainPickPhone            $pickPhone
      * @param DomainPrepareCall          $prepareCall
-     * @param DomainCollectPreparedCalls $collectPreparedCalls
+     * @param DomainCollectCalls $collectCalls
      */
     public function __construct(
         Server $server,
+        DomainPickPhone $pickPhone,
         DomainPrepareCall $prepareCall,
-        DomainCollectPreparedCalls $collectPreparedCalls
+        DomainCollectCalls $collectCalls
     ) {
         $this->server = $server;
+        $this->pickPhone = $pickPhone;
         $this->prepareCall = $prepareCall;
-        $this->collectPreparedCalls = $collectPreparedCalls;
+        $this->collectCalls = $collectCalls;
     }
 
     /**
      * @http\authorization({roles: ["aloleiro_operator"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/prepare-call"})
+     * @http\resolution({method: "POST", path: "/aloleiro/prepare-call"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function prepare($uniqueness)
+    public function prepare(Business $business)
     {
         $post = $this->server->resolveBody();
 
+        $phone = $this->pickPhone->pick($business, $post['from']);
+
         try {
             $this->prepareCall->prepare(
-                $uniqueness,
-                $post['from'],
+                $business,
+                $phone,
                 $post['to']
             );
         } catch (InvalidDataException $e) {
@@ -75,15 +86,9 @@ class PrepareCall
             ], 403);
 
             return;
-        } catch (NonExistentPhoneException $e) {
-            $this->server->sendResponse([
-                'type' => 'non-existent-phone',
-            ], 422);
-
-            return;
         }
 
-        $calls = $this->collectPreparedCalls->collect($uniqueness);
+        $calls = $this->collectCalls->collectPrepared($business);
 
         $this->server->sendResponse($calls);
     }

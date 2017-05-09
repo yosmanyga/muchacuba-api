@@ -33,7 +33,7 @@ class CollectDestinations
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/mule/collect-destinations"})
+     * @http\resolution({method: "GET", path: "/mule/collect-destinations"})
      */
     public function collect()
     {

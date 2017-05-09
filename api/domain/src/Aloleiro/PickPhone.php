@@ -26,20 +26,20 @@ class PickPhone
     }
 
     /**
-     * @param string $number
-     * @param string $business
+     * @param Business $business
+     * @param string   $number
      *
      * @return Phone
      *
      * @throws NonExistentPhoneException
      */
-    public function pick($number, $business)
+    public function pick(Business $business, $number)
     {
         /** @var Phone $phone */
         $phone = $this->manageStorage->connect()
             ->findOne([
                 '_id' => $number,
-                'business' => $business
+                'business' => $business->getId()
             ]);
 
         if (is_null($phone)) {

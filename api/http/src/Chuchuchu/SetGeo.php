@@ -34,7 +34,7 @@ class SetGeo
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "POST", uri: "/chuchuchu/set-geo"})
+     * @http\resolution({method: "POST", path: "/chuchuchu/set-geo"})
      *
      * @param string $uniqueness
      */

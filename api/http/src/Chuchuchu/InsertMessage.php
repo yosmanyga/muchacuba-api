@@ -43,7 +43,7 @@ class InsertMessage
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "POST", uri: "/chuchuchu/insert-message"})
+     * @http\resolution({method: "POST", path: "/chuchuchu/insert-message"})
      *
      * @param string $uniqueness
      */

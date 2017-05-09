@@ -26,19 +26,19 @@ class CreateApproval
     }
 
     /**
+     * @param Business $business
      * @param string   $email
-     * @param string   $business
      * @param string[] $roles
      */
     public function create(
-        $email,
         $business,
+        $email,
         $roles
     )
     {
         $this->manageStorage->connect()->insertOne(new Approval(
             $email,
-            $business,
+            $business->getId(),
             $roles
         ));
     }

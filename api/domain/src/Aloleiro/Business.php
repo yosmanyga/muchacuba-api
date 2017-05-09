@@ -125,8 +125,8 @@ class Business implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'balance' => $this->balance,
-            'profitPercent' => $this->profitPercent,
+            'balance' => (string) $this->balance,
+            'profitPercent' => (string) $this->profitPercent,
             'name' => $this->name,
             'address' => $this->address,
         ];

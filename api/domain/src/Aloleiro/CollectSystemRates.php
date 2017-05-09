@@ -85,7 +85,7 @@ class CollectSystemRates
             }
 
             // Purchase
-            $sale = $rate->getValue();
+            $sale = $rate->getPrice();
             // Plus profit
             $sale += $sale * $this->profitPercent / 100;
             // Round
@@ -93,10 +93,10 @@ class CollectSystemRates
 
             $systemRates[] = new SystemRate(
                 $rate->getCountryTranslation(),
-                $rate->getType(),
-                $rate->getCode(),
+                $rate->getNetwork(),
+                $rate->getPrefix(),
                 $isFavorite,
-                $rate->getValue(),
+                $rate->getPrice(),
                 $sale
             );
         }

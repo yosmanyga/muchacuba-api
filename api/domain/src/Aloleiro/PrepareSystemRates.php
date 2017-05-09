@@ -2,8 +2,6 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Dompdf\Dompdf;
-
 /**
  * @di\service({
  *     deductible: true
@@ -12,26 +10,26 @@ use Dompdf\Dompdf;
 class PrepareSystemRates
 {
     /**
+     * @var PickCurrency
+     */
+    private $pickCurrency;
+
+    /**
      * @var CollectSystemRates
      */
     private $collectSystemRates;
 
     /**
-     * @var PickRate
-     */
-    private $pickRate;
-
-    /**
+     * @param PickCurrency       $pickCurrency
      * @param CollectSystemRates $collectSystemRates
-     * @param PickRate        $pickRate
      */
     public function __construct(
-        CollectSystemRates $collectSystemRates,
-        PickRate $pickRate
+        PickCurrency $pickCurrency,
+        CollectSystemRates $collectSystemRates
     )
     {
+        $this->pickCurrency = $pickCurrency;
         $this->collectSystemRates = $collectSystemRates;
-        $this->pickRate = $pickRate;
     }
 
     /**
@@ -41,19 +39,18 @@ class PrepareSystemRates
      */
     public function prepare($favorites = false)
     {
-        $currencyExchange = $this->pickRate
-            ->pick('Venezuela')
-            ->getCountryCurrencyExchange();
+        $currencyExchange = $this->pickCurrency
+            ->pickVEF();
 
         $output = fopen(sprintf('%s/precios.csv', sys_get_temp_dir()), 'w');
 
-        fputcsv($output, array('País', 'Tipo', 'Precio'));
+        fputcsv($output, array('País', 'Red', 'Precio'));
 
         $rates = $this->collectSystemRates->collect($favorites);
         foreach ($rates as $rate) {
             fputcsv($output, [
                 $rate->getCountry(),
-                $rate->getType(),
+                $rate->getNetwork(),
                 sprintf('%s Bf', round($rate->getSale() * $currencyExchange))
             ]);
         }

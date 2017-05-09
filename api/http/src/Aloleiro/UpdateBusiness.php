@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\Business\InvalidDataException;
 use Muchacuba\Aloleiro\UpdateBusiness as DomainUpdateBusiness;
 use Muchacuba\Aloleiro\CollectPhones as DomainCollectPhones;
@@ -44,17 +45,17 @@ class UpdateBusiness
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/update-business"})
+     * @http\resolution({method: "POST", path: "/aloleiro/update-business"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function update($uniqueness)
+    public function update(Business $business)
     {
         $post = $this->server->resolveBody();
 
         try {
             $this->updateBusiness->update(
-                $uniqueness,
+                $business,
                 $post['profitPercent']
             );
         } catch (InvalidDataException $e) {

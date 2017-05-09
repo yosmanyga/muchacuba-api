@@ -34,7 +34,7 @@ class CollectApprovals
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-approvals"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-approvals"})
      */
     public function collect()
     {

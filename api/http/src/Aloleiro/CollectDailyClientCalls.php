@@ -2,8 +2,10 @@
 
 namespace Muchacuba\Http\Aloleiro;
 
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\CollectDailyClientCalls as DomainCollectDailyClientCalls;
 use Symsonte\Http\Server;
+use Muchacuba\Aloleiro\PickProfile as DomainPickProfile;
 
 /**
  * @di\controller({deductible: true})
@@ -16,31 +18,39 @@ class CollectDailyClientCalls
     private $server;
 
     /**
+     * @var DomainPickProfile
+     */
+    private $pickProfile;
+
+    /**
      * @var DomainCollectDailyClientCalls
      */
     private $collectDailyClientCalls;
 
     /**
      * @param Server                        $server
+     * @param DomainPickProfile             $pickProfile
      * @param DomainCollectDailyClientCalls $collectDailyClientCalls
      */
     public function __construct(
         Server $server,
+        DomainPickProfile $pickProfile,
         DomainCollectDailyClientCalls $collectDailyClientCalls
     ) {
         $this->server = $server;
+        $this->pickProfile = $pickProfile;
         $this->collectDailyClientCalls = $collectDailyClientCalls;
     }
 
     /**
      * @http\authorization({roles: ["aloleiro_operator"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-daily-client-calls"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-daily-client-calls"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function collect($uniqueness)
+    public function collect(Business $business)
     {
-        $calls = $this->collectDailyClientCalls->collect($uniqueness);
+        $calls = $this->collectDailyClientCalls->collect($business);
 
         $this->server->sendResponse($calls);
     }

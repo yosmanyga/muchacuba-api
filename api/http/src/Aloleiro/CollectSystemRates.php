@@ -34,7 +34,7 @@ class CollectSystemRates
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-system-rates"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-system-rates"})
      */
     public function collect()
     {

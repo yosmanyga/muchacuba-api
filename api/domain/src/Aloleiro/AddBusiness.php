@@ -27,37 +27,39 @@ class AddBusiness
     }
 
     /**
-     * @param int         $balance
      * @param int         $profitPercent
+     * @param float       $balance
      * @param string      $name
      * @param string      $address
-     * @param string|null $id
      *
-     * @return string
+     * @return Business
      *
      * @throws InvalidDataException
      */
     public function add(
-        $balance,
         $profitPercent,
+        $balance,
         $name,
-        $address,
-        $id = null)
-    {
-        if ($balance != floatval($balance)) {
-            throw new InvalidDataException(InvalidDataException::FIELD_BALANCE);
+        $address
+    ) {
+        if ($profitPercent != (string)(int) $profitPercent) {
+            throw new InvalidDataException(InvalidDataException::FIELD_PROFIT_PERCENT);
         }
 
-        $id = $id ?: uniqid();
+        if ($profitPercent < 0) {
+            throw new InvalidDataException(InvalidDataException::FIELD_PROFIT_PERCENT);
+        }
 
-        $this->manageStorage->connect()->insertOne(new Business(
-            $id,
-            floatval($balance),
-            $profitPercent,
+        $business = new Business(
+            uniqid(),
+            $balance,
+            floatval($profitPercent),
             $name,
             $address
-        ));
+        );
 
-        return $id;
+        $this->manageStorage->connect()->insertOne($business);
+
+        return $business;
     }
 }

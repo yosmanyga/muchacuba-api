@@ -35,7 +35,7 @@ class CollectMessages
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "GET", uri: "/chuchuchu/collect-messages/{conversation}"})
+     * @http\resolution({method: "GET", path: "/chuchuchu/collect-messages/{conversation}"})
      *
      * @param string $uniqueness
      * @param string $conversation

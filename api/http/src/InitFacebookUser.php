@@ -33,7 +33,7 @@ class InitFacebookUser
     /**
      * @param string $uniqueness
      *
-     * @http\resolution({method: "POST", uri: "/init-facebook-user"})
+     * @http\resolution({method: "POST", path: "/init-facebook-user"})
      * @http\authorization({roles: []})
      */
     public function init($uniqueness)

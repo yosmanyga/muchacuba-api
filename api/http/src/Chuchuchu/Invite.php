@@ -52,7 +52,7 @@ class Invite
 
     /**
      * @http\authorization({roles: ["chuchuchu_user"]})
-     * @http\resolution({method: "POST", uri: "/chuchuchu/invite"})
+     * @http\resolution({method: "POST", path: "/chuchuchu/invite"})
      *
      * @param string $uniqueness
      */

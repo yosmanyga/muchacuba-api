@@ -5,6 +5,7 @@ namespace Muchacuba\Aloleiro;
 use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
+use Muchacuba\Aloleiro\Phone\FixNumber;
 
 /**
  * @di\service({
@@ -14,19 +15,9 @@ use Muchacuba\Aloleiro\Call\InvalidDataException;
 class PrepareCall
 {
     /**
-     * @var PickProfile
+     * @var FixNumber
      */
-    private $pickProfile;
-
-    /**
-     * @var PickBusiness
-     */
-    private $pickBusiness;
-
-    /**
-     * @var PickPhone
-     */
-    private $pickPhone;
+    private $fixNumber;
 
     /**
      * @var ManageCallStorage
@@ -34,66 +25,51 @@ class PrepareCall
     private $manageCallStorage;
 
     /**
-     * @param PickProfile       $pickProfile
-     * @param PickBusiness      $pickBusiness
-     * @param PickPhone         $pickPhone
+     * @param FixNumber         $fixNumber
      * @param ManageCallStorage $manageCallStorage
      */
     public function __construct(
-        PickProfile $pickProfile,
-        PickBusiness $pickBusiness,
-        PickPhone $pickPhone,
+        FixNumber $fixNumber,
         ManageCallStorage $manageCallStorage
     )
     {
-        $this->pickProfile = $pickProfile;
-        $this->pickBusiness = $pickBusiness;
-        $this->pickPhone = $pickPhone;
+        $this->fixNumber = $fixNumber;
         $this->manageCallStorage = $manageCallStorage;
     }
 
     /**
-     * @param string $uniqueness
-     * @param string $from
-     * @param string $to
+     * @param Business    $business
+     * @param Phone       $phone
+     * @param string      $to
+     * @param string|null $id
+     *
+     * @return Call
      *
      * @throws InvalidDataException
-     * @throws NonExistentPhoneException
      * @throws InsufficientBalanceException
      */
-    public function prepare($uniqueness, $from, $to)
+    public function prepare(Business $business, Phone $phone, $to, $id = null)
     {
-        $to = str_replace(['+', '-', ' '], [''], $to);
-
-        if (!ctype_digit($to)) {
-            throw new InvalidDataException(
-                InvalidDataException::FIELD_TO
-            );
+        try {
+            $to = $this->fixNumber->fix($to);
+        } catch (InvalidDataException $e) {
+            throw $e;
         }
-
-        $to = '+' . $to;
-
-        $profile = $this->pickProfile->pick($uniqueness);
-
-        $business = $this->pickBusiness->pick($profile->getBusiness());
 
         if ($business->getBalance() <= 0) {
             throw new InsufficientBalanceException();
         }
 
-        // Verify number
-        try {
-            $this->pickPhone->pick($from, $profile->getBusiness());
-        } catch (NonExistentPhoneException $e) {
-            throw $e;
-        }
-
-        $this->manageCallStorage->connect()->insertOne(new Call(
-            uniqid(),
-            $profile->getBusiness(),
-            $from,
+        $call = new Call(
+            $id ?: uniqid(),
+            $business->getId(),
+            $phone->getNumber(),
             $to,
             []
-        ));
+        );
+
+        $this->manageCallStorage->connect()->insertOne($call);
+
+        return $call;
     }
 }

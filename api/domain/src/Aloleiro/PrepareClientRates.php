@@ -2,8 +2,6 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Dompdf\Dompdf;
-
 /**
  * @di\service({
  *     deductible: true
@@ -12,51 +10,51 @@ use Dompdf\Dompdf;
 class PrepareClientRates
 {
     /**
+     * @var PickCurrency
+     */
+    private $pickCurrency;
+
+    /**
      * @var CollectClientRates
      */
     private $collectClientRates;
 
     /**
+     * @param PickCurrency       $pickCurrency
      * @param CollectClientRates $collectClientRates
      */
     public function __construct(
+        PickCurrency $pickCurrency,
         CollectClientRates $collectClientRates
     )
     {
+        $this->pickCurrency = $pickCurrency;
         $this->collectClientRates = $collectClientRates;
     }
 
     /**
-     * @param string $uniqueness
+     * @param Business $business
      *
      * @return string
      */
-    public function prepare($uniqueness)
+    public function prepare(Business $business)
     {
-        $file = sprintf('%s/precios.pdf', sys_get_temp_dir());
+        $currencyExchange = $this->pickCurrency
+            ->pickVEF();
 
-        $dompdf = new Dompdf();
-        $dompdf->setPaper('A4', 'landscape');
-        $dompdf->loadHtml('<strong>Listado de precios</strong>');
+        $output = fopen(sprintf('%s/precios.csv', sys_get_temp_dir()), 'w');
 
-        $html = '<table cellpadding="10">';
-        $html .= '<tr><th>País</th><th>Código</th><th>Tipo</th><th>Precio</th></th>';
-        $rates = $this->collectClientRates->collect($uniqueness, true);
+        fputcsv($output, array('País', 'Red', 'Precio'));
+
+        $rates = $this->collectClientRates->collect($business);
         foreach ($rates as $rate) {
-            $html .= sprintf(
-                '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+            fputcsv($output, [
                 $rate->getCountry(),
-                $rate->getCode(),
-                $rate->getType(),
-                $rate->getSale()
-            );
+                $rate->getNetwork(),
+                sprintf('%s Bf', round($rate->getSale() * $currencyExchange))
+            ]);
         }
-        $html .= '</table>';
 
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-        $dompdf->stream($file);
-
-        return $file;
+        return $output;
     }
 }

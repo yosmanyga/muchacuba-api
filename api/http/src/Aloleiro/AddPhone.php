@@ -3,6 +3,7 @@
 namespace Muchacuba\Http\Aloleiro;
 
 use Muchacuba\Aloleiro\AddPhone as DomainAddPhone;
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\CollectPhones as DomainCollectPhones;
 use Muchacuba\Aloleiro\ExistentPhoneException;
 use Muchacuba\Aloleiro\Phone\InvalidDataException;
@@ -45,17 +46,17 @@ class AddPhone
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "POST", uri: "/aloleiro/add-phone"})
+     * @http\resolution({method: "POST", path: "/aloleiro/add-phone"})
      *
-     * @param string $uniqueness
+     * @param Business $business
      */
-    public function add($uniqueness)
+    public function add(Business $business)
     {
         $post = $this->server->resolveBody();
 
         try {
             $this->addPhone->add(
-                $uniqueness,
+                $business,
                 $post['number'],
                 $post['name']
             );
@@ -75,6 +76,6 @@ class AddPhone
             return;
         }
 
-        $this->server->sendResponse($this->collectPhones->collect($uniqueness));
+        $this->server->sendResponse($this->collectPhones->collect($business));
     }
 }

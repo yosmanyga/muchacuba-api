@@ -325,8 +325,8 @@ export default class Front extends React.Component {
                 finish: () => {
                     this.setState({
                         notification: {
-                            ...this.state.notification,
-                            message: null
+                            message: null,
+                            finish: null
                         }
                     }, typeof finish !== 'undefined' ? finish() : null);
                 }

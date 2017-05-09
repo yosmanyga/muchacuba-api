@@ -33,7 +33,7 @@ class DownloadSystemRates
     }
 
     /**
-     * @http\resolution({method: "GET", uri: "/aloleiro/download-system-rates"})
+     * @http\resolution({method: "GET", path: "/aloleiro/download-system-rates"})
      */
     public function download()
     {

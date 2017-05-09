@@ -2,16 +2,9 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Voip\Nexmo\AnswerCall;
+use Cubalider\Voip\Nexmo\ProcessEvent;
 use Faker\Generator;
-use Muchacuba\Aloleiro\Rate\ManageStorage as ManageRateStorage;
-use Muchacuba\Aloleiro\Business\ManageStorage as ManageBusinessStorage;
-use Muchacuba\Aloleiro\Profile\ManageStorage as ManageProfileStorage;
-use Muchacuba\Aloleiro\Phone\ManageStorage as ManagePhoneStorage;
-use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
-use Muchacuba\Aloleiro\Approval\ManageStorage as ManageApprovalStorage;
-use Muchacuba\Aloleiro\AdminApproval\ManageStorage as ManageAdminApprovalStorage;
-use Cubalider\Call\Provider\Log\ManageStorage as ManageLogStorage;
-use Cubalider\Call\Provider\Sinch\ProcessEvent;
 use Faker\Factory;
 
 /**
@@ -27,49 +20,14 @@ class SetFixtures
     private $importRates;
 
     /**
-     * @var UpdateVenezuelanCurrencyExchange
+     * @var UpdateCurrencies
      */
-    private $updateVenezuelanCurrencyExchange;
+    private $updateCurrencies;
 
     /**
-     * @var ManageRateStorage
+     * @var PurgeStorages
      */
-    private $manageRateStorage;
-
-    /**
-     * @var ManageAdminApprovalStorage
-     */
-    private $manageAdminApprovalStorage;
-
-    /**
-     * @var ManageApprovalStorage
-     */
-    private $manageApprovalStorage;
-    
-    /**
-     * @var ManageBusinessStorage
-     */
-    private $manageBusinessStorage;
-
-    /**
-     * @var ManageProfileStorage
-     */
-    private $manageProfileStorage;
-
-    /**
-     * @var ManagePhoneStorage
-     */
-    private $managePhoneStorage;
-
-    /**
-     * @var ManageCallStorage
-     */
-    private $manageCallStorage;
-
-    /**
-     * @var ManageLogStorage
-     */
-    private $manageLogStorage;
+    private $purgeStorages;
 
     /**
      * @var CreateAdminApproval
@@ -100,6 +58,11 @@ class SetFixtures
      * @var PrepareCall
      */
     private $prepareCall;
+
+    /**
+     * @var AnswerCall
+     */
+    private $answerCall;
 
     /**
      * @var ProcessEvent
@@ -133,21 +96,15 @@ class SetFixtures
 
     /**
      * @param ImportRates $importRates
-     * @param UpdateVenezuelanCurrencyExchange $updateVenezuelanCurrencyExchange
-     * @param ManageRateStorage $manageRateStorage
-     * @param ManageAdminApprovalStorage $manageAdminApprovalStorage
-     * @param ManageApprovalStorage $manageApprovalStorage
-     * @param ManageBusinessStorage $manageBusinessStorage
-     * @param ManageProfileStorage $manageProfileStorage
-     * @param ManagePhoneStorage $managePhoneStorage
-     * @param ManageCallStorage $manageCallStorage
-     * @param ManageLogStorage $manageLogStorage
+     * @param UpdateCurrencies $updateCurrencies
+     * @param PurgeStorages $purgeStorages
      * @param CreateAdminApproval $createAdminApproval
      * @param AddBusiness $addBusiness
      * @param CreateApproval $createApproval
      * @param ListenInitFacebookUser $listenInitFacebookUser
      * @param AddPhone $addPhone
      * @param PrepareCall $prepareCall
+     * @param AnswerCall $answerCall
      * @param ProcessEvent $processEvent
      * @param $testOwnerUniqueness
      * @param $testOwnerEmail
@@ -163,21 +120,15 @@ class SetFixtures
      */
     public function __construct(
         ImportRates $importRates,
-        UpdateVenezuelanCurrencyExchange $updateVenezuelanCurrencyExchange,
-        ManageRateStorage $manageRateStorage,
-        ManageAdminApprovalStorage $manageAdminApprovalStorage,
-        ManageApprovalStorage $manageApprovalStorage,
-        ManageBusinessStorage $manageBusinessStorage,
-        ManageProfileStorage $manageProfileStorage,
-        ManagePhoneStorage $managePhoneStorage,
-        ManageCallStorage $manageCallStorage,
-        ManageLogStorage $manageLogStorage,
+        UpdateCurrencies $updateCurrencies,
+        PurgeStorages $purgeStorages,
         CreateAdminApproval $createAdminApproval,
         AddBusiness $addBusiness,
         CreateApproval $createApproval,
         ListenInitFacebookUser $listenInitFacebookUser,
         AddPhone $addPhone,
         PrepareCall $prepareCall,
+        AnswerCall $answerCall,
         ProcessEvent $processEvent,
         $testOwnerUniqueness,
         $testOwnerEmail,
@@ -186,21 +137,15 @@ class SetFixtures
     )
     {
         $this->importRates = $importRates;
-        $this->updateVenezuelanCurrencyExchange = $updateVenezuelanCurrencyExchange;
-        $this->manageRateStorage = $manageRateStorage;
-        $this->manageAdminApprovalStorage = $manageAdminApprovalStorage;
-        $this->manageApprovalStorage = $manageApprovalStorage;
-        $this->manageBusinessStorage = $manageBusinessStorage;
-        $this->manageProfileStorage = $manageProfileStorage;
-        $this->managePhoneStorage = $managePhoneStorage;
-        $this->manageCallStorage = $manageCallStorage;
-        $this->manageLogStorage = $manageLogStorage;
+        $this->updateCurrencies = $updateCurrencies;
+        $this->purgeStorages = $purgeStorages;
         $this->createAdminApproval = $createAdminApproval;
         $this->addBusiness = $addBusiness;
         $this->createApproval = $createApproval;
         $this->listenInitFacebookUser = $listenInitFacebookUser;
         $this->addPhone = $addPhone;
         $this->prepareCall = $prepareCall;
+        $this->answerCall = $answerCall;
         $this->processEvent = $processEvent;
         $this->testOwnerUniqueness = $testOwnerUniqueness;
         $this->testOwnerEmail = $testOwnerEmail;
@@ -213,29 +158,29 @@ class SetFixtures
      */
     public function set()
     {
-        $this->purge();
+        $this->purgeStorages->purge();
 
+        $this->updateCurrencies->update();
         $this->importRates->import();
-        $this->updateVenezuelanCurrencyExchange->update();
 
         $this->createAdminApproval->create();
-        
+
         $business = $this->addBusiness->add(
-            5000000,
             15,
+            5000000,
             'Test',
             'USA'
         );
-        
+
         $this->createApproval->create(
-            $this->testOwnerEmail,
             $business,
+            $this->testOwnerEmail,
             ['aloleiro_owner']
         );
 
         $this->createApproval->create(
-            $this->testOperatorEmail,
             $business,
+            $this->testOperatorEmail,
             ['aloleiro_operator']
         );
 
@@ -250,19 +195,19 @@ class SetFixtures
         );
         
         $this->setCalls(
-            $this->testOwnerUniqueness,
-            $this->testOperatorUniqueness
+            $business
         );
     }
 
     /**
-     * @param string $ownerUniqueness
-     * @param string $operatorUniqueness
+     * @param Business $business
      */
-    private function setCalls($ownerUniqueness, $operatorUniqueness)
+    private function setCalls(
+        Business $business
+    )
     {
         $phones = $this->addPhones(
-            $ownerUniqueness,
+            $business,
             rand(1, 10)
         );
 
@@ -270,7 +215,7 @@ class SetFixtures
 
         /** @var \DateTime[][] $days */
         $days = [];
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $minutes = [];
             $amount = rand(0, 4); // 0 means that it's a prepared call with no instances
             for ($j = 1; $j <= $amount; $j++) {
@@ -289,82 +234,71 @@ class SetFixtures
             $to = $this->generatePhoneNumber();
 
             $this->prepareCall->prepare(
-                $operatorUniqueness,
+                $business,
                 $from,
                 $to
             );
 
             foreach ($day as $time) {
-                $cid = uniqid();
+                $id = uniqid('provider-');
 
-                $this->processEvent->process([
-                    'event' => 'ice',
-                    'callid' => $cid,
-                    'cli' => str_replace('+', '', $from),
-                    'to' => [
-                        'endpoint' => '+789'
-                    ]
-                ]);
-
-                $duration = rand(1, 120);
-
-                $this->processEvent->process([
-                    'event' => 'ace',
-                    'callid' => $cid,
-                    'timestamp' => date(
-                        DATE_ISO8601,
-                        $time->getTimestamp()
-                    )
+                $this->answerCall->answer([
+                    'conversation_uuid' => $id,
+                    'from' => $from->getNumber(),
+                    'to' => '+789',
                 ]);
 
                 // Some calls will be in progress
                 if (rand(0, 1) == 1) {
+                    $duration = rand(1, 120);
+                    $start = date(
+                        DATE_ISO8601,
+                        $time->getTimestamp()
+                    );
+                    $end = date(
+                        DATE_ISO8601,
+                        $time->getTimestamp() + $duration
+                    );
+                    $price = rand(1, 100) / 100;
+
                     $this->processEvent->process([
-                        'event' => 'dice',
-                        'callid' => $cid,
-                        'timestamp' => date(
-                            DATE_ISO8601,
-                            $time->getTimestamp() + $duration
-                        ),
-                        'result' => 'ANSWERED',
+                        'status' => 'completed',
+                        'direction' => 'outbound',
+                        'conversation_uuid' => $id,
+                        'start_time' => $start,
+                        'end_time' => $end,
                         'duration' => $duration,
-                        'debit' => [
-                            'amount' => rand(1, 100) / 100
-                        ]
+                        'price' => $price
+                    ]);
+
+                    $this->processEvent->process([
+                        'status' => 'completed',
+                        'direction' => 'inbound',
+                        'conversation_uuid' => $id,
+                        'start_time' => $start,
+                        'end_time' => $end,
+                        'duration' => $duration,
+                        'price' => $price
                     ]);
                 }
             }
         }
     }
 
-    private function purge()
-    {
-        $this->manageRateStorage->purge();
-        $this->manageAdminApprovalStorage->purge();
-        $this->manageApprovalStorage->purge();
-        $this->manageBusinessStorage->purge();
-        $this->manageProfileStorage->purge();
-        $this->managePhoneStorage->purge();
-        $this->manageCallStorage->purge();
-        $this->manageLogStorage->purge();
-    }
-
     /**
-     * @param string $uniqueness
+     * @param Business $business
      * @param int    $amount
      * 
-     * @return string[]
+     * @return Phone[]
      */
-    private function addPhones($uniqueness, $amount)
+    private function addPhones(Business $business, $amount)
     {
         $phones = [];
 
         for ($i = 1; $i <= $amount; $i++) {
-            $phone = $this->generatePhoneNumber();
-
-            $this->addPhone->add(
-                $uniqueness,
-                $phone,
+            $phone = $this->addPhone->add(
+                $business,
+                $this->generatePhoneNumber(),
                 ucfirst($this->faker->colorName)
             );
 

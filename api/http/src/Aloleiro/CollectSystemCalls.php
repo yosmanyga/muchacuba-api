@@ -34,7 +34,7 @@ class CollectSystemCalls
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/collect-system-calls"})
+     * @http\resolution({method: "GET", path: "/aloleiro/collect-system-calls"})
      */
     public function collect()
     {

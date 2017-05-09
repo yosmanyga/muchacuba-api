@@ -10,19 +10,9 @@ namespace Muchacuba\Aloleiro;
 class CollectBusinessRates
 {
     /**
-     * @var PickProfile
+     * @var PickCurrency
      */
-    private $pickProfile;
-
-    /**
-     * @var PickBusiness
-     */
-    private $pickBusiness;
-
-    /**
-     * @var PickRate
-     */
-    private $pickRate;
+    private $pickCurrency;
 
     /**
      * @var CollectSystemRates
@@ -30,39 +20,28 @@ class CollectBusinessRates
     private $collectSystemRates;
 
     /**
-     * @param PickProfile        $pickProfile
-     * @param PickBusiness       $pickBusiness
-     * @param PickRate           $pickRate
+     * @param PickCurrency       $pickCurrency
      * @param CollectSystemRates $collectSystemRates
      */
     public function __construct(
-        PickProfile $pickProfile,
-        PickBusiness $pickBusiness,
-        PickRate $pickRate,
+        PickCurrency $pickCurrency,
         CollectSystemRates $collectSystemRates
     )
     {
-        $this->pickProfile = $pickProfile;
-        $this->pickBusiness = $pickBusiness;
-        $this->pickRate = $pickRate;
+        $this->pickCurrency = $pickCurrency;
         $this->collectSystemRates = $collectSystemRates;
     }
 
     /**
-     * @param string $uniqueness
-     * @param bool   $favorite
+     * @param Business $business
+     * @param bool     $favorite
      *
      * @return BusinessRate[]
      */
-    public function collect($uniqueness, $favorite = false)
+    public function collect(Business $business, $favorite = false)
     {
-        $profile = $this->pickProfile->pick($uniqueness);
-
-        $business = $this->pickBusiness->pick($profile->getBusiness());
-
-        $currencyExchange = $this->pickRate
-            ->pick('Venezuela')
-            ->getCountryCurrencyExchange();
+        $currencyExchange = $this->pickCurrency
+            ->pickVEF();
 
         /** @var SystemRate[] $rates */
         $rates = $this->collectSystemRates->collect($favorite);
@@ -83,8 +62,8 @@ class CollectBusinessRates
 
             $businessRates[] = new BusinessRate(
                 $rate->getCountry(),
-                $rate->getType(),
-                $rate->getCode(),
+                $rate->getNetwork(),
+                $rate->getPrefix(),
                 $rate->isFavorite(),
                 $purchase,
                 $sale

@@ -3,6 +3,7 @@
 namespace Muchacuba\Aloleiro\Business;
 
 use MongoDB\UpdateResult;
+use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\NonExistentBusinessException;
 
 /**
@@ -28,16 +29,16 @@ class DecreaseBalance
     }
 
     /**
-     * @param string $business
-     * @param string $amount
+     * @param Business $business
+     * @param string   $amount
      *
      * @throws NonExistentBusinessException
      */
-    public function decrease($business, $amount)
+    public function decrease(Business $business, $amount)
     {
         /** @var UpdateResult $result */
         $result = $this->manageStorage->connect()->updateOne(
-            ['_id' => $business],
+            ['_id' => $business->getId()],
             ['$inc' => ['balance' => -$amount]]
         );
 

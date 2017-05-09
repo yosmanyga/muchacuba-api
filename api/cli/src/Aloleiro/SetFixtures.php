@@ -38,8 +38,6 @@ class SetFixtures
      */
     public function promote()
     {
-        $input = $this->server->resolveInput();
-
         $this->setFixtures->set();
     }
 }

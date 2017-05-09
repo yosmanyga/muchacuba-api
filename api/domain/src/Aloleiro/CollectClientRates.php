@@ -25,22 +25,22 @@ class CollectClientRates
     }
 
     /**
-     * @param string $uniqueness
-     * @param bool   $favorite
+     * @param Business $business
+     * @param bool     $favorite
      *
      * @return ClientRate[]
      */
-    public function collect($uniqueness, $favorite = false)
+    public function collect(Business $business, $favorite = false)
     {
         /** @var BusinessRate[] $businessRates */
-        $businessRates = $this->collectBusinessRates->collect($uniqueness, $favorite);
+        $businessRates = $this->collectBusinessRates->collect($business, $favorite);
 
         $clientRates = [];
         foreach ($businessRates as $i => $businessRate) {
             $clientRates[] = new ClientRate(
                 $businessRate->getCountry(),
-                $businessRate->getType(),
-                $businessRate->getCode(),
+                $businessRate->getNetwork(),
+                $businessRate->getPrefix(),
                 $businessRate->isFavorite(),
                 $businessRate->getSale()
             );

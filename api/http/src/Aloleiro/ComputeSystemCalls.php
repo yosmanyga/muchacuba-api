@@ -34,7 +34,7 @@ class ComputeSystemCalls
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", uri: "/aloleiro/compute-system-calls/{from}/{to}"})
+     * @http\resolution({method: "GET", path: "/aloleiro/compute-system-calls/{from}/{to}"})
      *
      * @param string $from
      * @param string $to
