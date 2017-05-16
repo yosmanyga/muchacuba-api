@@ -2,6 +2,13 @@ export default class ResolveElement
 {
     resolve(url, items) {
         let item = items.find((item) => {
+            if (
+                typeof item.hostname !== 'undefined'
+                && item.hostname === window.location.hostname
+            ) {
+                return true;
+            }
+
             return url.startsWith(item.url);
         });
 

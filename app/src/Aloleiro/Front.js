@@ -119,7 +119,8 @@ export default class Front extends React.Component {
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
-                    />
+                    />,
+                    'def': _.includes(this.state.profile.roles, 'aloleiro_admin')
                 },
                 {
                     'url': '/list-logs',
@@ -127,8 +128,7 @@ export default class Front extends React.Component {
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
-                    />,
-                    'def': _.includes(this.state.profile.roles, 'aloleiro_admin')
+                    />
                 },
                 // Owner
                 {

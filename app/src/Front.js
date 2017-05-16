@@ -189,18 +189,30 @@ export default class Front extends React.Component {
                     this.state.location.pathname,
                     [
                         {
-                            'url': '/aloleiro',
+                            'url': '/internauta',
+                            'element': <InternautaFront
+                                url={this.state.location.pathname.replace('/internauta', '')}
+                                layout={layout}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
+                                onNavigate={(url) => this._handleNavigate('/internauta' + url)}
+                                onNotify={this._handleNotify}
+                            />,
+                            'def': true
+                        },
+                        {
+                            'hostname': 'holapana.com',
+                            'url': '',
                             'element': <AloleiroFront
-                                url={this.state.location.pathname.replace('/aloleiro', '')}
+                                url={this.state.location.pathname.replace('', '')}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
                                 onFrontAuth={this._handleFrontAuth}
                                 onLogout={this._handleLogout}
-                                onNavigate={(url) => this._handleNavigate('/aloleiro' + url)}
+                                onNavigate={(url) => this._handleNavigate('' + url)}
                                 onNotify={this._handleNotify}
                                 onError={this._handleError}
-                            />,
-                            'def': true
+                            />
                         },
                         {
                             'url': '/mule',
@@ -213,8 +225,7 @@ export default class Front extends React.Component {
                                 onNavigate={(url) => this._handleNavigate('/mule' + url)}
                                 onNotify={this._handleNotify}
                                 onError={this._handleError}
-                            />,
-                            'def': true
+                            />
                         },
                         {
                             'url': '/chuchuchu',
@@ -228,17 +239,6 @@ export default class Front extends React.Component {
                                 onNotify={this._handleNotify}
                                 onError={this._handleError}
                             />
-                        },
-                        {
-                            'url': '/internauta',
-                            'element': <InternautaFront
-                                url={this.state.location.pathname.replace('/internauta', '')}
-                                layout={layout}
-                                onBackAuth={this._handleBackAuth}
-                                onFrontAuth={this._handleFrontAuth}
-                                onNavigate={(url) => this._handleNavigate('/internauta' + url)}
-                                onNotify={this._handleNotify}
-                            />,
                         }
                     ]
                 )}
