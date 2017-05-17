@@ -46,15 +46,16 @@ class AnswerCall
 
     /**
      * @param string|null $from
+     * @param string|null $to
      *
-     * @return string
+     * @return array
      */
-    public function answer($from = null)
+    public function answer($from = null, $to = null)
     {
         return $this->answerCall->answer([
             'conversation_uuid' => $this->faker->uuid,
             'from' => $from !== null ? $from : $this->generateNumber(),
-            'to' => $this->faker->phoneNumber
+            'to' => $to !== null ? $to : $this->generateNumber(),
         ]);
     }
 

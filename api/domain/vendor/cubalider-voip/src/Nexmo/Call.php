@@ -29,16 +29,14 @@ class Call implements Persistable, \JsonSerializable
     /**
      * @param string $id
      * @param array  $answerRequest
-     * @param array  $answerResponse
      */
     public function __construct(
         $id,
-        $answerRequest,
-        $answerResponse
+        $answerRequest
     ) {
         $this->id = $id;
         $this->answerRequest = $answerRequest;
-        $this->answerResponse = $answerResponse;
+        $this->answerResponse = null;
         $this->events = [];
     }
 
@@ -100,7 +98,7 @@ class Call implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {

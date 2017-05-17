@@ -174,6 +174,22 @@ class CallContext implements BaseContext, ContainerAwareContext
     }
 
     /**
+     * @When I receive a nexmo answer call from Venezuela, having the specified phone without the country code in that prepared call
+     */
+    public function answerCallFromVenezuela()
+    {
+        $business = $this->pickLastBusiness->pick();
+        $call = $this->pickLastCall->pick($business);
+
+        $response = $this->answerCall->answer(
+            str_replace('+58', '', $call->getFrom()),
+            '+582123353020'
+        );
+
+        $this->data['expected'] = $response;
+    }
+
+    /**
      * @When I receive a nexmo answer call, having another phone than that prepared call
      */
     public function answerCallFromAnotherPhone()
@@ -201,7 +217,7 @@ class CallContext implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get a response to nexmo ordering to connect to the specified number in that prepared call
+     * @Then I should get a response to nexmo, ordering to connect to the specified number in that prepared call
      *
      * @throws \Exception
      */
@@ -218,7 +234,7 @@ class CallContext implements BaseContext, ContainerAwareContext
                 [
                     'action' => 'talk',
                     'text' => 'Por favor, espere mientras le comunicamos',
-                    'voiceName' => 'Penelope' // 'Conchita'
+                    'voiceName' => 'Conchita'
                 ],
                 [
                     'action' => 'connect',
@@ -237,17 +253,23 @@ class CallContext implements BaseContext, ContainerAwareContext
     }
 
     /**
-     * @Then I should get a null response to nexmo
+     * @Then I should get a response to nexmo, ordering to talk a no available message
      *
      * @throws \Exception
      */
-    public function compareNexmoNullResponse()
+    public function compareNexmoHangupResponse()
     {
         $matcher = (new SimpleFactory())->createMatcher();
 
         if (!$matcher->match(
             $this->data['expected'],
-            null
+            [
+                [
+                    'action' => 'talk',
+                    'text' => 'No disponible',
+                    'voiceName' => 'Conchita'
+                ]
+            ]
         )) {
             throw new \Exception($matcher->getError());
         }

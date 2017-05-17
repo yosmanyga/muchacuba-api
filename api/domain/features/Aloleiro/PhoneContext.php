@@ -135,6 +135,22 @@ class PhoneContext implements BaseContext, ContainerAwareContext
     }
 
     /**
+     * @Given there is a phone from Venezuela in that business
+     */
+    public function preAddPhoneFromVenezuela()
+    {
+        $business = $this->pickLastBusiness->pick();
+
+        $this->addPhone->add(
+            $business,
+            '+582819962120',
+            null
+        );
+
+        $this->checkAllStates->shoot('phone');
+    }
+
+    /**
      * @When I add a phone to that business
      * @When I add another phone to that business
      */

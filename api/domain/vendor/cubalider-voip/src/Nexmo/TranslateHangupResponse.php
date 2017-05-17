@@ -5,7 +5,6 @@ namespace Cubalider\Voip\Nexmo;
 use Cubalider\Voip\HangupResponse;
 use Cubalider\Voip\TranslateResponse;
 use Cubalider\Voip\UnsupportedResponseException;
-use GuzzleHttp\Client;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;

@@ -42,6 +42,13 @@ class AnswerCall
      */
     public function answer($payload)
     {
+        // Insert call as it comes
+
+        $this->manageStorage->connect()->insertOne(new Call(
+            $payload['conversation_uuid'],
+            $payload
+        ));
+
         /* Nexmo doesn't add country prefix to calls from Venezuela */
         // TODO: https://github.com/giggsey/libphonenumber-for-php
 
@@ -61,11 +68,14 @@ class AnswerCall
             $payload['from']
         );
 
-        $this->manageStorage->connect()->insertOne(new Call(
-            $payload['conversation_uuid'],
-            $payload,
-            $response
-        ));
+        $this->manageStorage->connect()->updateOne(
+            [
+                '_id' => $payload['conversation_uuid']
+            ],
+            [
+                '$set' => ['answerResponse' => $response]
+            ]
+        );
 
         return $response;
     }
