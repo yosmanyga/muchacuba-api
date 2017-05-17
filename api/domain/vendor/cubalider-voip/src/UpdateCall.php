@@ -3,7 +3,6 @@
 namespace Cubalider\Voip;
 
 use Cubalider\Voip\Call\ManageStorage;
-use MongoDB\UpdateResult;
 use Muchacuba\Aloleiro\NonExistentCallException;
 
 /**
@@ -38,33 +37,7 @@ class UpdateCall
      */
     public function updateWithOutbound($id, $cost)
     {
-        /** @var Call $call */
-        $call = $this->manageStorage->connect()->findOne([
-            '_id' => $id
-        ]);
-
-        if (is_null($call)) {
-            throw new NonExistentCallException();
-        }
-
-        $this->manageStorage->connect()->updateOne(
-            ['_id' => $id],
-            [
-                '$inc' => [
-                    'cost' => $cost
-                ],
-                '$set' => [
-                    'status' => $call->getStatus() == Call::STATUS_NONE
-                        ? Call::STATUS_FIRST
-                        : Call::STATUS_SECOND
-                ]
-            ]
-        );
-
-        /** @var Call $call */
-        $call = $this->manageStorage->connect()->findOne([
-            '_id' => $id
-        ]);
+        $call = $this->updateCostAndStatus($id, $cost);
 
         return $call;
     }
@@ -81,6 +54,32 @@ class UpdateCall
      * @throws NonExistentCallException
      */
     public function updateWithInbound($id, $cost, $start, $end, $duration)
+    {
+        $this->manageStorage->connect()->updateOne(
+            ['_id' => $id],
+            [
+                '$set' => [
+                    'duration' => $duration,
+                    'start' => $start,
+                    'end' => $end
+                ]
+            ]
+        );
+
+        $call = $this->updateCostAndStatus($id, $cost);
+
+        return $call;
+    }
+
+    /**
+     * @param string $id
+     * @param float  $cost
+     *
+     * @return Call
+     *
+     * @throws NonExistentCallException
+     */
+    private function updateCostAndStatus($id, $cost)
     {
         /** @var Call $call */
         $call = $this->manageStorage->connect()->findOne([
@@ -101,17 +100,6 @@ class UpdateCall
                     'status' => $call->getStatus() == Call::STATUS_NONE
                         ? Call::STATUS_FIRST
                         : Call::STATUS_SECOND
-                ]
-            ]
-        );
-
-        $this->manageStorage->connect()->updateOne(
-            ['_id' => $id],
-            [
-                '$set' => [
-                    'duration' => $duration,
-                    'start' => $start,
-                    'end' => $end
                 ]
             ]
         );

@@ -38,27 +38,35 @@ class AnswerCall
     /**
      * @param array $payload
      *
-     * @return string
+     * @return array
      */
     public function answer($payload)
     {
         /* Nexmo doesn't add country prefix to calls from Venezuela */
+        // TODO: https://github.com/giggsey/libphonenumber-for-php
 
-        // Not Venezuela country code?
-        if (strpos($payload['from'], '+58') === false) {
+        if (
+            // Call inside Venezuela?
+            $payload['to'] == '582123353020'
+            // Not having country code?
+            && strpos($payload['from'], '+58') === false
+        ) {
             // Add country code
             $payload['from'] = sprintf('+58%s', $payload['from']);
         }
 
-        $this->manageStorage->connect()->insertOne(new Call(
-            $payload['conversation_uuid'],
-            $payload
-        ));
-
-        return $this->addCall->add(
+        $response = $this->addCall->add(
             'nexmo',
             $payload['conversation_uuid'],
             $payload['from']
         );
+
+        $this->manageStorage->connect()->insertOne(new Call(
+            $payload['conversation_uuid'],
+            $payload,
+            $response
+        ));
+
+        return $response;
     }
 }
