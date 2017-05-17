@@ -165,7 +165,7 @@ EOF;
         // The title comes with spaces at the beginning and end
         $title = trim($title);
 
-        $text = $crawler
+        $texts = $crawler
             ->filter('.uvn-flex-article-body p')
             ->each(function(Crawler $crawler) {
                 $titleCrawler = $crawler->filter('b');
@@ -181,7 +181,15 @@ EOF;
 
                 return sprintf("%s%s", $title, $text);
             });
-        $text = implode("\n\n", $text);
+
+        foreach ($texts as $i => $text) {
+            // Remove final texts, not related to the horoscope
+            if (strlen($text) < 80) {
+                unset($texts[$i]);
+            }
+        }
+
+        $text = implode("\n\n", $texts);
 
         return sprintf("%s\n\n%s", $title, $text);
     }
