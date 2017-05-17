@@ -228,14 +228,15 @@ export default class Front extends React.Component {
                             />
                         },
                         {
-                            'url': '/topup',
+                            'hostname': 'mundorecarga.com',
+                            'url': '',
                             'element': <TopupFront
-                                url={this.state.location.pathname.replace('/topup', '')}
+                                url={this.state.location.pathname.replace('', '')}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
                                 onFrontAuth={this._handleFrontAuth}
                                 onLogout={this._handleLogout}
-                                onNavigate={(url) => this._handleNavigate('/topup' + url)}
+                                onNavigate={(url) => this._handleNavigate('' + url)}
                                 onNotify={this._handleNotify}
                                 onError={this._handleError}
                             />

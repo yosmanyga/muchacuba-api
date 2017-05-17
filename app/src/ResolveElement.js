@@ -9,7 +9,7 @@ export default class ResolveElement
                 return true;
             }
 
-            return url.startsWith(item.url);
+            return item.url !== '' && url.startsWith(item.url);
         });
 
         if (typeof item === 'undefined') {
