@@ -4147,12 +4147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yosmanyga/symsonte.git",
-                "reference": "8df8122dba9fe8ea7242309e3588f8ce89d7d0a2"
+                "reference": "32dc5b020f779e8fb6ead4869f0f4257371d101c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/8df8122dba9fe8ea7242309e3588f8ce89d7d0a2",
-                "reference": "8df8122dba9fe8ea7242309e3588f8ce89d7d0a2",
+                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/32dc5b020f779e8fb6ead4869f0f4257371d101c",
+                "reference": "32dc5b020f779e8fb6ead4869f0f4257371d101c",
                 "shasum": ""
             },
             "require": {
@@ -4256,7 +4256,7 @@
                 "source": "https://github.com/yosmanyga/symsonte/tree/master",
                 "issues": "https://github.com/yosmanyga/symsonte/issues"
             },
-            "time": "2017-05-16 23:10:07"
+            "time": "2017-05-17 02:27:47"
         },
         {
             "name": "theseer/tokenizer",
