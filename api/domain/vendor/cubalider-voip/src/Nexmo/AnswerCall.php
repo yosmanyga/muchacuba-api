@@ -42,6 +42,9 @@ class AnswerCall
      */
     public function answer($payload)
     {
+        // Nexmo doesn't add country prefix to calls from Venezuela
+        $payload['from'] = sprintf('+58%s', $payload['from']);
+
         $this->manageStorage->connect()->insertOne(new Call(
             $payload['conversation_uuid'],
             $payload
