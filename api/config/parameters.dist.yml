@@ -34,3 +34,6 @@ sinch_app_secret: ''
 profit_percent: '30' # Profit in percent
 nexmo_key: ''
 nexmo_secret: ''
+# Topup
+topup_ding_id: ''
+topup_ding_password: ''

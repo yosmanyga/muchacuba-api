@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Topup;
 
-use Muchacuba\Topup\Service\ManageStorage as ManageServiceStorage;
+use Muchacuba\Topup\Product\ManageStorage as ManageServiceStorage;
 use MongoDB\UpdateResult;
 
 /**

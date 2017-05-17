@@ -8,7 +8,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
-import Moment from 'moment';
+import MomentTimezone from 'moment-timezone';
 import {} from 'moment/locale/es';
 
 import ConnectToServer from '../ConnectToServer';
@@ -373,7 +373,10 @@ export default class ListClientCalls extends React.Component {
                                                                         width: '15%'
                                                                     }}
                                                                 >
-                                                                    {Moment.unix(instance.start).format('dddd D MMMM YYYY')}
+                                                                    {MomentTimezone
+                                                                        .unix(instance.start)
+                                                                        .tz('America/Caracas')
+                                                                        .format('dddd D MMMM YYYY')}
                                                                 </TableRowColumn>
                                                                 <TableRowColumn
                                                                     style={{
@@ -381,7 +384,11 @@ export default class ListClientCalls extends React.Component {
                                                                         width: '10%'
                                                                     }}
                                                                 >
-                                                                    {Moment.unix(instance.start).format('h:mm:ss a')}
+                                                                    {MomentTimezone
+                                                                        .unix(instance.start)
+                                                                        .tz('America/Caracas')
+                                                                        .format('h:mm:ss a')
+                                                                    }
                                                                 </TableRowColumn>
                                                                 <TableRowColumn
                                                                     style={{
@@ -389,7 +396,10 @@ export default class ListClientCalls extends React.Component {
                                                                         width: '10%'
                                                                     }}
                                                                 >
-                                                                    {Moment.unix(instance.end).format('h:mm:ss a')}
+                                                                    {MomentTimezone
+                                                                        .unix(instance.end)
+                                                                        .tz('America/Caracas')
+                                                                        .format('h:mm:ss a')}
                                                                 </TableRowColumn>
                                                                 <TableRowColumn
                                                                     style={{

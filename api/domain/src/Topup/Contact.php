@@ -106,7 +106,7 @@ class Contact implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {

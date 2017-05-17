@@ -12,7 +12,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import Moment from 'moment-timezone';
+import MomentTimezone from 'moment-timezone';
 import {} from 'moment/locale/es';
 
 import ConnectToServer from '../ConnectToServer';
@@ -61,12 +61,12 @@ export default class ViewBusinessStats extends React.Component {
                 let from, to;
 
                 if (this.state.interval === 'last_month') {
-                    from = Moment()
+                    from = MomentTimezone()
                         .tz('America/Caracas')
                         .startOf('month')
                         .subtract(1, 'month')
                         .unix();
-                    to = Moment()
+                    to = MomentTimezone()
                         .tz('America/Caracas')
                         .endOf('month')
                         .subtract(1, 'month')
@@ -74,11 +74,11 @@ export default class ViewBusinessStats extends React.Component {
                 }
 
                 if (this.state.interval === 'current_month') {
-                    from = Moment()
+                    from = MomentTimezone()
                         .tz('America/Caracas')
                         .startOf('month')
                         .unix();
-                    to = Moment()
+                    to = MomentTimezone()
                         .tz('America/Caracas')
                         .endOf('month')
                         .unix();

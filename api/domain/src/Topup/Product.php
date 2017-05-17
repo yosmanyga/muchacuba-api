@@ -14,36 +14,20 @@ class Product implements Persistable, \JsonSerializable
     private $id;
 
     /**
-     * @var string
+     * @var array
      */
-    private $provider;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $logo;
+    private $payload;
 
     /**
      * @param string $id
-     * @param string $provider
-     * @param string $name
-     * @param string $logo
+     * @param array $payload
      */
     public function __construct(
         $id,
-        $provider,
-        $name,
-        $logo
+        $payload
     ) {
         $this->id = $id;
-        $this->provider = $provider;
-        $this->name = $name;
-        $this->logo = $logo;
+        $this->payload = $payload;
     }
 
     /**
@@ -55,27 +39,11 @@ class Product implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getProvider()
+    public function getPayload()
     {
-        return $this->provider;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLogo()
-    {
-        return $this->logo;
+        return $this->payload;
     }
 
     /**
@@ -85,9 +53,7 @@ class Product implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'provider' => $this->provider,
-            'name' => $this->name,
-            'logo' => $this->logo
+            'payload' => $this->payload
         ];
     }
 
@@ -97,21 +63,17 @@ class Product implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->provider = $data['provider'];
-        $this->name = $data['name'];
-        $this->logo = $data['logo'];
+        $this->payload = $data['payload'];
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
-            'provider' => $this->provider,
-            'name' => $this->name,
-            'logo' => $this->logo,
+            'payload' => $this->payload
         ];
     }
 }

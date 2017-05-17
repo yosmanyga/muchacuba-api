@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Topup;
 
-use Muchacuba\Topup\Service\ManageStorage;
+use Muchacuba\Topup\Product\ManageStorage;
 
 /**
  * @di\service({

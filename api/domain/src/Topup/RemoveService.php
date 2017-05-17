@@ -3,7 +3,7 @@
 namespace Muchacuba\Topup;
 
 use MongoDB\DeleteResult;
-use Muchacuba\Topup\Service\ManageStorage as ManageServiceStorage;
+use Muchacuba\Topup\Product\ManageStorage as ManageServiceStorage;
 
 /**
  * @di\service({

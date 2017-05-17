@@ -18,6 +18,7 @@ import AloleiroFront from './Aloleiro/Front';
 import MuleFront from './Mule/Front';
 import ChuchuchuFront from './Chuchuchu/Front';
 import InternautaFront from './Internauta/Front';
+import TopupFront from './Topup/Front';
 
 firebase.initializeApp({
     apiKey: "AIzaSyApFrRpHVKRK1pvBchd0rcC_ycUa0H-5AU",
@@ -201,20 +202,6 @@ export default class Front extends React.Component {
                             'def': true
                         },
                         {
-                            'hostname': 'holapana.com',
-                            'url': '',
-                            'element': <AloleiroFront
-                                url={this.state.location.pathname.replace('', '')}
-                                layout={layout}
-                                onBackAuth={this._handleBackAuth}
-                                onFrontAuth={this._handleFrontAuth}
-                                onLogout={this._handleLogout}
-                                onNavigate={(url) => this._handleNavigate('' + url)}
-                                onNotify={this._handleNotify}
-                                onError={this._handleError}
-                            />
-                        },
-                        {
                             'url': '/mule',
                             'element': <MuleFront
                                 url={this.state.location.pathname.replace('/mule', '')}
@@ -239,7 +226,34 @@ export default class Front extends React.Component {
                                 onNotify={this._handleNotify}
                                 onError={this._handleError}
                             />
-                        }
+                        },
+                        {
+                            'url': '/topup',
+                            'element': <TopupFront
+                                url={this.state.location.pathname.replace('/topup', '')}
+                                layout={layout}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
+                                onLogout={this._handleLogout}
+                                onNavigate={(url) => this._handleNavigate('/topup' + url)}
+                                onNotify={this._handleNotify}
+                                onError={this._handleError}
+                            />
+                        },
+                        {
+                            'hostname': 'holapana.com',
+                            'url': '',
+                            'element': <AloleiroFront
+                                url={this.state.location.pathname.replace('', '')}
+                                layout={layout}
+                                onBackAuth={this._handleBackAuth}
+                                onFrontAuth={this._handleFrontAuth}
+                                onLogout={this._handleLogout}
+                                onNavigate={(url) => this._handleNavigate('' + url)}
+                                onNotify={this._handleNotify}
+                                onError={this._handleError}
+                            />
+                        },
                     ]
                 )}
             </MuiThemeProvider>
