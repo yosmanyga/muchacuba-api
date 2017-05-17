@@ -9,7 +9,7 @@ interface TranslateResponse
      * @param string $cid
      * @param string $from
      *
-     * @return string
+     * @return array
      *
      * @throws UnsupportedResponseException
      */

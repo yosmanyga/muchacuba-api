@@ -54,7 +54,7 @@ class AddCall
      * @param string      $from
      * @param string|null $id
      *
-     * @return string
+     * @return array
      */
     public function add(
         $provider,
@@ -107,7 +107,7 @@ class AddCall
      * @param string                         $cid
      * @param string                         $from
      *
-     * @return string
+     * @return array
      *
      * @throws UnsupportedResponseException
      */
