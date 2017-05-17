@@ -43,7 +43,7 @@ class NotifyPayment
         $profile = $this->pickFacebookProfile->pick($uniqueness);
 
         $this->sendEmail->send(
-            'yosmanyga@gmail.com,admin@jimenezsolutions.com.ve',
+            'yosmanyga@gmail.com, admin@jimenezsolutions.com.ve',
             'Pago de un cliente en Holapana',
             sprintf(
                 "El cliente %s (%s) ha hecho un pago en Holapana.\r\nEl código de la transferencia es %s",

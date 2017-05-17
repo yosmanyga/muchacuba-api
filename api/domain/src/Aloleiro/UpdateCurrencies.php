@@ -141,7 +141,7 @@ class UpdateCurrencies
         }
 
         $this->sendEmail->send(
-            'yosmanyga@gmail.com,admin@jimenezsolutions.com.ve',
+            'yosmanyga@gmail.com, admin@jimenezsolutions.com.ve',
             'Cambio de moneda',
             $body
         );
