@@ -88,7 +88,7 @@ export default class EditBusiness extends React.Component {
                 />
                 <br/><br/>
                 <p>Este es el número que tus clientes tienen que marcar desde las cabinas.</p>
-                <p><strong>02127710746</strong></p>
+                <p><strong>02123353020</strong></p>
                 <br/>
                 <p>Esta casilla permite establecer la ganancia que se quiere obtener con las llamadas.</p>
                 <p>Por ejemplo, si el porciento de ganancia es 15 y una llamada cuesta 100 Bf por minuto, entonces se venderá a 115 Bf (costo + % de ganancia).</p>
