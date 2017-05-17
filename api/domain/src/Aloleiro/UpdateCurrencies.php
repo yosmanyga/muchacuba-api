@@ -50,7 +50,7 @@ class UpdateCurrencies
             return !empty($notification);
         });
 
-//        $this->notify($notifications);
+        $this->notify($notifications);
     }
 
     /**
@@ -68,7 +68,10 @@ class UpdateCurrencies
             ->getNode(0)
             ->textContent;
 
-        return $this->insertOrUpdate('EUR', (float) $value);
+        $this->insertOrUpdate('EUR', (float) $value);
+
+        // Ignore eur notification for now
+        return [];
     }
 
     /**
@@ -138,7 +141,7 @@ class UpdateCurrencies
         }
 
         $this->sendEmail->send(
-            'yosmanyga@gmail.com, admin@jimenezsolutions.com.ve',
+            'yosmanyga@gmail.com,admin@jimenezsolutions.com.ve',
             'Cambio de moneda',
             $body
         );
