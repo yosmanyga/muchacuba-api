@@ -108,7 +108,7 @@ class BusinessRate implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {

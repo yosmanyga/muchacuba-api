@@ -56,7 +56,7 @@ class ComputeCalls
             $criteria['instances.start']['$lt'] = new UTCDatetime($to * 1000);
         }
 
-        $criteria['instances.result']['$eq'] = Instance::RESULT_DID_SPEAK;
+        $criteria['instances.result'] = Instance::RESULT_DID_SPEAK;
 
         switch ($group) {
             case self::GROUP_BY_DAY:

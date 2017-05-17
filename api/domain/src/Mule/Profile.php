@@ -63,7 +63,7 @@ class Profile implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {
