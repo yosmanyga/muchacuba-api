@@ -4,8 +4,10 @@ namespace Muchacuba\Aloleiro\Call;
 
 use MongoDB\UpdateResult;
 use Muchacuba\Aloleiro\Business;
+use Muchacuba\Aloleiro\Call;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageInstanceStorage;
 use Muchacuba\Aloleiro\NonExistentCallException;
+use Muchacuba\Aloleiro\Business\ManageBalance;
 
 /**
  * @di\service({
@@ -20,13 +22,21 @@ class MarkInstance
     private $manageInstanceStorage;
 
     /**
+     * @var ManageBalance
+     */
+    private $manageBalance;
+
+    /**
      * @param ManageInstanceStorage $manageInstanceStorage
+     * @param ManageBalance         $manageBalance
      */
     public function __construct(
-        ManageInstanceStorage $manageInstanceStorage
+        ManageInstanceStorage $manageInstanceStorage,
+        ManageBalance $manageBalance
     )
     {
         $this->manageInstanceStorage = $manageInstanceStorage;
+        $this->manageBalance = $manageBalance;
     }
 
     /**
@@ -39,10 +49,19 @@ class MarkInstance
     public function markAsDidSpeak(Business $business, $call, $id)
     {
         try {
-            $this->mark($business, $call, $id, Instance::RESULT_DID_SPEAK);
+            $businessPurchase = $this->mark(
+                $business,
+                $call,
+                $id,
+                Instance::RESULT_DID_SPEAK
+            );
         } catch (NonExistentCallException $e) {
             throw $e;
+        } catch (AlreadyMarkedInstanceException $e) {
+            return;
         }
+
+        $this->manageBalance->decrease($business, $businessPurchase);
     }
 
     /**
@@ -55,10 +74,19 @@ class MarkInstance
     public function markAsDidNotSpeak(Business $business, $call, $id)
     {
         try {
-            $this->mark($business, $call, $id, Instance::RESULT_DID_NOT_SPEAK);
+            $businessPurchase = $this->mark(
+                $business, 
+                $call, 
+                $id, 
+                Instance::RESULT_DID_NOT_SPEAK
+            );
         } catch (NonExistentCallException $e) {
             throw $e;
+        } catch (AlreadyMarkedInstanceException $e) {
+            return;
         }
+
+        $this->manageBalance->increase($business, $businessPurchase);
     }
 
     /**
@@ -67,7 +95,10 @@ class MarkInstance
      * @param string   $id
      * @param int      $result
      *
+     * @return float The business purchase
+     *
      * @throws NonExistentCallException
+     * @throws AlreadyMarkedInstanceException
      */
     private function mark(Business $business, $call, $id, $result)
     {
@@ -82,8 +113,26 @@ class MarkInstance
                 'instances.$.result' => $result
             ]]);
 
-        if ($result->getModifiedCount() === 0) {
+        if ($result->getMatchedCount() === 0) {
             throw new NonExistentCallException();
         }
+
+        if ($result->getModifiedCount() === 0) {
+            throw new AlreadyMarkedInstanceException();
+        }
+
+        /** @var Call $call */
+        $call = $this->manageInstanceStorage->connect()->findOne([
+            '_id' => $call,
+            'business' =>$business->getId(),
+        ]);
+
+        foreach ($call->getInstances() as $instance) {
+            if ($instance['id'] == $id) {
+                return $instance['businessPurchase'];
+            }
+        }
+
+        throw new NonExistentCallException();
     }
 }

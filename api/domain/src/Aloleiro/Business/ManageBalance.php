@@ -11,7 +11,7 @@ use Muchacuba\Aloleiro\NonExistentBusinessException;
  *     deductible: true
  * })
  */
-class IncreaseBalance
+class ManageBalance
 {
     /**
      * @var ManageStorage
@@ -36,10 +36,32 @@ class IncreaseBalance
      */
     public function increase(Business $business, $amount)
     {
+        $this->change($business, $amount);
+    }
+
+    /**
+     * @param Business $business
+     * @param string   $amount
+     *
+     * @throws NonExistentBusinessException
+     */
+    public function decrease(Business $business, $amount)
+    {
+        $this->change($business, $amount * -1);
+    }
+
+    /**
+     * @param Business $business
+     * @param string   $amount
+     *
+     * @throws NonExistentBusinessException
+     */
+    private function change(Business $business, $amount)
+    {
         /** @var UpdateResult $result */
         $result = $this->manageStorage->connect()->updateOne(
             ['_id' => $business->getId()],
-            ['$inc' => ['balance' => (int) $amount]]
+            ['$inc' => ['balance' => $amount]]
         );
 
         if ($result->getMatchedCount() == 0) {

@@ -5,7 +5,7 @@ namespace Muchacuba\Aloleiro;
 use Cubalider\Voip\ListenCompletedEvent;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\UpdateResult;
-use Muchacuba\Aloleiro\Business\DecreaseBalance;
+use Muchacuba\Aloleiro\Business\ManageBalance;
 use Muchacuba\Aloleiro\Call\Instance;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 
@@ -38,16 +38,16 @@ class CompleteCall implements ListenCompletedEvent
     private $profitPercent;
 
     /**
-     * @var DecreaseBalance
+     * @var ManageBalance
      */
-    private $decreaseBalance;
+    private $manageBalance;
 
     /**
      * @param PickBusiness      $pickBusiness
      * @param PickCurrency      $pickCurrency
      * @param ManageCallStorage $manageCallStorage
      * @param int               $profitPercent
-     * @param DecreaseBalance   $decreaseBalance
+     * @param ManageBalance   $manageBalance
      *
      * @di\arguments({
      *     profitPercent: "%profit_percent%",
@@ -58,14 +58,14 @@ class CompleteCall implements ListenCompletedEvent
         PickCurrency $pickCurrency,
         ManageCallStorage $manageCallStorage,
         $profitPercent,
-        DecreaseBalance $decreaseBalance
+        ManageBalance $manageBalance
     )
     {
         $this->pickBusiness = $pickBusiness;
         $this->pickCurrency = $pickCurrency;
         $this->manageCallStorage = $manageCallStorage;
         $this->profitPercent = $profitPercent;
-        $this->decreaseBalance = $decreaseBalance;
+        $this->manageBalance = $manageBalance;
     }
 
     /**
@@ -149,6 +149,6 @@ class CompleteCall implements ListenCompletedEvent
             throw new \Exception(sprintf("Instance '%s' does not exist", $id));
         }
 
-        $this->decreaseBalance->decrease($business, $businessPurchase);
+        $this->manageBalance->decrease($business, $businessPurchase);
     }
 }
