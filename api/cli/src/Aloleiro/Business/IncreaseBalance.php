@@ -4,7 +4,7 @@ namespace Muchacuba\Cli\Aloleiro\Business;
 
 use Muchacuba\Aloleiro\PickBusiness as DomainPickBusiness;
 use Symsonte\Cli\Server;
-use Muchacuba\Aloleiro\Business\IncreaseBalance as DomainIncreaseBalance;
+use Muchacuba\Aloleiro\Business\ManageBalance as DomainIncreaseBalance;
 
 /**
  * @di\command({deductible: true})
