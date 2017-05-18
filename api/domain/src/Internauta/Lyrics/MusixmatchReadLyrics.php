@@ -87,7 +87,7 @@ class MusixmatchReadLyrics implements ReadLyrics
     {
         $crawler = $crawler->filter('.mxm-lyrics__content');
 
-        $lyrics = $crawler->eq(1)->getNode(0)->textContent;
+        $lyrics = $crawler->eq(0)->getNode(0)->textContent;
         $lyrics = trim($lyrics);
 
         return $lyrics;
