@@ -104,6 +104,15 @@ class ProcessRequest implements BaseProcessRequest
                 list($author, $title, $lyrics) = $this->delegateReadLyrics->read($result['link']);
 
                 $str = $author . $title;
+
+                $events[] = new Event(
+                    $this,
+                    'Found',
+                    [
+                        'link' => $result['link']
+                    ]
+                );
+
                 if (
                     strpos($str, 'Lyrics') !== false
                     || strpos($str, 'Letra') !== false
