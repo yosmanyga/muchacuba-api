@@ -65,19 +65,29 @@ class PostProcessCalls
                     $completed = true;
 
                     if ($event['direction'] == 'inbound') {
-                        $inbound = [
-                            'price' => $event['price'],
-                            'duration' => $event['duration'],
-                            'start_time' => $event['start_time'],
-                            'end_time' => $event['end_time']
-                        ];
+                        $inbound['price'] = isset($inbound['end_time'])
+                            ? $inbound['price'] : null;
+
+                        $inbound['duration'] = isset($inbound['end_time'])
+                            ? $inbound['duration'] : null;
+
+                        $inbound['start_time'] = isset($inbound['end_time'])
+                            ? $inbound['start_time'] : null;
+                        
+                        $inbound['end_time'] = isset($inbound['end_time'])
+                            ? $inbound['end_time'] : null;
                     } else {
-                        $outbound = [
-                            'price' => $event['price'],
-                            'duration' => $event['duration'],
-                            'start_time' => $event['start_time'],
-                            'end_time' => $event['end_time']
-                        ];
+                        $outbound['price'] = isset($outbound['end_time'])
+                            ? $outbound['price'] : null;
+
+                        $outbound['duration'] = isset($outbound['end_time'])
+                            ? $outbound['duration'] : null;
+
+                        $outbound['start_time'] = isset($outbound['end_time'])
+                            ? $outbound['start_time'] : null;
+
+                        $outbound['end_time'] = isset($outbound['end_time'])
+                            ? $outbound['end_time'] : null;
                     }
                 }
             }
@@ -94,23 +104,31 @@ class PostProcessCalls
             $cost = 0;
 
             if (!empty($outbound)) {
-                $start = strtotime($outbound['start_time']);
-                $end = strtotime($outbound['end_time']);
-                $duration = (int) $outbound['duration'];
-                $cost = (float) $outbound['price'];
+                $start = !is_null($outbound['start_time'])
+                    ? strtotime($outbound['start_time']) : null;
+                $end = !is_null($outbound['end_time'])
+                    ? strtotime($outbound['end_time']) : null;
+                $duration = !is_null($outbound['duration'])
+                    ? (int) $outbound['duration'] : null;
+                $cost = !is_null($outbound['price'])
+                    ? (float) $outbound['price'] : null;
             }
 
             if (!empty($inbound)) {
                 /* Start time, end time and duration from inbound are more
                    important than the outbound values. So let's override them */
 
-                $start = strtotime($inbound['start_time']);
-                $end = strtotime($inbound['end_time']);
-                $duration = (int) $inbound['duration'];
+                $start = !is_null($outbound['start_time'])
+                    ? strtotime($outbound['start_time']) : null;
+                $end = !is_null($outbound['end_time'])
+                    ? strtotime($outbound['end_time']) : null;
+                $duration = !is_null($outbound['duration'])
+                    ? (int) $outbound['duration'] : null;
 
                 /* Cost is added to the outbound */
 
-                $cost += (float) $inbound['price'];
+                $cost += $cost + !is_null($outbound['price'])
+                    ? (float) $outbound['price'] : 0;
             }
 
             $this->manageStorage->connect()->updateOne(
