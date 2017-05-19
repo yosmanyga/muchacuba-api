@@ -7,7 +7,6 @@ Feature: Answering call
     When I receive a nexmo answer call, having the specified phone in that prepared call
     Then I should get a response to nexmo, ordering to connect to the specified number in that prepared call
 
-  @this
   Scenario: Answering a call from Venezuela
     Given there is a business
     And there is a phone from Venezuela in that business
