@@ -49,11 +49,11 @@ class ComputeCalls
         }
 
         if (!is_null($from)) {
-            $criteria['instances.start']['$gte'] = new UTCDateTime($from * 1000);
+            $criteria['instances.localStart']['$gte'] = new UTCDateTime($from * 1000);
         }
 
         if (!is_null($to)) {
-            $criteria['instances.start']['$lt'] = new UTCDatetime($to * 1000);
+            $criteria['instances.localStart']['$lt'] = new UTCDatetime($to * 1000);
         }
 
         $criteria['instances.result'] = Instance::RESULT_DID_SPEAK;
@@ -61,30 +61,30 @@ class ComputeCalls
         switch ($group) {
             case self::GROUP_BY_DAY:
                 $instanceStart = [
-                    'year' => ['$year' => '$instances.start'],
-                    'month' => ['$month' => '$instances.start'],
-                    'day' => ['$dayOfMonth' => '$instances.start']
+                    'year' => ['$year' => '$instances.localStart'],
+                    'month' => ['$month' => '$instances.localStart'],
+                    'day' => ['$dayOfMonth' => '$instances.localStart']
                 ];
 
                 break;
             case self::GROUP_BY_MONTH:
                 $instanceStart = [
-                    'year' => ['$year' => '$instances.start'],
-                    'month' => ['$month' => '$instances.start']
+                    'year' => ['$year' => '$instances.localStart'],
+                    'month' => ['$month' => '$instances.localStart']
                 ];
 
                 break;
             case self::GROUP_BY_YEAR:
                 $instanceStart = [
-                    'year' => ['$year' => '$instances.start']
+                    'year' => ['$year' => '$instances.localStart']
                 ];
 
                 break;
             default:
                 $instanceStart = [
-                    'year' => ['$year' => '$instances.start'],
-                    'month' => ['$month' => '$instances.start'],
-                    'day' => ['$dayOfMonth' => '$instances.start']
+                    'year' => ['$year' => '$instances.localStart'],
+                    'month' => ['$month' => '$instances.localStart'],
+                    'day' => ['$dayOfMonth' => '$instances.localStart']
                 ];
         }
 
@@ -92,6 +92,24 @@ class ComputeCalls
             ->aggregate(
                 [
                     ['$unwind' => '$instances'],
+                    ['$project' => [
+                        'business' => 1,
+                        'instances.duration' => 1,
+                        'instances.systemPurchase' => 1,
+                        'instances.systemSale' => 1,
+                        'instances.systemProfit' => 1,
+                        'instances.businessPurchase' => 1,
+                        'instances.businessSale' => 1,
+                        'instances.businessProfit' => 1,
+                        'instances.result' => 1,
+                        // Field with the date in local timezone
+                        'instances.localStart' => [
+                            '$subtract' => [
+                                '$instances.start',
+                                4 * 60 * 60 * 1000 // -4 is America/Caracas
+                            ]
+                        ]
+                    ]],
                     ['$match' => $criteria],
                     ['$group' => [
                         '_id' => $instanceStart,

@@ -33,7 +33,7 @@ class ComputeDailyBusinessCalls
      */
     public function compute(Business $business)
     {
-        $now = new \DateTime("now");
+        $now = new \DateTime("now", new \DateTimeZone('America/Caracas'));
         $from = clone $now;
         $from->modify('today');
         $to = clone $from;
