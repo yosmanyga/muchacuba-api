@@ -2,7 +2,7 @@
 
 namespace Cubalider\Voip\Tests\Nexmo;
 
-use Cubalider\Voip\AddCall;
+use Cubalider\Voip\StartCall;
 use Cubalider\Voip\Nexmo\AnswerCall;
 use Cubalider\Voip\Nexmo\Call;
 use Cubalider\Voip\Nexmo\Call\ManageStorage;
@@ -17,7 +17,7 @@ class AnswerCallTest extends TestCase
     private $manageStorage;
 
     /**
-     * @var AddCall|\PHPUnit_Framework_MockObject_MockObject
+     * @var StartCall|\PHPUnit_Framework_MockObject_MockObject
      */
     private $addCall;
 
@@ -34,7 +34,7 @@ class AnswerCallTest extends TestCase
             ->getMock();
 
         $this->addCall = $this
-            ->getMockBuilder(AddCall::class)
+            ->getMockBuilder(StartCall::class)
             ->disableOriginalConstructor()
             ->getMock();
 

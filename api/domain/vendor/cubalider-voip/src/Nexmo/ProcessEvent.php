@@ -2,9 +2,7 @@
 
 namespace Cubalider\Voip\Nexmo;
 
-use Cubalider\Voip\Nexmo\Call\LogEvent;
-use Cubalider\Voip\ReceiveEvent;
-use Cubalider\Voip\UnsupportedEventException;
+use Cubalider\Voip\Nexmo\Call\ManageStorage;
 
 /**
  * @di\service({
@@ -14,65 +12,30 @@ use Cubalider\Voip\UnsupportedEventException;
 class ProcessEvent
 {
     /**
-     * @var LogEvent
+     * @var ManageStorage
      */
-    private $logEvent;
+    private $manageStorage;
 
     /**
-     * @var ReceiveEvent[]
-     */
-    private $receiveEventServices;
-
-    /**
-     * @param LogEvent       $logEvent
-     * @param ReceiveEvent[] $receiveEventServices
-     *
-     * @di\arguments({
-     *     receiveEventServices: '#cubalider.voip.nexmo.receive_event'
-     * })
+     * @param ManageStorage $manageStorage
      */
     public function __construct(
-        LogEvent $logEvent,
-        array $receiveEventServices
+        ManageStorage $manageStorage
     )
     {
-        $this->logEvent = $logEvent;
-        $this->receiveEventServices = $receiveEventServices;
+        $this->manageStorage = $manageStorage;
     }
 
     /**
-     * @param array $payload
+     * @param array  $payload
      */
     public function process($payload)
     {
-        $this->logEvent->log(
-            $payload['conversation_uuid'],
-            $payload
+        $this->manageStorage->connect()->updateOne(
+            ['_id' => $payload['conversation_uuid']],
+            ['$push' => [
+                'events' => $payload
+            ]]
         );
-
-        try {
-            $this->receiveEvent($payload);
-        } catch (UnsupportedEventException $e) {
-        }
-    }
-
-    /**
-     * @param array $payload
-     *
-     * @return mixed
-     *
-     * @throws UnsupportedEventException
-     */
-    private function receiveEvent($payload)
-    {
-        foreach ($this->receiveEventServices as $receiveEventService) {
-            try {
-                return $receiveEventService->receive($payload);
-            } catch (UnsupportedEventException $e) {
-                continue;
-            }
-        }
-
-        throw new UnsupportedEventException();
     }
 }

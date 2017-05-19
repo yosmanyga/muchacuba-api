@@ -6,10 +6,6 @@ use MongoDB\BSON\Persistable;
 
 class Call implements Persistable
 {
-    const STATUS_NONE = 'none';
-    const STATUS_FIRST = 'first';
-    const STATUS_SECOND = 'second';
-
     /**
      * @var string
      */
@@ -26,69 +22,59 @@ class Call implements Persistable
     private $cid;
 
     /**
-     * The cost is the sum of both calls (inbound and outbound).
-     *
-     * @var float
-     */
-    private $cost;
-
-    /**
-     * The max duration between both calls (inbound and outbound).
-     *
-     * @var int
-     */
-    private $duration;
-
-    /**
-     * The min time between both calls (inbound and outbound).
-     *
      * @var int
      */
     private $start;
 
     /**
-     * The max time between both calls (inbound and outbound).
-     *
      * @var int
      */
     private $end;
 
     /**
-     * Used to know if only one call was counted or both (inbound and outbound)
-     *
+     * @var int
+     */
+    private $duration;
+
+    /**
+     * @var float
+     */
+    private $cost;
+
+    /**
      * @var string
      */
-    private $status;
+    private $currency;
 
     /**
      * @param string      $id
      * @param string      $provider
      * @param string      $cid
-     * @param float|null  $cost
-     * @param string|null $status
-     * @param int|null    $duration
      * @param int|null    $start
      * @param int|null    $end
+     * @param int|null    $duration
+     * @param float|null  $cost
+     * @param string|null $currency
      */
     public function __construct(
         $id,
         $provider,
         $cid,
-        $cost = null,
-        $status = null,
-        $duration = null,
         $start = null,
-        $end = null
+        $end = null,
+        $duration = null,
+        $cost = null,
+        $currency = null
     )
     {
         $this->id = $id;
         $this->provider = $provider;
         $this->cid = $cid;
-        $this->cost = $cost ?: 0;
-        $this->status = $status ?: self::STATUS_NONE;
-        $this->duration = $duration ?: 0;
         $this->start = $start ?: 0;
         $this->end = $end ?: 0;
+        $this->duration = $duration ?: 0;
+        $this->cost = $cost ?: 0;
+        $this->currency = $currency ?: null;
     }
 
     /**
@@ -116,30 +102,6 @@ class Call implements Persistable
     }
 
     /**
-     * @return float
-     */
-    public function getCost()
-    {
-        return $this->cost;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
      * @return int
      */
     public function getStart()
@@ -156,6 +118,30 @@ class Call implements Persistable
     }
 
     /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -164,11 +150,11 @@ class Call implements Persistable
             '_id' => $this->id,
             'provider' => $this->provider,
             'cid' => $this->cid,
-            'cost' => $this->cost,
-            'status' => $this->status,
-            'duration' => $this->duration,
             'start' => $this->start,
             'end' => $this->end,
+            'duration' => $this->duration,
+            'cost' => $this->cost,
+            'currency' => $this->currency,
         ];
     }
 
@@ -180,10 +166,10 @@ class Call implements Persistable
         $this->id = $data['_id'];
         $this->provider = $data['provider'];
         $this->cid = $data['cid'];
-        $this->cost = $data['cost'];
-        $this->status = $data['status'];
-        $this->duration = $data['duration'];
         $this->start = $data['start'];
         $this->end = $data['end'];
+        $this->duration = $data['duration'];
+        $this->cost = $data['cost'];
+        $this->currency = $data['currency'];
     }
 }

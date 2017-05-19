@@ -10,7 +10,7 @@ use Cubalider\Voip\Call\ManageStorage;
  *     private: true
  * })
  */
-class AddCall
+class StartCall
 {
     /**
      * @var ManageStorage
@@ -23,29 +23,20 @@ class AddCall
     private $listenIncomingEventServices;
 
     /**
-     * @var TranslateResponse[]
-     */
-    private $translateResponseServices;
-
-    /**
      * @param ManageStorage         $manageStorage
      * @param ListenIncomingEvent[] $listenIncomingEventServices
-     * @param TranslateResponse[]   $translateResponseServices
      *
      * @di\arguments({
      *     listenIncomingEventServices: '#cubalider.voip.listen_incoming_event',
-     *     translateResponseServices:   '#cubalider.voip.nexmo.translate_response'
      * })
      */
     public function __construct(
         ManageStorage $manageStorage,
-        array $listenIncomingEventServices,
-        array $translateResponseServices
+        array $listenIncomingEventServices
     )
     {
         $this->manageStorage = $manageStorage;
         $this->listenIncomingEventServices = $listenIncomingEventServices;
-        $this->translateResponseServices = $translateResponseServices;
     }
 
     /**
@@ -54,9 +45,9 @@ class AddCall
      * @param string      $from
      * @param string|null $id
      *
-     * @return array
+     * @return ConnectResponse|HangupResponse
      */
-    public function add(
+    public function start(
         $provider,
         $cid,
         $from,
@@ -73,14 +64,14 @@ class AddCall
 
         $response = $this->callListeners($from, $id);
 
-        return $this->translateResponse($response, $cid, $from);
+        return $response;
     }
 
     /**
      * @param string $from
      * @param string $id
      *
-     * @return ConnectResponse|null
+     * @return ConnectResponse|HangupResponse
      */
     private function callListeners($from, $id)
     {
@@ -102,25 +93,5 @@ class AddCall
         return $finalResponse;
     }
 
-    /**
-     * @param ConnectResponse|HangupResponse $response
-     * @param string                         $cid
-     * @param string                         $from
-     *
-     * @return array
-     *
-     * @throws UnsupportedResponseException
-     */
-    private function translateResponse($response, $cid, $from)
-    {
-        foreach ($this->translateResponseServices as $translateResponseService) {
-            try {
-                return $translateResponseService->translate($response, $cid, $from);
-            } catch (UnsupportedResponseException $e) {
-                continue;
-            }
-        }
 
-        throw new UnsupportedResponseException();
-    }
 }

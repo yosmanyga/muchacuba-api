@@ -71,7 +71,7 @@ class CompleteCall implements ListenCompletedEvent
     /**
      * {@inheritdoc}
      */
-    public function listen($id, $start, $end, $duration, $cost)
+    public function listen($id, $start, $end, $duration, $cost, $currency)
     {
         if ($cost == 0) {
             // Forget about the call if there was no cost
@@ -98,13 +98,16 @@ class CompleteCall implements ListenCompletedEvent
 
         $business = $this->pickBusiness->pick($call->getBusiness());
 
-        $eurCurrencyExchange = $this->pickCurrency->pickEUR();
         $vefCurrencyExchange = $this->pickCurrency->pickVEF();
 
         // Initial cost
         $systemPurchase = $cost;
-        //
-        $systemPurchase = $systemPurchase / $eurCurrencyExchange;
+
+        if ($currency == 'EUR') {
+            $eurCurrencyExchange = $this->pickCurrency->pickEUR();
+            $systemPurchase = $systemPurchase / $eurCurrencyExchange;
+        }
+
         // Plus profit
         $systemSale = $systemPurchase + $systemPurchase * $this->profitPercent / 100;
         // Round

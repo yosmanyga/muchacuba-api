@@ -24,11 +24,13 @@ class TranslateConnectResponse implements TranslateResponse
         }
 
         return [
+            /* Disabled for now, because it removes the ringing sound
             [
                 'action' => 'talk',
                 'text' => 'Por favor, espere mientras le comunicamos',
                 'voiceName' => 'Conchita'
             ],
+            */
             [
                 'action' => 'connect',
                 'from' => $from,

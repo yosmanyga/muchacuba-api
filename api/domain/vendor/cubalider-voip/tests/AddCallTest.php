@@ -6,7 +6,7 @@ use Cubalider\Voip\Call;
 use Cubalider\Voip\Call\ManageStorage;
 use Cubalider\Voip\ConnectResponse;
 use Cubalider\Voip\ListenIncomingEvent;
-use Cubalider\Voip\AddCall;
+use Cubalider\Voip\StartCall;
 use Cubalider\Voip\TranslateResponse;
 use MongoDB\Collection;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class AddCallTest extends TestCase
     private $translateResponseServices;
 
     /**
-     * @var AddCall
+     * @var StartCall
      */
     private $addCall;
 
@@ -58,7 +58,7 @@ class AddCallTest extends TestCase
                 ->getMock()
         ];
 
-        $this->addCall = new AddCall(
+        $this->addCall = new StartCall(
             $this->manageStorage,
             $this->listenIncomingEventServices,
             $this->translateResponseServices

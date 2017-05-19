@@ -6,10 +6,18 @@ use MongoDB\BSON\Persistable;
 
 class Call implements Persistable, \JsonSerializable
 {
+    const STATUS_STARTED   = 'started';
+    const STATUS_COMPLETED = 'completed';
+
     /**
      * @var string
      */
     private $id;
+
+    /**
+     * @var string
+     */
+    private $status;
 
     /**
      * @var array
@@ -28,13 +36,16 @@ class Call implements Persistable, \JsonSerializable
 
     /**
      * @param string $id
+     * @param string $status
      * @param array  $answerRequest
      */
     public function __construct(
         $id,
+        $status,
         $answerRequest
     ) {
         $this->id = $id;
+        $this->status = $status;
         $this->answerRequest = $answerRequest;
         $this->answerResponse = null;
         $this->events = [];
@@ -46,6 +57,14 @@ class Call implements Persistable, \JsonSerializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -80,6 +99,7 @@ class Call implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
+            'status' => $this->status,
             'answerRequest' => $this->answerRequest,
             'answerResponse' => $this->answerResponse,
             'events' => $this->events,
@@ -92,6 +112,7 @@ class Call implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
+        $this->status = $data['status'];
         $this->answerRequest = $data['answerRequest'];
         $this->answerResponse = $data['answerResponse'];
         $this->events = $data['events'];
@@ -104,6 +125,7 @@ class Call implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
+            'status' => $this->status,
             'answerRequest' => $this->answerRequest,
             'answerResponse' => $this->answerResponse,
             'events' => $this->events,

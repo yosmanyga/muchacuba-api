@@ -2,8 +2,13 @@
 
 namespace Cubalider\Voip\Nexmo;
 
+use Cubalider\Voip\ConnectResponse;
+use Cubalider\Voip\HangupResponse;
 use Cubalider\Voip\Nexmo\Call\ManageStorage;
-use Cubalider\Voip\AddCall as BaseAddCall;
+use Cubalider\Voip\StartCall as BaseStartCall;
+use Cubalider\Voip\TranslateResponse;
+use Cubalider\Voip\UnsupportedResponseException;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * @di\service({
@@ -18,21 +23,33 @@ class AnswerCall
     private $manageStorage;
 
     /**
-     * @var BaseAddCall
+     * @var BaseStartCall
      */
-    private $addCall;
+    private $startCall;
 
     /**
-     * @param ManageStorage $manageStorage
-     * @param BaseAddCall   $addCall
+     * @var TranslateResponse[]
+     */
+    private $translateResponseServices;
+    
+    /**
+     * @param ManageStorage       $manageStorage
+     * @param BaseStartCall       $startCall
+     * @param TranslateResponse[] $translateResponseServices
+     * 
+     * @di\arguments({
+     *     translateResponseServices: '#cubalider.voip.nexmo.translate_response'
+     * })
      */
     public function __construct(
         ManageStorage $manageStorage,
-        BaseAddCall $addCall
+        BaseStartCall $startCall,
+        array $translateResponseServices
     )
     {
         $this->manageStorage = $manageStorage;
-        $this->addCall = $addCall;
+        $this->startCall = $startCall;
+        $this->translateResponseServices = $translateResponseServices;
     }
 
     /**
@@ -46,9 +63,43 @@ class AnswerCall
 
         $this->manageStorage->connect()->insertOne(new Call(
             $payload['conversation_uuid'],
+            Call::STATUS_STARTED,
             $payload
         ));
 
+        $payload = $this->fixVenezuela($payload);
+
+        $response = $this->startCall->start(
+            'nexmo',
+            $payload['conversation_uuid'],
+            $payload['from']
+        );
+
+        $response = $this->translateResponse(
+            $response,
+            $payload['conversation_uuid'],
+            $payload['from']
+        );
+        
+        $this->manageStorage->connect()->updateOne(
+            [
+                '_id' => $payload['conversation_uuid']
+            ],
+            [
+                '$set' => ['answerResponse' => $response]
+            ]
+        );
+
+        return $response;
+    }
+
+    /**
+     * @param array $payload
+     * 
+     * @return array
+     */
+    private function fixVenezuela($payload)
+    {
         /* Nexmo doesn't add country prefix to calls from Venezuela */
         // TODO: https://github.com/giggsey/libphonenumber-for-php
 
@@ -61,22 +112,33 @@ class AnswerCall
             // Add country code
             $payload['from'] = sprintf('+58%s', $payload['from']);
         }
+        
+        return $payload;
+    }
 
-        $response = $this->addCall->add(
-            'nexmo',
-            $payload['conversation_uuid'],
-            $payload['from']
-        );
+    /**
+     * @param ConnectResponse|HangupResponse $response
+     * @param string                         $conversationUuid
+     * @param string                         $from
+     *
+     * @return array
+     *
+     * @throws UnsupportedResponseException
+     */
+    private function translateResponse($response, $conversationUuid, $from)
+    {
+        foreach ($this->translateResponseServices as $translateResponseService) {
+            try {
+                return $translateResponseService->translate(
+                    $response,
+                    $conversationUuid,
+                    $from
+                );
+            } catch (UnsupportedResponseException $e) {
+                continue;
+            }
+        }
 
-        $this->manageStorage->connect()->updateOne(
-            [
-                '_id' => $payload['conversation_uuid']
-            ],
-            [
-                '$set' => ['answerResponse' => $response]
-            ]
-        );
-
-        return $response;
+        throw new UnsupportedResponseException();
     }
 }

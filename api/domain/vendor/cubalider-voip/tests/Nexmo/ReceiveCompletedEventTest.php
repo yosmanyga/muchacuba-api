@@ -7,7 +7,7 @@ use Cubalider\Voip\PickCall;
 use Cubalider\Voip\ListenCompletedEvent;
 use Cubalider\Voip\Nexmo\ReceiveCompletedEvent;
 use Cubalider\Voip\UnsupportedEventException;
-use Cubalider\Voip\UpdateCall;
+use Cubalider\Voip\CompleteCall;
 use PHPUnit\Framework\TestCase;
 
 class ReceiveCompletedEventTest extends TestCase
@@ -18,7 +18,7 @@ class ReceiveCompletedEventTest extends TestCase
     private $pickCall;
 
     /**
-     * @var UpdateCall|\PHPUnit_Framework_MockObject_MockObject
+     * @var CompleteCall|\PHPUnit_Framework_MockObject_MockObject
      */
     private $updateCall;
 
@@ -40,7 +40,7 @@ class ReceiveCompletedEventTest extends TestCase
             ->getMock();
 
         $this->updateCall = $this
-            ->getMockBuilder(UpdateCall::class)
+            ->getMockBuilder(CompleteCall::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -61,7 +61,7 @@ class ReceiveCompletedEventTest extends TestCase
     {
         $id = 'an-internal-id';
 
-        $firstCompletedPayload = [
+        $halfCompletedPayload = [
             'conversation_uuid' => 'a-conversation-uuid',
             'status' => 'completed',
             'direction' => 'inbound',
@@ -71,7 +71,7 @@ class ReceiveCompletedEventTest extends TestCase
             'duration' => 60
         ];
 
-        $secondCompletedPayload = [
+        $completedCompletedPayload = [
             'conversation_uuid' => 'a-conversation-uuid',
             'status' => 'completed',
             'direction' => 'outbound',
@@ -86,12 +86,12 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('pick')
             ->with(
                 $this->equalTo('nexmo'),
-                $this->equalTo($firstCompletedPayload['conversation_uuid'])
+                $this->equalTo($halfCompletedPayload['conversation_uuid'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $firstCompletedPayload['conversation_uuid'],
+                $halfCompletedPayload['conversation_uuid'],
                 Call::STATUS_NONE
             ));
 
@@ -100,20 +100,20 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('updateWithInbound')
             ->with(
                 $this->equalTo($id),
-                $this->equalTo((float) $firstCompletedPayload['price']),
-                $this->equalTo(strtotime($firstCompletedPayload['start_time'])),
-                $this->equalTo(strtotime($firstCompletedPayload['end_time'])),
-                $this->equalTo((int) $firstCompletedPayload['duration'])
+                $this->equalTo((float) $halfCompletedPayload['price']),
+                $this->equalTo(strtotime($halfCompletedPayload['start_time'])),
+                $this->equalTo(strtotime($halfCompletedPayload['end_time'])),
+                $this->equalTo((int) $halfCompletedPayload['duration'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $firstCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'],
-                Call::STATUS_FIRST,
-                (int) $firstCompletedPayload['duration'],
-                strtotime($firstCompletedPayload['start_time']),
-                strtotime($firstCompletedPayload['end_time'])
+                $halfCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'],
+                Call::STATUS_HALF,
+                (int) $halfCompletedPayload['duration'],
+                strtotime($halfCompletedPayload['start_time']),
+                strtotime($halfCompletedPayload['end_time'])
             ));
 
         $this->pickCall
@@ -121,17 +121,17 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('pick')
             ->with(
                 $this->equalTo('nexmo'),
-                $this->equalTo($secondCompletedPayload['conversation_uuid'])
+                $this->equalTo($completedCompletedPayload['conversation_uuid'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $secondCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'],
-                Call::STATUS_FIRST,
-                (int) $firstCompletedPayload['duration'],
-                strtotime($firstCompletedPayload['start_time']),
-                strtotime($firstCompletedPayload['end_time'])
+                $completedCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'],
+                Call::STATUS_HALF,
+                (int) $halfCompletedPayload['duration'],
+                strtotime($halfCompletedPayload['start_time']),
+                strtotime($halfCompletedPayload['end_time'])
             ));
 
         $this->updateCall
@@ -139,17 +139,17 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('updateWithOutbound')
             ->with(
                 $this->equalTo($id),
-                $this->equalTo($secondCompletedPayload['price'])
+                $this->equalTo($completedCompletedPayload['price'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $secondCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'] + (float) $secondCompletedPayload['price'],
-                Call::STATUS_SECOND,
-                (int) $firstCompletedPayload['duration'],
-                strtotime($firstCompletedPayload['start_time']),
-                strtotime($firstCompletedPayload['end_time'])
+                $completedCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'] + (float) $completedCompletedPayload['price'],
+                Call::STATUS_COMPLETED,
+                (int) $halfCompletedPayload['duration'],
+                strtotime($halfCompletedPayload['start_time']),
+                strtotime($halfCompletedPayload['end_time'])
             ));
 
         foreach ($this->listenCompletedEventServices as $listenCompletedEventService) {
@@ -158,22 +158,22 @@ class ReceiveCompletedEventTest extends TestCase
                 ->method('listen')
                 ->with(
                     $this->equalTo($id),
-                    $this->equalTo(strtotime($firstCompletedPayload['start_time'])),
-                    $this->equalTo(strtotime($firstCompletedPayload['end_time'])),
-                    $this->equalTo($firstCompletedPayload['duration']),
-                    $this->equalTo((float) $firstCompletedPayload['price'] + (float) $secondCompletedPayload['price'])
+                    $this->equalTo(strtotime($halfCompletedPayload['start_time'])),
+                    $this->equalTo(strtotime($halfCompletedPayload['end_time'])),
+                    $this->equalTo($halfCompletedPayload['duration']),
+                    $this->equalTo((float) $halfCompletedPayload['price'] + (float) $completedCompletedPayload['price'])
                 );
         }
 
-        $this->receiveCompletedEvent->receive($firstCompletedPayload);
-        $this->receiveCompletedEvent->receive($secondCompletedPayload);
+        $this->receiveCompletedEvent->receive($halfCompletedPayload);
+        $this->receiveCompletedEvent->receive($completedCompletedPayload);
     }
 
     public function testReceiveOutboundInbound()
     {
         $id = 'an-internal-id';
 
-        $firstCompletedPayload = [
+        $halfCompletedPayload = [
             'conversation_uuid' => 'a-conversation-uuid',
             'status' => 'completed',
             'direction' => 'outbound',
@@ -183,7 +183,7 @@ class ReceiveCompletedEventTest extends TestCase
             'duration' => 65
         ];
 
-        $secondCompletedPayload = [
+        $completedCompletedPayload = [
             'conversation_uuid' => 'a-conversation-uuid',
             'status' => 'completed',
             'direction' => 'inbound',
@@ -198,12 +198,12 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('pick')
             ->with(
                 $this->equalTo('nexmo'),
-                $this->equalTo($firstCompletedPayload['conversation_uuid'])
+                $this->equalTo($halfCompletedPayload['conversation_uuid'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $firstCompletedPayload['conversation_uuid'],
+                $halfCompletedPayload['conversation_uuid'],
                 Call::STATUS_NONE
             ));
 
@@ -212,13 +212,13 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('updateWithOutbound')
             ->with(
                 $this->equalTo($id),
-                $this->equalTo($firstCompletedPayload['price'])
+                $this->equalTo($halfCompletedPayload['price'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $firstCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'],
+                $halfCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'],
                 Call::STATUS_NONE
             ));
 
@@ -227,14 +227,14 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('pick')
             ->with(
                 $this->equalTo('nexmo'),
-                $this->equalTo($secondCompletedPayload['conversation_uuid'])
+                $this->equalTo($completedCompletedPayload['conversation_uuid'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $firstCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'],
-                Call::STATUS_FIRST
+                $halfCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'],
+                Call::STATUS_HALF
             ));
 
         $this->updateCall
@@ -242,20 +242,20 @@ class ReceiveCompletedEventTest extends TestCase
             ->method('updateWithInbound')
             ->with(
                 $this->equalTo($id),
-                $this->equalTo((float) $secondCompletedPayload['price']),
-                $this->equalTo(strtotime($secondCompletedPayload['start_time'])),
-                $this->equalTo(strtotime($secondCompletedPayload['end_time'])),
-                $this->equalTo((int) $secondCompletedPayload['duration'])
+                $this->equalTo((float) $completedCompletedPayload['price']),
+                $this->equalTo(strtotime($completedCompletedPayload['start_time'])),
+                $this->equalTo(strtotime($completedCompletedPayload['end_time'])),
+                $this->equalTo((int) $completedCompletedPayload['duration'])
             )
             ->willReturn(new Call(
                 $id,
                 'nexmo',
-                $secondCompletedPayload['conversation_uuid'],
-                (float) $firstCompletedPayload['price'] + (float) $secondCompletedPayload['price'],
-                Call::STATUS_SECOND,
-                (int) $secondCompletedPayload['duration'],
-                strtotime($secondCompletedPayload['start_time']),
-                strtotime($secondCompletedPayload['end_time'])
+                $completedCompletedPayload['conversation_uuid'],
+                (float) $halfCompletedPayload['price'] + (float) $completedCompletedPayload['price'],
+                Call::STATUS_COMPLETED,
+                (int) $completedCompletedPayload['duration'],
+                strtotime($completedCompletedPayload['start_time']),
+                strtotime($completedCompletedPayload['end_time'])
             ));
 
         foreach ($this->listenCompletedEventServices as $listenCompletedEventService) {
@@ -264,15 +264,15 @@ class ReceiveCompletedEventTest extends TestCase
                 ->method('listen')
                 ->with(
                     $this->equalTo($id),
-                    $this->equalTo(strtotime($secondCompletedPayload['start_time'])),
-                    $this->equalTo(strtotime($secondCompletedPayload['end_time'])),
-                    $this->equalTo($secondCompletedPayload['duration']),
-                    $this->equalTo((float) $firstCompletedPayload['price'] + (float) $secondCompletedPayload['price'])
+                    $this->equalTo(strtotime($completedCompletedPayload['start_time'])),
+                    $this->equalTo(strtotime($completedCompletedPayload['end_time'])),
+                    $this->equalTo($completedCompletedPayload['duration']),
+                    $this->equalTo((float) $halfCompletedPayload['price'] + (float) $completedCompletedPayload['price'])
                 );
         }
 
-        $this->receiveCompletedEvent->receive($firstCompletedPayload);
-        $this->receiveCompletedEvent->receive($secondCompletedPayload);
+        $this->receiveCompletedEvent->receive($halfCompletedPayload);
+        $this->receiveCompletedEvent->receive($completedCompletedPayload);
     }
 
     public function testReceiveWithUnsupportedEvent()
