@@ -61,7 +61,7 @@ class MarkInstance
             return;
         }
 
-        $this->manageBalance->decrease($business, $businessPurchase);
+        $this->manageBalance->increase($business, $businessPurchase);
     }
 
     /**
@@ -86,7 +86,7 @@ class MarkInstance
             return;
         }
 
-        $this->manageBalance->increase($business, $businessPurchase);
+        $this->manageBalance->decrease($business, $businessPurchase);
     }
 
     /**
