@@ -120,9 +120,10 @@ export default class ListBusinessRates extends React.Component {
 
                                     if (
                                         this.state.filter !== ''
-                                        && !rate.country
-                                            .toLowerCase()
-                                            .includes(this.state.filter.toLowerCase())
+                                        && !this._normalizeText(rate.country)
+                                            .includes(
+                                                this._normalizeText(this.state.filter)
+                                            )
                                     ) {
                                         return null;
                                     }
@@ -144,6 +145,17 @@ export default class ListBusinessRates extends React.Component {
                 }
             </this.props.layout.type>
         );
+    }
+
+    _normalizeText(text) {
+        return text
+            .replace('á', 'a')
+            .replace('é', 'e')
+            .replace('í', 'i')
+            .replace('ó', 'o')
+            .replace('ú', 'u')
+            .replace('ñ', 'n')
+            .toLowerCase();
     }
 }
 
