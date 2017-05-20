@@ -46,26 +46,23 @@ class PostProcessCalls
         ]);
 
         foreach ($calls as $call) {
-            $completed = false;
+            $priced = false;
             $inbound = [];
             $outbound = [];
 
             foreach ($call->getEvents() as $event) {
-                if (
-                    isset($event['status'])
-                    && $event['status'] == 'completed'
-                ) {
-                    // Less than 30 seconds?
+                if (isset($event['price'])) {
+                    // Less than 10 seconds?
                     if (
                         isset($event['end_time'])
-                        && strtotime($event['end_time']) + 30 > time()
+                        && strtotime($event['end_time']) + 10 > time()
                     ) {
-                        // Ignore this call, let's wait more than 30 seconds,
+                        // Ignore this call, let's wait more than 10 seconds,
                         // to make sure that nexmo sends all events
                         break;
                     }
 
-                    $completed = true;
+                    $priced = true;
 
                     if ($event['direction'] == 'inbound') {
                         $inbound['price'] = isset($event['end_time'])
@@ -95,9 +92,17 @@ class PostProcessCalls
                 }
             }
 
-            if (!$completed) {
-                // TODO
-                // Call ended more than 30 seconds ago, doesn't have completed event
+            if (!$priced) {
+                $this->completeCall->complete(
+                    'nexmo',
+                    $call->getId(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                );
+
                 continue;
             }
 

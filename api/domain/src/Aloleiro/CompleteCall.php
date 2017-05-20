@@ -73,7 +73,7 @@ class CompleteCall implements ListenCompletedEvent
      */
     public function listen($id, $start, $end, $duration, $cost, $currency)
     {
-        if ($cost == 0) {
+        if (!$cost) {
             // Forget about the call if there was no cost
 
             /** @var UpdateResult $result */
