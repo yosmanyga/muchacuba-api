@@ -28,7 +28,7 @@ class Profiles implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {
