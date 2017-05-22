@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Aloleiro;
 
-use Mailgun\Mailgun;
+use Muchacuba\SendEmail as BaseSendEmail;
 
 /**
  * @di\service({
@@ -13,22 +13,16 @@ use Mailgun\Mailgun;
 class SendEmail
 {
     /**
-     * @var string
+     * @var BaseSendEmail
      */
-    private $mailgunApiKey;
+    private $sendEmail;
 
     /**
-     * @param string $mailgunApiKey
-     *
-     * @di\arguments({
-     *     mailgunApiKey: '%mailgun_api_key%'
-     * })
+     * @param BaseSendEmail $sendEmail
      */
-    public function __construct(
-        $mailgunApiKey
-    )
+    public function __construct(BaseSendEmail $sendEmail)
     {
-        $this->mailgunApiKey = $mailgunApiKey;
+        $this->sendEmail = $sendEmail;
     }
 
     /**
@@ -38,16 +32,11 @@ class SendEmail
      */
     public function send($to, $subject, $text)
     {
-        $mg = Mailgun::create($this->mailgunApiKey);
-
-        $mg->messages()->send(
-            'muchacuba.com',
-            [
-                'from' => 'Holapana <sistema@holapana.com>',
-                'to' => $to,
-                'subject' => $subject,
-                'text' => $text
-            ]
+        $this->sendEmail->send(
+            'Holapana <sistema@holapana.com>',
+            $to,
+            $subject,
+            $text
         );
     }
 }
