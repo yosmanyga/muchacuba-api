@@ -46,6 +46,7 @@ class PostProcessCalls
         ]);
 
         foreach ($calls as $call) {
+            $completed = false;
             $inbound = [];
             $outbound = [];
 
@@ -90,8 +91,14 @@ class PostProcessCalls
                             $outbound['end_time'] = isset($event['end_time'])
                                 ? $event['end_time'] : null;
                         }
+
+                        $completed = true;
                     }
                 }
+            }
+
+            if (!$completed) {
+                continue;
             }
 
             $start = null;
