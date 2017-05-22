@@ -62,7 +62,7 @@ class PostProcessCalls
                         ) {
                             // Ignore this call, let's wait more than 10 seconds,
                             // to make sure that nexmo sends all events
-                            break;
+                            continue 2;
                         }
 
                         if ($event['direction'] == 'inbound') {
