@@ -12,20 +12,44 @@ class Provider implements Persistable, \JsonSerializable
     private $id;
 
     /**
-     * @var array
+     * @var string
      */
-    private $payload;
+    private $country;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $logo;
+
+    /**
+     * @var string
+     */
+    private $validation;
 
     /**
      * @param string $id
-     * @param array $payload
+     * @param string $country
+     * @param string $name
+     * @param string $logo
+     * @param string $validation
      */
     public function __construct(
         $id,
-        $payload
+        $country,
+        $name,
+        $logo,
+        $validation
     ) {
         $this->id = $id;
-        $this->payload = $payload;
+        $this->country = $country;
+        $this->name = $name;
+        $this->logo = $logo;
+        $this->validation = $validation;
     }
 
     /**
@@ -37,11 +61,35 @@ class Provider implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getPayload()
+    public function getCountry()
     {
-        return $this->payload;
+        return $this->country;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValidation()
+    {
+        return $this->validation;
     }
 
     /**
@@ -51,7 +99,10 @@ class Provider implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'payload' => $this->payload
+            'country' => $this->country,
+            'name' => $this->name,
+            'logo' => $this->logo,
+            'validation' => $this->validation
         ];
     }
 
@@ -61,7 +112,10 @@ class Provider implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->payload = $data['payload'];
+        $this->country = $data['country'];
+        $this->name = $data['name'];
+        $this->logo = $data['logo'];
+        $this->validation = $data['validation'];
     }
 
     /**
@@ -71,7 +125,10 @@ class Provider implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'payload' => $this->payload
+            'country' => $this->country,
+            'name' => $this->name,
+            'logo' => $this->logo,
+            'validation' => $this->validation
         ];
     }
 }

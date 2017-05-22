@@ -81,6 +81,9 @@ export default class ListProviders extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>Id</TableHeaderColumn>
+                                    <TableHeaderColumn>País</TableHeaderColumn>
+                                    <TableHeaderColumn>Nombre</TableHeaderColumn>
+                                    <TableHeaderColumn>Validation</TableHeaderColumn>
                                     <TableHeaderColumn>Proveedor</TableHeaderColumn>
                                 </TableRow>
                             </TableHeader>
@@ -89,6 +92,9 @@ export default class ListProviders extends React.Component {
                                     return (
                                         <TableRow key={i}>
                                             <TableRowColumn>{provider.id}</TableRowColumn>
+                                            <TableRowColumn>{provider.country}</TableRowColumn>
+                                            <TableRowColumn>{provider.name}</TableRowColumn>
+                                            <TableRowColumn>{provider.validation}</TableRowColumn>
                                             <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(provider.payload, null, 4)}} /></TableRowColumn>
                                         </TableRow>
                                     );
@@ -96,7 +102,7 @@ export default class ListProviders extends React.Component {
                             </TableBody>
                         </Table>
                     ]
-                    : <p>No hay proveedor</p>
+                    : <p>No hay proveedores</p>
                 }
             </this.props.layout.type>
         );

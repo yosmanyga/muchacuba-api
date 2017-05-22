@@ -50,6 +50,7 @@ class QueryApi
     {
         $response = (new Client())->request(
             'POST',
+            //'http://74.208.79.63/redir/index.php',
             'http://www.imoontel.com/yosmy/redir/index.php',
             [
                 'headers' => [
@@ -68,12 +69,20 @@ class QueryApi
                                     $this->apiPassword
                                 ))
                             )
-                        ]
+                        ],
+                        'json' => $params
                     ]
                 ]
             ]
         );
 
-        return json_decode((string) $response->getBody(), true);
+        $response = (string) $response->getBody();
+
+        $jsonResponse = json_decode($response, true);
+        if (!json_last_error()) {
+            $response = $jsonResponse;
+        }
+
+        return $response;
     }
 }

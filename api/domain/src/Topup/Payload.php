@@ -4,8 +4,13 @@ namespace Muchacuba\Topup;
 
 use MongoDB\BSON\Persistable;
 
-class Product implements Persistable, \JsonSerializable
+class Payload implements Persistable, \JsonSerializable
 {
+    const TYPE_PROVIDER = 'provider';
+    const TYPE_PROVIDER_LOGO = 'product-logo';
+    const TYPE_PRODUCT = 'product';
+    const TYPE_PRODUCT_DESCRIPTION = 'product-description';
+
     /**
      * @var string
      */
@@ -14,26 +19,26 @@ class Product implements Persistable, \JsonSerializable
     /**
      * @var string
      */
-    private $provider;
+    private $type;
 
     /**
-     * @var string
+     * @var array
      */
-    private $description;
+    private $data;
 
     /**
      * @param string $id
-     * @param string $provider
-     * @param string $description
+     * @param string $type
+     * @param array  $data
      */
     public function __construct(
         $id,
-        $provider,
-        $description
+        $type,
+        array $data
     ) {
         $this->id = $id;
-        $this->provider = $provider;
-        $this->description = $description;
+        $this->type = $type;
+        $this->data = $data;
     }
 
     /**
@@ -47,17 +52,17 @@ class Product implements Persistable, \JsonSerializable
     /**
      * @return string
      */
-    public function getProvider()
+    public function getType()
     {
-        return $this->provider;
+        return $this->type;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getDescription()
+    public function getData()
     {
-        return $this->description;
+        return $this->data;
     }
 
     /**
@@ -67,8 +72,8 @@ class Product implements Persistable, \JsonSerializable
     {
         return [
             '_id' => $this->id,
-            'provider' => $this->provider,
-            'description' => $this->description
+            'type' => $this->type,
+            'data' => $this->data
         ];
     }
 
@@ -78,8 +83,8 @@ class Product implements Persistable, \JsonSerializable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->provider = $data['provider'];
-        $this->description = $data['description'];
+        $this->type = $data['type'];
+        $this->data = $data['data'];
     }
 
     /**
@@ -89,8 +94,8 @@ class Product implements Persistable, \JsonSerializable
     {
         return [
             'id' => $this->id,
-            'provider' => $this->provider,
-            'description' => $this->description
+            'type' => $this->type,
+            'data' => $this->data,
         ];
     }
 }

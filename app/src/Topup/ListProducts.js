@@ -81,15 +81,31 @@ export default class ListProducts extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>Id</TableHeaderColumn>
-                                    <TableHeaderColumn>Producto</TableHeaderColumn>
+                                    <TableHeaderColumn>Logo</TableHeaderColumn>
+                                    <TableHeaderColumn>Descripción</TableHeaderColumn>
+                                    <TableHeaderColumn>Crudo</TableHeaderColumn>
                                 </TableRow>
                             </TableHeader>
                             <TableBody displayRowCheckbox={false}>
                                 {this.state.products.map((product, i) => {
                                     return (
                                         <TableRow key={i}>
-                                            <TableRowColumn>{product.id}</TableRowColumn>
-                                            <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(product.payload, null, 4)}} /></TableRowColumn>
+                                            <TableRowColumn
+                                                style={{
+                                                    verticalAlign: "top",
+                                                    paddingTop: "10px"
+                                                }}
+                                            >{product.id}</TableRowColumn>
+                                            <TableRowColumn
+                                                style={{
+                                                    verticalAlign: "top",
+                                                    paddingTop: "10px"
+                                                }}
+                                            >
+                                                <img src={"data:image/png;base64," + product.logo} alt={product.id}/>
+                                            </TableRowColumn>
+                                            <TableRowColumn>{product.description}</TableRowColumn>
+                                            <TableRowColumn><pre dangerouslySetInnerHTML={{__html: JSON.stringify(product.raw, null, 4)}} /></TableRowColumn>
                                         </TableRow>
                                     );
                                 })}

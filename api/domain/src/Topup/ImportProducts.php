@@ -2,7 +2,8 @@
 
 namespace Muchacuba\Topup;
 
-use Muchacuba\Topup\Product\ManageStorage;
+use Muchacuba\Topup\Payload\ManageStorage as ManagepayloadStorage;
+use Muchacuba\Topup\Provider\ManageStorage as ManageProductStorage;
 
 /**
  * @di\service({
@@ -12,39 +13,75 @@ use Muchacuba\Topup\Product\ManageStorage;
 class ImportProducts
 {
     /**
-     * @var QueryApi
+     * @var ManagepayloadStorage
      */
-    private $queryApi;
+    private $managepayloadStorage;
 
     /**
-     * @var ManageStorage
+     * @var ManageProductStorage
      */
-    private $manageStorage;
+    private $manageProductStorage;
 
     /**
-     * @param QueryApi      $queryApi
-     * @param ManageStorage $manageStorage
+     * @param ManagepayloadStorage     $managepayloadStorage
+     * @param ManageProductStorage $manageProductStorage
      */
     public function __construct(
-        QueryApi $queryApi,
-        ManageStorage $manageStorage
+        ManagepayloadStorage $managepayloadStorage,
+        ManageProductStorage $manageProductStorage
     )
     {
-        $this->queryApi = $queryApi;
-        $this->manageStorage = $manageStorage;
+        $this->managepayloadStorage = $managepayloadStorage;
+        $this->manageProductStorage = $manageProductStorage;
     }
 
     public function import()
     {
-        $products = $this->queryApi->query(
-            'GET',
-            '/api/EdtsV3/GetProducts'
-        );
+        $this->manageProductStorage->purge();
+
+        $products = $this->managepayloadStorage->connect()->find([
+            'type' => Payload::TYPE_PRODUCT
+        ]);
+
+        $productDescriptions = $this->managepayloadStorage->connect()->find([
+            'type' => Payload::TYPE_PRODUCT_DESCRIPTION
+        ]);
 
         foreach ($products['Items'] as $product) {
-            $this->manageStorage->connect()->insertOne(new Product(
+            $description = null;
+            foreach ($productDescriptions['Items'] as $productDescription) {
+                if ($productDescription['LocalizationKey'] == $product['SkuCode']) {
+                    if (
+                        (
+                            // Spanish?
+                            $productDescription['LanguageCode'] == 'es'
+                            // English and no spanish?
+                            || (
+                                is_null($description)
+                                && $productDescription['LanguageCode'] == 'en'
+                            )
+                        )
+                        // Description not empty?
+                        && (
+                            $productDescription['DisplayText'] != null
+                            && $productDescription['DescriptionMarkdown'] != null
+                        )
+                    ) {
+                        $description = sprintf(
+                            "%s\r\r%s",
+                            $productDescription['DisplayText'],
+                            $productDescription['DescriptionMarkdown']
+                        );
+
+                        break;
+                    }
+                }
+            }
+
+            $this->manageProductStorage->connect()->insertOne(new Product(
                 $product['SkuCode'],
-                $product
+                $product['ProviderCode'],
+                $description
             ));
         }
     }

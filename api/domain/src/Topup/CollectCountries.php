@@ -2,14 +2,14 @@
 
 namespace Muchacuba\Topup;
 
-use Muchacuba\Topup\Provider\ManageStorage;
+use Muchacuba\Topup\Country\ManageStorage;
 
 /**
  * @di\service({
  *     deductible: true
  * })
  */
-class CollectProviders
+class CollectCountries
 {
     /**
      * @var ManageStorage
@@ -27,13 +27,12 @@ class CollectProviders
     }
 
     /**
-     * @return Provider[]
+     * @return Country[]
      */
     public function collect()
     {
-        /** @var Provider[] $providers */
-        $providers = $this->manageStorage->connect()->find();
+        $countries = $this->manageStorage->connect()->find();
 
-        return $providers;
+        return iterator_to_array($countries);
     }
 }

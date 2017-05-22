@@ -2,7 +2,8 @@
 
 namespace Muchacuba\Topup;
 
-use Muchacuba\Topup\Provider\ManageStorage;
+use Muchacuba\Topup\Payload\ManageStorage as ManagePayloadStorage;
+use Muchacuba\Topup\Provider\ManageStorage as ManageProviderStorage;
 
 /**
  * @di\service({
@@ -12,39 +13,58 @@ use Muchacuba\Topup\Provider\ManageStorage;
 class ImportProviders
 {
     /**
-     * @var QueryApi
+     * @var ManagePayloadStorage
      */
-    private $queryApi;
+    private $managePayloadStorage;
 
     /**
-     * @var ManageStorage
+     * @var ManageProviderStorage
      */
-    private $manageStorage;
+    private $manageProviderStorage;
 
     /**
-     * @param QueryApi      $queryApi
-     * @param ManageStorage $manageStorage
+     * @param ManagePayloadStorage  $managePayloadStorage
+     * @param ManageProviderStorage $manageProviderStorage
      */
     public function __construct(
-        QueryApi $queryApi,
-        ManageStorage $manageStorage
+        ManagePayloadStorage $managePayloadStorage,
+        ManageProviderStorage $manageProviderStorage
     )
     {
-        $this->queryApi = $queryApi;
-        $this->manageStorage = $manageStorage;
+        $this->managePayloadStorage = $managePayloadStorage;
+        $this->manageProviderStorage = $manageProviderStorage;
     }
 
     public function import()
     {
-        $providers = $this->queryApi->query(
-            'GET',
-            '/api/EdtsV3/GetProviders'
-        );
+        $this->manageProviderStorage->purge();
 
-        foreach ($providers['Items'] as $provider) {
-            $this->manageStorage->connect()->insertOne(new Provider(
+        /** @var Payload[] $providers */
+        $providers = $this->managePayloadStorage->connect()->find([
+            'type' => Payload::TYPE_PROVIDER
+        ]);
+
+        /** @var Payload[] $providerLogos */
+        $providerLogos = $this->managePayloadStorage->connect()->find([
+            'type' => Payload::TYPE_PROVIDER_LOGO
+        ]);
+
+        foreach ($providers as $provider) {
+            $logo = null;
+            foreach ($providerLogos as $providerLogo) {
+                if ($providerLogo->getData()['ProviderCode'] == $provider->getData()['ProviderCode']) {
+                    $logo = $providerLogo->getData()['Logo'];
+
+                    break;
+                }
+            }
+
+            $this->manageProviderStorage->connect()->insertOne(new Provider(
                 $provider['ProviderCode'],
-                $provider
+                $provider['CountryIso'],
+                $provider['Name'],
+                $logo,
+                $provider['ValidationRegex']
             ));
         }
     }
