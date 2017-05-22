@@ -2,6 +2,8 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Voip\PostProcessCalls;
+
 /**
  * @di\service({
  *     deductible: true
@@ -10,15 +12,25 @@ namespace Muchacuba\Aloleiro;
 class CollectDailyClientCalls
 {
     /**
+     * @var PostProcessCalls
+     */
+    private $postProcessCalls;
+
+    /**
      * @var CollectClientCalls
      */
     private $collectClientCalls;
 
     /**
+     * @param PostProcessCalls   $postProcessCalls
      * @param CollectClientCalls $collectClientCalls
      */
-    public function __construct(CollectClientCalls $collectClientCalls)
+    public function __construct(
+        PostProcessCalls $postProcessCalls,
+        CollectClientCalls $collectClientCalls
+    )
     {
+        $this->postProcessCalls = $postProcessCalls;
         $this->collectClientCalls = $collectClientCalls;
     }
 
@@ -29,6 +41,9 @@ class CollectDailyClientCalls
      */
     public function collect(Business $business)
     {
+        // Shortcut to post process calls without waiting for cron
+        $this->postProcessCalls->postProcess();
+
         $now = new \DateTime("now");
         $from = clone $now;
         $from->modify('today');
