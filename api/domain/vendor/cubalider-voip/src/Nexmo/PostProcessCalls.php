@@ -46,64 +46,52 @@ class PostProcessCalls
         ]);
 
         foreach ($calls as $call) {
-            $priced = false;
             $inbound = [];
             $outbound = [];
 
             foreach ($call->getEvents() as $event) {
-                if (isset($event['price'])) {
-                    // Less than 10 seconds?
+                if (isset($event['status'])) {
                     if (
-                        isset($event['end_time'])
-                        && strtotime($event['end_time']) + 10 > time()
+                        $event['status'] == 'completed'
+                        || $event['status'] == 'failed'
                     ) {
-                        // Ignore this call, let's wait more than 10 seconds,
-                        // to make sure that nexmo sends all events
-                        break;
-                    }
+                        // Less than 10 seconds?
+                        if (
+                            isset($event['end_time'])
+                            && strtotime($event['end_time']) + 10 > time()
+                        ) {
+                            // Ignore this call, let's wait more than 10 seconds,
+                            // to make sure that nexmo sends all events
+                            break;
+                        }
 
-                    $priced = true;
+                        if ($event['direction'] == 'inbound') {
+                            $inbound['price'] = isset($event['price'])
+                                ? $event['price'] : null;
 
-                    if ($event['direction'] == 'inbound') {
-                        $inbound['price'] = isset($event['end_time'])
-                            ? $event['price'] : null;
+                            $inbound['duration'] = isset($event['duration'])
+                                ? $event['duration'] : null;
 
-                        $inbound['duration'] = isset($event['end_time'])
-                            ? $event['duration'] : null;
+                            $inbound['start_time'] = isset($event['start_time'])
+                                ? $event['start_time'] : null;
 
-                        $inbound['start_time'] = isset($event['end_time'])
-                            ? $event['start_time'] : null;
-                        
-                        $inbound['end_time'] = isset($event['end_time'])
-                            ? $event['end_time'] : null;
-                    } else {
-                        $outbound['price'] = isset($event['end_time'])
-                            ? $event['price'] : null;
+                            $inbound['end_time'] = isset($event['end_time'])
+                                ? $event['end_time'] : null;
+                        } else {
+                            $outbound['price'] = isset($event['price'])
+                                ? $event['price'] : null;
 
-                        $outbound['duration'] = isset($event['end_time'])
-                            ? $event['duration'] : null;
+                            $outbound['duration'] = isset($event['duration'])
+                                ? $event['duration'] : null;
 
-                        $outbound['start_time'] = isset($event['end_time'])
-                            ? $event['start_time'] : null;
+                            $outbound['start_time'] = isset($event['start_time'])
+                                ? $event['start_time'] : null;
 
-                        $outbound['end_time'] = isset($event['end_time'])
-                            ? $event['end_time'] : null;
+                            $outbound['end_time'] = isset($event['end_time'])
+                                ? $event['end_time'] : null;
+                        }
                     }
                 }
-            }
-
-            if (!$priced) {
-                $this->completeCall->complete(
-                    'nexmo',
-                    $call->getId(),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                );
-
-                continue;
             }
 
             $start = null;
