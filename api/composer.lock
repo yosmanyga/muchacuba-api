@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
-            "version": "1.17.0",
+            "version": "1.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/algolia/algoliasearch-client-php.git",
-                "reference": "470c5cc20ae879e0a5f692227b416c26d10a6fba"
+                "reference": "77aeb5f3856c1460432e2ccb9df5634c37c0b9f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/470c5cc20ae879e0a5f692227b416c26d10a6fba",
-                "reference": "470c5cc20ae879e0a5f692227b416c26d10a6fba",
+                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/77aeb5f3856c1460432e2ccb9df5634c37c0b9f3",
+                "reference": "77aeb5f3856c1460432e2ccb9df5634c37c0b9f3",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
             ],
             "description": "Algolia Search API Client for PHP",
             "homepage": "https://github.com/algolia/algoliasearch-client-php",
-            "time": "2017-04-03T07:54:23+00:00"
+            "time": "2017-05-22T14:50:28+00:00"
         },
         {
             "name": "aura/cli",
@@ -323,12 +323,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/authentication-profile.git",
-                "reference": "b39c1db2c1b6a57a39f83f62403381b167fb4085"
+                "reference": "7ceef80e37dca74489bc5fd88717e720d679bb1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/authentication-profile/zipball/b39c1db2c1b6a57a39f83f62403381b167fb4085",
-                "reference": "b39c1db2c1b6a57a39f83f62403381b167fb4085",
+                "url": "https://api.github.com/repos/cubalider/authentication-profile/zipball/7ceef80e37dca74489bc5fd88717e720d679bb1e",
+                "reference": "7ceef80e37dca74489bc5fd88717e720d679bb1e",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-04-21 21:58:31"
+            "time": "2017-05-19 16:52:20"
         },
         {
             "name": "cubalider/internet-profile",
@@ -367,12 +367,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/internet-profile.git",
-                "reference": "53a1d6f9fabc98fab3b7917f433f0c4389e91300"
+                "reference": "a3785d710988db85bde540810ccc0340472eafad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/internet-profile/zipball/53a1d6f9fabc98fab3b7917f433f0c4389e91300",
-                "reference": "53a1d6f9fabc98fab3b7917f433f0c4389e91300",
+                "url": "https://api.github.com/repos/cubalider/internet-profile/zipball/a3785d710988db85bde540810ccc0340472eafad",
+                "reference": "a3785d710988db85bde540810ccc0340472eafad",
                 "shasum": ""
             },
             "require": {
@@ -403,7 +403,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-04-21 21:56:26"
+            "time": "2017-05-19 16:51:22"
         },
         {
             "name": "cubalider/privilege-profile",
@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/privilege-profile.git",
-                "reference": "e084293b40d82d86ba1bad34c5412dd42a3085f4"
+                "reference": "d64f3a1a3997ad2d7bc605fb7211202db61f5ba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/e084293b40d82d86ba1bad34c5412dd42a3085f4",
-                "reference": "e084293b40d82d86ba1bad34c5412dd42a3085f4",
+                "url": "https://api.github.com/repos/cubalider/privilege-profile/zipball/d64f3a1a3997ad2d7bc605fb7211202db61f5ba2",
+                "reference": "d64f3a1a3997ad2d7bc605fb7211202db61f5ba2",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                     "email": "mectwork@gmail.com"
                 }
             ],
-            "time": "2017-04-26 22:45:37"
+            "time": "2017-05-19 16:51:48"
         },
         {
             "name": "cubalider/unique",
@@ -458,12 +458,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubalider/unique.git",
-                "reference": "187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d"
+                "reference": "64c418dbd2858ceccf517e5ee2dc16cb6f7e267e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubalider/unique/zipball/187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d",
-                "reference": "187bbf041a52e0f1fd6f80f09dc1e4bcbf528a6d",
+                "url": "https://api.github.com/repos/cubalider/unique/zipball/64c418dbd2858ceccf517e5ee2dc16cb6f7e267e",
+                "reference": "64c418dbd2858ceccf517e5ee2dc16cb6f7e267e",
                 "shasum": ""
             },
             "require": {
@@ -493,7 +493,7 @@
                     "email": "yosmanyga@gmail.com"
                 }
             ],
-            "time": "2017-04-21 22:08:01"
+            "time": "2017-05-19 16:52:41"
         },
         {
             "name": "doctrine/instantiator",
@@ -2651,16 +2651,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "6.1.3",
+            "version": "6.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "824d02024916525a36b2db21847a5ef91db9e4a8"
+                "reference": "42b7f394a8e009516582331b1e03a1aba40175d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/824d02024916525a36b2db21847a5ef91db9e4a8",
-                "reference": "824d02024916525a36b2db21847a5ef91db9e4a8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/42b7f394a8e009516582331b1e03a1aba40175d1",
+                "reference": "42b7f394a8e009516582331b1e03a1aba40175d1",
                 "shasum": ""
             },
             "require": {
@@ -2680,8 +2680,8 @@
                 "phpunit/php-timer": "^1.0.6",
                 "phpunit/phpunit-mock-objects": "^4.0",
                 "sebastian/comparator": "^2.0",
-                "sebastian/diff": "^1.2",
-                "sebastian/environment": "^3.0.1",
+                "sebastian/diff": "^1.4.3 || ^2.0",
+                "sebastian/environment": "^3.0.2",
                 "sebastian/exporter": "^3.1",
                 "sebastian/global-state": "^1.1 || ^2.0",
                 "sebastian/object-enumerator": "^3.0.2",
@@ -2731,7 +2731,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-04-29T10:40:17+00:00"
+            "time": "2017-05-22T07:45:30+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3204,23 +3204,23 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "1.4.1",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/7f066a26a962dbe58ddea9f72a4e82874a3975a4",
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "type": "library",
             "extra": {
@@ -3252,20 +3252,20 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2017-05-22T07:24:03+00:00"
         },
         {
             "name": "sebastian/environment",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "11e7710b7724d42c62249b0e9d3030240398949d"
+                "reference": "02b6b2c7aefe2cdb1185b8dbf8718b0bcedf3ab3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/11e7710b7724d42c62249b0e9d3030240398949d",
-                "reference": "11e7710b7724d42c62249b0e9d3030240398949d",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/02b6b2c7aefe2cdb1185b8dbf8718b0bcedf3ab3",
+                "reference": "02b6b2c7aefe2cdb1185b8dbf8718b0bcedf3ab3",
                 "shasum": ""
             },
             "require": {
@@ -3302,7 +3302,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-04-21T14:40:32+00:00"
+            "time": "2017-05-18T10:10:00+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -4147,12 +4147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yosmanyga/symsonte.git",
-                "reference": "32dc5b020f779e8fb6ead4869f0f4257371d101c"
+                "reference": "9d5a0d59f73ab94becbbb4d7d571834b4bb602db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/32dc5b020f779e8fb6ead4869f0f4257371d101c",
-                "reference": "32dc5b020f779e8fb6ead4869f0f4257371d101c",
+                "url": "https://api.github.com/repos/yosmanyga/symsonte/zipball/9d5a0d59f73ab94becbbb4d7d571834b4bb602db",
+                "reference": "9d5a0d59f73ab94becbbb4d7d571834b4bb602db",
                 "shasum": ""
             },
             "require": {
@@ -4256,7 +4256,7 @@
                 "source": "https://github.com/yosmanyga/symsonte/tree/master",
                 "issues": "https://github.com/yosmanyga/symsonte/issues"
             },
-            "time": "2017-05-17 02:27:47"
+            "time": "2017-05-20 16:01:37"
         },
         {
             "name": "theseer/tokenizer",

@@ -10,6 +10,6 @@ muchacuba.http.server.controller_dispatcher:
         - '@muchacuba.http.server.request.authentication.credential.processor'
         - '@muchacuba.http.server.request.authorization.role.collector'
         - '#symsonte.http.server.convert_parameter'
-        - '@muchacuba.log_exception'
+        - '@muchacuba.http.log_exception'
         - '@symsonte.http.server'
 

@@ -3,14 +3,13 @@
 namespace Muchacuba;
 
 use Muchacuba\Exception\ManageStorage;
-use Symsonte\Http\Server\LogException as BaseLogException;
 
 /**
  * @di\service({
  *     deductible: true
  * })
  */
-class LogException implements BaseLogException
+class LogException
 {
     /**
      * @var ManageStorage
@@ -18,20 +17,27 @@ class LogException implements BaseLogException
     private $manageStorage;
 
     /**
+     * @var SendEmail
+     */
+    private $sendEmail;
+
+    /**
      * @param ManageStorage $manageStorage
+     * @param SendEmail     $sendEmail
      */
     public function __construct(
-        ManageStorage $manageStorage
+        ManageStorage $manageStorage,
+        SendEmail $sendEmail
     ) {
         $this->manageStorage = $manageStorage;
+        $this->sendEmail = $sendEmail;
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Exception|\Throwable $e
      */
-    public function log(
-        \Exception $e
-    ) {
+    public function log($e)
+    {
         $exception = new Exception(
             uniqid(),
             $e->getMessage(),
@@ -41,5 +47,12 @@ class LogException implements BaseLogException
         );
 
         $this->manageStorage->connect()->insertOne($exception);
+
+        $this->sendEmail->send(
+            'Muchacuba <system@muchacuba.com>',
+            'yosmanyga@gmail.com',
+            'Exception',
+            print_r($exception, true)
+        );
     }
 }
