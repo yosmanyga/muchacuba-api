@@ -27,20 +27,32 @@ class PickCall
     }
 
     /**
-     * @param string $provider
-     * @param string $cid
+     * @param string|null $id
+     * @param string|null $provider
+     * @param string|null $cid
      *
      * @return Call
      *
      * @throws NonExistentCallException
      */
-    public function pick($provider, $cid)
+    public function pick($id = null, $provider = null, $cid = null)
     {
+        $criteria = [];
+
+        if (!is_null($id)) {
+            $criteria['_id'] = $id;
+        }
+
+        if (!is_null($provider)) {
+            $criteria['provider'] = $provider;
+        }
+
+        if (!is_null($cid)) {
+            $criteria['cid'] = $cid;
+        }
+
         /** @var Call $call */
-        $call = $this->manageStorage->connect()->findOne([
-            'provider' => $provider,
-            'cid' => $cid,
-        ]);
+        $call = $this->manageStorage->connect()->findOne($criteria);
 
         if (is_null($call)) {
             throw new NonExistentCallException();

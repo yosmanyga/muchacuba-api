@@ -187,7 +187,7 @@ class ProcessEvent
             $payload['callid'],
             strtotime($payload['timestamp']) - $payload['duration'],
             strtotime($payload['timestamp']),
-            isset($payload['duration']) ? $payload['duration'] : null,
+            $payload['duration'],
             $payload['debit']['amount']
         );
 

@@ -266,147 +266,82 @@ export default class ListClientCalls extends React.Component {
                                     <CardText expandable={true}>
                                         {call.instances.length !== 0
                                             ?
-                                            <Table style={{background: "transparent"}}>
-                                                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                                                    <TableRow>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'left',
-                                                                width: "15%"
-                                                            }}
-                                                        >
-                                                            Duración
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'right',
-                                                                width: '15%'
-                                                            }}
-                                                        >
-                                                            Costo
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                width: '20%'
-                                                            }}
-                                                        />
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'left',
-                                                                width: '15%'
-                                                            }}
-                                                        >
-                                                            Día
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'right',
-                                                                width: '10%'
-                                                            }}
-                                                        >
-                                                            Comienzo
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'right',
-                                                                width: '10%'
-                                                            }}
-                                                        >
-                                                            Final
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn
-                                                            style={{
-                                                                textAlign: 'left',
-                                                                width: '15%'
-                                                            }}
-                                                        />
-                                                    </TableRow>
-                                                </TableHeader>
-                                                <TableBody
-                                                    displayRowCheckbox={false}
-                                                    stripedRows={true}
-                                                >
-                                                    {call.instances.map((instance) => {
-                                                        if (instance.duration === null) {
-                                                            return (
-                                                                <TableRow key={instance.id}>
-                                                                    <TableRowColumn>
-                                                                        {this._buildDuration(
+                                                <Table style={{background: "transparent"}}>
+                                                    <TableHeader
+                                                        displaySelectAll={false}
+                                                        adjustForCheckbox={false}
+                                                    >
+                                                        {this._renderHeaderRow(
+                                                            'Duración',
+                                                            'Costo',
+                                                            'Día',
+                                                            'Comienzo',
+                                                            'Final'
+                                                        )}
+                                                    </TableHeader>
+                                                    <TableBody
+                                                        displayRowCheckbox={false}
+                                                        stripedRows={true}
+                                                    >
+                                                        {call.instances.map((instance) => {
+                                                            if (instance.duration === null) {
+                                                                return (
+                                                                    this._renderBodyRow(
+                                                                        instance.id,
+                                                                        this._buildDuration(
                                                                             this.state.timestamp
                                                                             - instance.start
-                                                                        )}
-                                                                    </TableRowColumn>
-                                                                </TableRow>
-                                                            );
-                                                        }
+                                                                        ),
+                                                                        <Button
+                                                                            label="Solicitar"
+                                                                            labelAfterTouchTap="Solicitando"
+                                                                            icon="attach_money"
+                                                                            onTouchTap={() => {
+                                                                                this._connectToServer
+                                                                                    .post('/aloleiro/query-call')
+                                                                                    .auth(this.props.profile.token)
+                                                                                    .send({id: instance.id})
+                                                                                    .end((err, res) => {
+                                                                                        if (err) {
+                                                                                            this.props.onError(
+                                                                                                err.status,
+                                                                                                JSON.parse(err.response.text)
+                                                                                            );
 
-                                                        return (
-                                                            <TableRow key={instance.id}>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'left',
-                                                                        width: "15%"
-                                                                    }}
-                                                                >
-                                                                    {this._buildDuration(instance.duration)}
-                                                                </TableRowColumn>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'right',
-                                                                        width: '15%',
-                                                                        textDecoration: instance.result === 'did_not_speak'
-                                                                            ? 'line-through'
-                                                                            : 'none'
-                                                                    }}
-                                                                >
-                                                                    {instance.charge} Bf
-                                                                </TableRowColumn>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'left',
-                                                                        width: '20%'
-                                                                    }}
-                                                                />
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'left',
-                                                                        width: '15%'
-                                                                    }}
-                                                                >
-                                                                    {MomentTimezone
+                                                                                            return;
+                                                                                        }
+
+                                                                                        this.setState({
+                                                                                            calls: res.body
+                                                                                        });
+                                                                                    });
+                                                                            }}
+                                                                        />,
+                                                                        null,
+                                                                        null,
+                                                                        null
+                                                                    )
+                                                                );
+                                                            }
+
+                                                            return (
+                                                                this._renderBodyRow(
+                                                                    instance.id,
+                                                                    this._buildDuration(instance.duration),
+                                                                    instance.charge + ' Bf',
+                                                                    instance.result,
+                                                                    MomentTimezone
                                                                         .unix(instance.start)
                                                                         .tz('America/Caracas')
-                                                                        .format('dddd D MMMM YYYY')}
-                                                                </TableRowColumn>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'right',
-                                                                        width: '10%'
-                                                                    }}
-                                                                >
-                                                                    {MomentTimezone
+                                                                        .format('dddd D MMMM YYYY'),
+                                                                    MomentTimezone
                                                                         .unix(instance.start)
                                                                         .tz('America/Caracas')
-                                                                        .format('h:mm:ss a')
-                                                                    }
-                                                                </TableRowColumn>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'right',
-                                                                        width: '10%'
-                                                                    }}
-                                                                >
-                                                                    {MomentTimezone
+                                                                        .format('h:mm:ss a'),
+                                                                    MomentTimezone
                                                                         .unix(instance.end)
                                                                         .tz('America/Caracas')
-                                                                        .format('h:mm:ss a')}
-                                                                </TableRowColumn>
-                                                                <TableRowColumn
-                                                                    style={{
-                                                                        textAlign: 'left',
-                                                                        width: '15%'
-                                                                    }}
-                                                                >
+                                                                        .format('h:mm:ss a'),
                                                                     <RadioButtonGroup
                                                                         name="result"
                                                                         defaultSelected={instance.result}
@@ -446,42 +381,28 @@ export default class ListClientCalls extends React.Component {
                                                                             label="No habló"
                                                                         />
                                                                     </RadioButtonGroup>
-                                                                </TableRowColumn>
-                                                            </TableRow>
-                                                        );
-                                                    })}
-                                                    <TableRow>
-                                                        <TableRowColumn
-                                                            style={{
-                                                                textAlign: 'left',
-                                                                width: "15%"
-                                                            }}
-                                                        >
-                                                            <strong>Total</strong>
-                                                        </TableRowColumn>
-                                                        <TableRowColumn
-                                                            style={{
-                                                                textAlign: 'right',
-                                                                width: '25%'
-                                                            }}
-                                                        >
-                                                            <strong>
-                                                                {call.instances.reduce((total, instance) => {
-                                                                    if (instance.result === 'did_not_speak') {
-                                                                        // Don't sum if client did not speak
-                                                                        return total;
-                                                                    }
+                                                                )
+                                                            );
+                                                        })}
+                                                        {this._renderBodyRow(
+                                                            'total',
+                                                            'Total',
+                                                            call.instances.reduce((total, instance) => {
+                                                                if (instance.result === 'did_not_speak') {
+                                                                    // Don't sum if client did not speak
+                                                                    return total;
+                                                                }
 
-                                                                    return total + instance.charge;
-                                                                }, 0)} Bf
-                                                            </strong>
-                                                        </TableRowColumn>
-                                                        <TableRowColumn/>
-                                                    </TableRow>
-                                                </TableBody>
-                                            </Table>
+                                                                return total + instance.charge;
+                                                            }, 0) + ' Bf',
+                                                            null,
+                                                            null,
+                                                            null
+                                                        )}
+                                                    </TableBody>
+                                                </Table>
                                             :
-                                            null
+                                                null
                                         }
                                     </CardText>
                                 </Card>
@@ -558,6 +479,97 @@ export default class ListClientCalls extends React.Component {
                         : null
                 }
             </this.props.layout.type>
+        );
+    }
+
+    _renderHeaderRow(duration, cost, day, start, end) {
+        return this._renderRow(
+            <TableHeaderColumn/>,
+            'header',
+            duration,
+            cost,
+            null,
+            day,
+            start,
+            end,
+            null
+        );
+    }
+
+    _renderBodyRow(id, duration, cost, result, day, start, end, status) {
+        return this._renderRow(
+            <TableRowColumn/>,
+            id,
+            duration,
+            cost,
+            result,
+            day,
+            start,
+            end,
+            status
+        );
+    }
+
+    _renderRow(component, id, duration, cost, result, day, start, end, status) {
+        return (
+            <TableRow key={id}>
+                <component.type
+                    style={{
+                        textAlign: 'left',
+                        width: "15%"
+                    }}
+                >
+                    {duration}
+                </component.type>
+                <component.type
+                    style={{
+                        textAlign: 'right',
+                        width: '15%',
+                        textDecoration: result === 'did_not_speak'
+                            ? 'line-through'
+                            : 'none'
+                    }}
+                >
+                    {cost}
+                </component.type>
+                <component.type
+                    style={{
+                        width: '20%'
+                    }}
+                />
+                <component.type
+                    style={{
+                        textAlign: 'left',
+                        width: '15%'
+                    }}
+                >
+                    {day}
+                </component.type>
+                <component.type
+                    style={{
+                        textAlign: 'right',
+                        width: '10%'
+                    }}
+                >
+                    {start}
+                </component.type>
+                <component.type
+                    style={{
+                        textAlign: 'right',
+                        width: '10%'
+                    }}
+                >
+                    {end}
+                </component.type>
+                <component.type
+                    style={{
+                        textAlign: 'left',
+                        width: '15%'
+                    }}
+                >
+                    {status}
+                </component.type>
+            </TableRow>
         );
     }
 
