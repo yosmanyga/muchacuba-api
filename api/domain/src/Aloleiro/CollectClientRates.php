@@ -40,7 +40,6 @@ class CollectClientRates
             $clientRates[] = new ClientRate(
                 $businessRate->getCountry(),
                 $businessRate->getNetwork(),
-                $businessRate->getPrefix(),
                 $businessRate->isFavorite(),
                 $businessRate->getSale()
             );

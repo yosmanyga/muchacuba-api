@@ -78,7 +78,7 @@ class CollectSystemRates
 
         $systemRates = [];
         foreach ($rates as $rate) {
-            $isFavorite = in_array($rate->getCountryTranslation(), $favorites);
+            $isFavorite = in_array($rate->getCountry(), $favorites);
 
             if ($favorite == true && $isFavorite == false) {
                 continue;
@@ -92,9 +92,8 @@ class CollectSystemRates
             $sale = round($sale, 4);
 
             $systemRates[] = new SystemRate(
-                $rate->getCountryTranslation(),
+                $rate->getCountry(),
                 $rate->getNetwork(),
-                $rate->getPrefix(),
                 $isFavorite,
                 $rate->getPrice(),
                 $sale

@@ -112,7 +112,6 @@ export default class ListClientRates extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>País</TableHeaderColumn>
-                                    <TableHeaderColumn>Prefijo</TableHeaderColumn>
                                     <TableHeaderColumn>Red</TableHeaderColumn>
                                     <TableHeaderColumn>Precio x minuto</TableHeaderColumn>
                                 </TableRow>
@@ -136,7 +135,6 @@ export default class ListClientRates extends React.Component {
                                     return (
                                         <TableRow key={i}>
                                             <TableRowColumn>{rate.country}</TableRowColumn>
-                                            <TableRowColumn>{rate.prefix}</TableRowColumn>
                                             <TableRowColumn>{rate.network}</TableRowColumn>
                                             <TableRowColumn>{rate.sale} Bf</TableRowColumn>
                                         </TableRow>

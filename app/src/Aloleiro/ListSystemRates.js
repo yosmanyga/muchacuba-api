@@ -94,7 +94,6 @@ export default class ListSystemRates extends React.Component {
                             >
                                 <TableRow>
                                     <TableHeaderColumn>País</TableHeaderColumn>
-                                    <TableHeaderColumn>Prefijo</TableHeaderColumn>
                                     <TableHeaderColumn>Red</TableHeaderColumn>
                                     <TableHeaderColumn>Precio de compra</TableHeaderColumn>
                                     <TableHeaderColumn>Precio de venta</TableHeaderColumn>
@@ -109,7 +108,6 @@ export default class ListSystemRates extends React.Component {
                                     return (
                                         <TableRow key={i}>
                                             <TableRowColumn>{rate.country}</TableRowColumn>
-                                            <TableRowColumn>{rate.prefix}</TableRowColumn>
                                             <TableRowColumn>{rate.network}</TableRowColumn>
                                             <TableRowColumn>{rate.purchase} USD</TableRowColumn>
                                             <TableRowColumn>{rate.sale} USD</TableRowColumn>

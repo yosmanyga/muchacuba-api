@@ -35,7 +35,7 @@ class ProcessEvent
     /**
      * @http\resolution({method: "POST", path: "/aloleiro/provider/nexmo/process-event"})
      */
-    public function create()
+    public function process()
     {
         /** @var array $post */
         $post = $this->server->resolveBody();

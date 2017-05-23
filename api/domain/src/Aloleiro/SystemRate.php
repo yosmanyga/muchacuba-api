@@ -15,11 +15,6 @@ class SystemRate implements \JsonSerializable
     private $network;
 
     /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
      * @var bool
      */
     private $favorite;
@@ -37,7 +32,6 @@ class SystemRate implements \JsonSerializable
     /**
      * @param string $country
      * @param string $network
-     * @param string $prefix
      * @param bool   $favorite
      * @param float  $purchase
      * @param float  $sale
@@ -45,7 +39,6 @@ class SystemRate implements \JsonSerializable
     public function __construct(
         $country,
         $network,
-        $prefix,
         $favorite,
         $purchase,
         $sale
@@ -53,7 +46,6 @@ class SystemRate implements \JsonSerializable
     {
         $this->country = $country;
         $this->network = $network;
-        $this->prefix = $prefix;
         $this->favorite = $favorite;
         $this->purchase = $purchase;
         $this->sale = $sale;
@@ -73,14 +65,6 @@ class SystemRate implements \JsonSerializable
     public function getNetwork()
     {
         return $this->network;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
     }
 
     /**
@@ -115,7 +99,6 @@ class SystemRate implements \JsonSerializable
         return [
             'country' => $this->country,
             'network' => $this->network,
-            'prefix' => $this->prefix,
             'favorite' => $this->favorite,
             'purchase' => $this->purchase,
             'sale' => $this->sale,

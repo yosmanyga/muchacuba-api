@@ -15,11 +15,6 @@ class ClientRate implements \JsonSerializable
     private $network;
 
     /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
      * @var bool
      */
     private $favorite;
@@ -32,21 +27,18 @@ class ClientRate implements \JsonSerializable
     /**
      * @param string $country
      * @param string $network
-     * @param string $prefix
      * @param bool   $favorite
      * @param float  $sale
      */
     public function __construct(
         $country,
         $network,
-        $prefix,
         $favorite,
         $sale
     )
     {
         $this->country = $country;
         $this->network = $network;
-        $this->prefix = $prefix;
         $this->favorite = $favorite;
         $this->sale = $sale;
     }
@@ -65,14 +57,6 @@ class ClientRate implements \JsonSerializable
     public function getNetwork()
     {
         return $this->network;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
     }
 
     /**
@@ -99,7 +83,6 @@ class ClientRate implements \JsonSerializable
         return [
             'country' => $this->country,
             'network' => $this->network,
-            'prefix' => $this->prefix,
             'favorite' => $this->favorite,
             'sale' => $this->sale,
         ];

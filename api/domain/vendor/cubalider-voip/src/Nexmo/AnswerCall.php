@@ -6,9 +6,7 @@ use Cubalider\Voip\ConnectResponse;
 use Cubalider\Voip\HangupResponse;
 use Cubalider\Voip\Nexmo\Call\ManageStorage;
 use Cubalider\Voip\StartCall as BaseStartCall;
-use Cubalider\Voip\TranslateResponse;
 use Cubalider\Voip\UnsupportedResponseException;
-use MongoDB\BSON\UTCDateTime;
 
 /**
  * @di\service({
@@ -28,34 +26,40 @@ class AnswerCall
     private $startCall;
 
     /**
-     * @var TranslateResponse[]
+     * @var TranslateConnectResponse
      */
-    private $translateResponseServices;
-    
+    private $translateConnectResponse;
+
     /**
-     * @param ManageStorage       $manageStorage
-     * @param BaseStartCall       $startCall
-     * @param TranslateResponse[] $translateResponseServices
-     * 
-     * @di\arguments({
-     *     translateResponseServices: '#cubalider.voip.nexmo.translate_response'
-     * })
+     * @var TranslateHangupResponse
+     */
+    private $translateHangupResponse;
+
+    /**
+     * @param ManageStorage            $manageStorage
+     * @param BaseStartCall            $startCall
+     * @param TranslateConnectResponse $translateConnectResponse
+     * @param TranslateHangupResponse  $translateHangupResponse
      */
     public function __construct(
         ManageStorage $manageStorage,
         BaseStartCall $startCall,
-        array $translateResponseServices
+        TranslateConnectResponse $translateConnectResponse,
+        TranslateHangupResponse $translateHangupResponse
     )
     {
         $this->manageStorage = $manageStorage;
         $this->startCall = $startCall;
-        $this->translateResponseServices = $translateResponseServices;
+        $this->translateConnectResponse = $translateConnectResponse;
+        $this->translateHangupResponse = $translateHangupResponse;
     }
 
     /**
      * @param array $payload
      *
      * @return array
+     *
+     * @throws UnsupportedResponseException
      */
     public function answer($payload)
     {
@@ -75,12 +79,17 @@ class AnswerCall
             $payload['from']
         );
 
-        $response = $this->translateResponse(
-            $response,
-            $payload['conversation_uuid'],
-            $payload['from']
-        );
-        
+        if ($response instanceof ConnectResponse) {
+            $response = $this->translateConnectResponse->translate(
+                $response,
+                $payload['from']
+            );
+        } elseif ($response instanceof HangupResponse) {
+            $response = $this->translateHangupResponse->translate();
+        } else {
+            throw new UnsupportedResponseException();
+        }
+
         $this->manageStorage->connect()->updateOne(
             [
                 '_id' => $payload['conversation_uuid']
@@ -114,31 +123,5 @@ class AnswerCall
         }
         
         return $payload;
-    }
-
-    /**
-     * @param ConnectResponse|HangupResponse $response
-     * @param string                         $conversationUuid
-     * @param string                         $from
-     *
-     * @return array
-     *
-     * @throws UnsupportedResponseException
-     */
-    private function translateResponse($response, $conversationUuid, $from)
-    {
-        foreach ($this->translateResponseServices as $translateResponseService) {
-            try {
-                return $translateResponseService->translate(
-                    $response,
-                    $conversationUuid,
-                    $from
-                );
-            } catch (UnsupportedResponseException $e) {
-                continue;
-            }
-        }
-
-        throw new UnsupportedResponseException();
     }
 }

@@ -14,22 +14,12 @@ class Rate implements Persistable
     /**
      * @var string
      */
-    private $countryName;
-
-    /**
-     * @var string
-     */
-    private $countryTranslation;
+    private $country;
 
     /**
      * @var string
      */
     private $network;
-
-    /**
-     * @var int
-     */
-    private $prefix;
 
     /**
      * @var string
@@ -38,26 +28,20 @@ class Rate implements Persistable
 
     /**
      * @param string $id
-     * @param string $countryName
-     * @param string $countryTranslation
+     * @param string $country
      * @param string $network
-     * @param int    $prefix
-     * @param string  $price
+     * @param string $price
      */
     public function __construct(
         $id,
-        $countryName,
-        $countryTranslation,
+        $country,
         $network,
-        $prefix,
         $price
     )
     {
         $this->id = $id;
-        $this->countryName = $countryName;
-        $this->countryTranslation = $countryTranslation;
+        $this->country = $country;
         $this->network = $network;
-        $this->prefix = $prefix;
         $this->price = $price;
     }
 
@@ -72,17 +56,9 @@ class Rate implements Persistable
     /**
      * @return string
      */
-    public function getCountryName()
+    public function getCountry()
     {
-        return $this->countryName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountryTranslation()
-    {
-        return $this->countryTranslation;
+        return $this->country;
     }
 
     /**
@@ -91,14 +67,6 @@ class Rate implements Persistable
     public function getNetwork()
     {
         return $this->network;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
     }
 
     /**
@@ -116,10 +84,8 @@ class Rate implements Persistable
     {
         return [
             '_id' => $this->id,
-            'countryName' => $this->countryName,
-            'countryTranslation' => $this->countryTranslation,
+            'country' => $this->country,
             'network' => $this->network,
-            'prefix' => $this->prefix,
             'price' => $this->price,
         ];
     }
@@ -130,10 +96,8 @@ class Rate implements Persistable
     public function bsonUnserialize(array $data)
     {
         $this->id = $data['_id'];
-        $this->countryName = $data['countryName'];
-        $this->countryTranslation = $data['countryTranslation'];
+        $this->country = $data['country'];
         $this->network = $data['network'];
-        $this->prefix = $data['prefix'];
         $this->price = $data['price'];
     }
 }

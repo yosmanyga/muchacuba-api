@@ -27,26 +27,20 @@ class AddRate
     }
 
     /**
-     * @param string $countryName
-     * @param string $countryTranslation
+     * @param string $country
      * @param string $network
-     * @param string $prefix
      * @param string $price
      */
     public function add(
-        $countryName,
-        $countryTranslation,
+        $country,
         $network,
-        $prefix,
         $price
     )
     {
         $this->manageStorage->connect()->insertOne(new Rate(
             uniqid(),
-            $countryName,
-            $countryTranslation,
+            $country,
             $network,
-            $prefix,
             $price
         ));
     }

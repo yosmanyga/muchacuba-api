@@ -2,55 +2,49 @@
 
 namespace Cubalider\Voip\Nexmo;
 
-use Cubalider\Voip\HangupResponse;
-use Cubalider\Voip\TranslateResponse;
-use Cubalider\Voip\UnsupportedResponseException;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
+//use Lcobucci\JWT\Builder;
+//use Lcobucci\JWT\Signer\Key;
+//use Lcobucci\JWT\Signer\Rsa\Sha256;
+
+use Cubalider\Voip\ConnectResponse;
 
 /**
  * @di\service({
- *     deductible: true,
- *     tags: ['cubalider.voip.nexmo.translate_response']
+ *     deductible: true
  * })
  */
-class TranslateHangupResponse implements TranslateResponse
+class TranslateHangupResponse
 {
-    /**
-     * @var string
-     */
-    private $privateKey;
+    //    /**
+//     * @var string
+//     */
+//    private $privateKey;
+//
+//    /**
+//     * @var string
+//     */
+//    private $applicationId;
+//
+//    /**
+//     * @param string $privateKey
+//     * @param string $applicationId
+//     *
+//     * @di\arguments({
+//     *     privateKey:    "%nexmo_private_key%",
+//     *     applicationId: "%nexmo_application_id%"
+//     * })
+//     */
+//    public function __construct($privateKey, $applicationId)
+//    {
+//        $this->privateKey = $privateKey;
+//        $this->applicationId = $applicationId;
+//    }
 
     /**
-     * @var string
+     * @return array
      */
-    private $applicationId;
-
-    /**
-     * @param string $privateKey
-     * @param string $applicationId
-     *
-     * @di\arguments({
-     *     privateKey:    "%nexmo_private_key%",
-     *     applicationId: "%nexmo_application_id%"
-     * })
-     */
-    public function __construct($privateKey, $applicationId)
+    public function translate()
     {
-        $this->privateKey = $privateKey;
-        $this->applicationId = $applicationId;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function translate($response, $cid, $from)
-    {
-        if (!$response instanceof HangupResponse) {
-            throw new UnsupportedResponseException();
-        }
-
         return [
             [
                 'action' => 'talk',
@@ -79,19 +73,19 @@ class TranslateHangupResponse implements TranslateResponse
 //        });
     }
 
-    private function generateJWT()
-    {
-        date_default_timezone_set('UTC');
-
-        $jwt = (new Builder())
-            ->setIssuedAt(time() - date('Z'))
-            ->set('application_id', $this->applicationId)
-            ->setId( base64_encode(mt_rand()), true)
-            ->sign(
-                new Sha256(),
-                new Key($this->privateKey))
-            ->getToken();
-
-        return $jwt;
-    }
+//    private function generateJWT()
+//    {
+//        date_default_timezone_set('UTC');
+//
+//        $jwt = (new Builder())
+//            ->setIssuedAt(time() - date('Z'))
+//            ->set('application_id', $this->applicationId)
+//            ->setId( base64_encode(mt_rand()), true)
+//            ->sign(
+//                new Sha256(),
+//                new Key($this->privateKey))
+//            ->getToken();
+//
+//        return $jwt;
+//    }
 }

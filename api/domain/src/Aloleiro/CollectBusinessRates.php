@@ -63,7 +63,6 @@ class CollectBusinessRates
             $businessRates[] = new BusinessRate(
                 $rate->getCountry(),
                 $rate->getNetwork(),
-                $rate->getPrefix(),
                 $rate->isFavorite(),
                 $purchase,
                 $sale

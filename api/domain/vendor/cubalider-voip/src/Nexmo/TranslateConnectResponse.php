@@ -3,26 +3,22 @@
 namespace Cubalider\Voip\Nexmo;
 
 use Cubalider\Voip\ConnectResponse;
-use Cubalider\Voip\TranslateResponse;
-use Cubalider\Voip\UnsupportedResponseException;
 
 /**
  * @di\service({
- *     deductible: true,
- *     tags: ['cubalider.voip.nexmo.translate_response']
+ *     deductible: true
  * })
  */
-class TranslateConnectResponse implements TranslateResponse
+class TranslateConnectResponse
 {
     /**
-     * {@inheritdoc}
+     * @param ConnectResponse $response
+     * @param string          $from
+     *
+     * @return array
      */
-    public function translate($response, $cid, $from)
+    public function translate(ConnectResponse $response, $from)
     {
-        if (!$response instanceof ConnectResponse) {
-            throw new UnsupportedResponseException();
-        }
-
         return [
             /* Disabled for now, because it removes the ringing sound
             [

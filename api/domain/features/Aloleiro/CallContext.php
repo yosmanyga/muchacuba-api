@@ -231,11 +231,6 @@ class CallContext implements BaseContext, ContainerAwareContext
         if (!$matcher->match(
             $this->data['expected'],
             [
-//                [
-//                    'action' => 'talk',
-//                    'text' => 'Por favor, espere mientras le comunicamos',
-//                    'voiceName' => 'Conchita'
-//                ],
                 [
                     'action' => 'connect',
                     'from' => $call->getFrom(),

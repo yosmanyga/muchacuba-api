@@ -2,6 +2,10 @@
 
 namespace Cubalider\Voip\Nexmo;
 
+use Cubalider\Voip\Rate;
+use Cubalider\Voip\Rate\TranslateCountry;
+use Cubalider\Voip\Rate\TranslateNetwork;
+
 /**
  * @di\service({
  *     deductible: true
@@ -10,6 +14,30 @@ namespace Cubalider\Voip\Nexmo;
 class LoadRates
 {
     /**
+     * @var TranslateCountry
+     */
+    private $translateCountry;
+
+    /**
+     * @var TranslateNetwork
+     */
+    private $translateNetwork;
+
+    /**
+     * @param TranslateCountry $translateCountry
+     * @param TranslateNetwork $translateNetwork
+     */
+    public function __construct(
+        TranslateCountry $translateCountry,
+        TranslateNetwork $translateNetwork
+    )
+    {
+        $this->translateCountry = $translateCountry;
+        $this->translateNetwork = $translateNetwork;
+    }
+
+    /**
+     * @return Rate[]
      */
     public function load()
     {
@@ -33,15 +61,16 @@ class LoadRates
             /** @var \PHPExcel_Worksheet_RowCellIterator $rowIterator */
             $rowIterator = $row->getCellIterator();
 
-            $rates[] = [
-                'countryCode'  => (string) $rowIterator->seek('A')->current()->getValue(),
-                'countryName'  => (string) $rowIterator->seek('B')->current()->getValue(),
-                'network'      => (string) $rowIterator->seek('C')->current()->getValue(),
-                'networkAlias' => (string) $rowIterator->seek('D')->current()->getValue(),
-                'networkName'  => (string) $rowIterator->seek('E')->current()->getValue(),
-                'prefix'       => (string) $rowIterator->seek('F')->current()->getValue(),
-                'price'        => (string) $rowIterator->seek('G')->current()->getValue(),
-            ];
+            $rates[] = new Rate(
+                $this->translateCountry->translate(
+                    (string) $rowIterator->seek('B')->current()->getValue()
+                ),
+                $this->translateNetwork->translate(
+                    (string) $rowIterator->seek('E')->current()->getValue()
+                ),
+                (string) $rowIterator->seek('G')->current()->getValue(),
+                'EUR'
+            );
         }
 
         unlink($excel);

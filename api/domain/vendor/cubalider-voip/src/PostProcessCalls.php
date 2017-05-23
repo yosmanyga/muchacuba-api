@@ -3,6 +3,7 @@
 namespace Cubalider\Voip;
 
 use Cubalider\Voip\Nexmo\PostProcessCalls as PostProcessNexmoCalls;
+use Cubalider\Voip\Sinch\PostProcessCalls as PostProcessSinchCalls;
 
 /**
  * @di\service({
@@ -17,13 +18,21 @@ class PostProcessCalls
     private $postProcessNexmoCalls;
 
     /**
+     * @var PostProcessSinchCalls
+     */
+    private $postProcessSinchCalls;
+
+    /**
      * @param PostProcessNexmoCalls $postProcessNexmoCalls
+     * @param PostProcessSinchCalls $postProcessSinchCalls
      */
     public function __construct(
-        PostProcessNexmoCalls $postProcessNexmoCalls
+        PostProcessNexmoCalls $postProcessNexmoCalls,
+        PostProcessSinchCalls $postProcessSinchCalls
     )
     {
         $this->postProcessNexmoCalls = $postProcessNexmoCalls;
+        $this->postProcessSinchCalls = $postProcessSinchCalls;
     }
 
     /**
@@ -32,5 +41,6 @@ class PostProcessCalls
     public function postProcess()
     {
         $this->postProcessNexmoCalls->postProcess();
+        $this->postProcessSinchCalls->postProcess();
     }
 }
