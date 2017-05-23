@@ -10,7 +10,7 @@ use Muchacuba\Topup\Provider\ManageStorage as ManageProviderStorage;
  *     deductible: true
  * })
  */
-class ImportProviders
+class LoadProviders
 {
     /**
      * @var ManagePayloadStorage
@@ -35,19 +35,19 @@ class ImportProviders
         $this->manageProviderStorage = $manageProviderStorage;
     }
 
-    public function import()
+    public function load()
     {
         $this->manageProviderStorage->purge();
 
         /** @var Payload[] $providers */
-        $providers = $this->managePayloadStorage->connect()->find([
+        $providers = iterator_to_array($this->managePayloadStorage->connect()->find([
             'type' => Payload::TYPE_PROVIDER
-        ]);
+        ]));
 
         /** @var Payload[] $providerLogos */
-        $providerLogos = $this->managePayloadStorage->connect()->find([
+        $providerLogos = iterator_to_array($this->managePayloadStorage->connect()->find([
             'type' => Payload::TYPE_PROVIDER_LOGO
-        ]);
+        ]));
 
         foreach ($providers as $provider) {
             $logo = null;
@@ -60,11 +60,11 @@ class ImportProviders
             }
 
             $this->manageProviderStorage->connect()->insertOne(new Provider(
-                $provider['ProviderCode'],
-                $provider['CountryIso'],
-                $provider['Name'],
+                $provider->getData()['ProviderCode'],
+                $provider->getData()['CountryIso'],
+                $provider->getData()['Name'],
                 $logo,
-                $provider['ValidationRegex']
+                $provider->getData()['ValidationRegex']
             ));
         }
     }
