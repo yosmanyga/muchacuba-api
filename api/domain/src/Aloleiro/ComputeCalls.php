@@ -13,9 +13,9 @@ use Muchacuba\Aloleiro\Call\ManageStorage;
  */
 class ComputeCalls
 {
-    const GROUP_BY_DAY = 1;
-    const GROUP_BY_MONTH = 2;
-    const GROUP_BY_YEAR = 3;
+    const GROUP_BY_DAY = 'by-day';
+    const GROUP_BY_MONTH = 'by-month';
+    const GROUP_BY_YEAR = 'by-year';
 
     /**
      * @var ManageStorage

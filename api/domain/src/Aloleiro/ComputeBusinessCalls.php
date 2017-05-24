@@ -28,34 +28,67 @@ class ComputeBusinessCalls
      * @param Business $business
      * @param int      $from
      * @param int      $to
+     * @param string   $by
      *
      * @return array
      *
      * @throws \Exception
      */
-    public function compute(Business $business, $from, $to)
+    public function compute(
+        Business $business,
+        $from,
+        $to,
+        $by
+    )
     {
         $stats = $this->computeCalls->compute(
             $business,
             $from,
             $to,
-            ComputeCalls::GROUP_BY_DAY
+            $by
         );
 
-        $monthlyBusinessStats = [];
-        foreach ($stats as $stat) {
-            $monthlyBusinessStats[] = [
-                'duration' => $stat['duration'],
-                'purchase' => $stat['businessPurchase'],
-                'sale' => $stat['businessSale'],
-                'profit' => $stat['businessProfit'],
-                'total' => $stat['total'],
-                'year' => $stat['year'],
-                'month' => $stat['month'],
-                'day' => $stat['day'],
-            ];
+        if ($by == ComputeCalls::GROUP_BY_DAY) {
+            $businessStats = [];
+            foreach ($stats as $stat) {
+                $businessStats[] = [
+                    'duration' => $stat['duration'],
+                    'purchase' => $stat['businessPurchase'],
+                    'sale' => $stat['businessSale'],
+                    'profit' => $stat['businessProfit'],
+                    'total' => $stat['total'],
+                    'year' => $stat['year'],
+                    'month' => $stat['month'],
+                    'day' => $stat['day'],
+                ];
+            }
+        } elseif ($by == ComputeCalls::GROUP_BY_MONTH) {
+            $businessStats = [];
+            foreach ($stats as $stat) {
+                $businessStats[] = [
+                    'duration' => $stat['duration'],
+                    'purchase' => $stat['businessPurchase'],
+                    'sale' => $stat['businessSale'],
+                    'profit' => $stat['businessProfit'],
+                    'total' => $stat['total'],
+                    'year' => $stat['year'],
+                    'month' => $stat['month']
+                ];
+            }
+        } else {
+            $businessStats = [];
+            foreach ($stats as $stat) {
+                $businessStats[] = [
+                    'duration' => $stat['duration'],
+                    'purchase' => $stat['businessPurchase'],
+                    'sale' => $stat['businessSale'],
+                    'profit' => $stat['businessProfit'],
+                    'total' => $stat['total'],
+                    'year' => $stat['year']
+                ];
+            }
         }
 
-        return $monthlyBusinessStats;
+        return $businessStats;
     }
 }

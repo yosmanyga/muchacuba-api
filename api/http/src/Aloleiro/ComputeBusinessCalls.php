@@ -44,18 +44,20 @@ class ComputeBusinessCalls
 
     /**
      * @http\authorization({roles: ["aloleiro_owner"]})
-     * @http\resolution({method: "GET", path: "/aloleiro/compute-business-calls/{from}/{to}"})
+     * @http\resolution({method: "GET", path: "/aloleiro/compute-business-calls/{from}/{to}/{by}"})
      *
      * @param Business $business
      * @param string $from
      * @param string $to
+     * @param string $by
      */
-    public function compute(Business $business, $from, $to)
+    public function compute(Business $business, $from, $to, $by)
     {
         $stats = $this->computeBusinessCalls->compute(
             $business,
             $from, 
-            $to
+            $to,
+            $by
         );
 
         $this->server->sendResponse($stats);

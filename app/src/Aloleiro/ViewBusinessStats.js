@@ -1,22 +1,14 @@
 import React from 'react';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import {purple900 as totalColor} from 'material-ui/styles/colors';
 import {green900 as profitColor} from 'material-ui/styles/colors';
-import {
-    CartesianGrid,
-    Legend,
-    LineChart,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
+import {yellow900 as saleColor} from 'material-ui/styles/colors';
+import {purple900 as totalColor} from 'material-ui/styles/colors';
 import MomentTimezone from 'moment-timezone';
 import {} from 'moment/locale/es';
 
 import ConnectToServer from '../ConnectToServer';
 import Wait from '../Wait';
+import Chart from './Chart';
 
 export default class ViewBusinessStats extends React.Component {
     static propTypes = {
@@ -58,7 +50,7 @@ export default class ViewBusinessStats extends React.Component {
             }
 
             if (this.state.stats === null) {
-                let from, to;
+                let from, to, by;
 
                 if (this.state.interval === 'last_month') {
                     from = MomentTimezone()
@@ -71,6 +63,7 @@ export default class ViewBusinessStats extends React.Component {
                         .endOf('month')
                         .subtract(1, 'month')
                         .unix();
+                    by = 'by-day';
                 }
 
                 if (this.state.interval === 'current_month') {
@@ -82,20 +75,35 @@ export default class ViewBusinessStats extends React.Component {
                         .tz('America/Caracas')
                         .endOf('month')
                         .unix();
+                    by = 'by-day';
                 }
 
-                this._collectStats(from, to);
+                if (this.state.interval === 'current_year') {
+                    from = MomentTimezone()
+                        .tz('America/Caracas')
+                        .startOf('year')
+                        .unix();
+                    to = MomentTimezone()
+                        .tz('America/Caracas')
+                        .endOf('year')
+                        .unix();
+                    by = 'by-month';
+                }
+
+                this._collectStats(from, to, by);
             }
         }
     }
 
-    _collectStats(from, to) {
+    _collectStats(from, to, by) {
         this._connectToServer
             .get(
                 '/aloleiro/compute-business-calls/'
                 + from
                 + '/'
                 + to
+                + '/'
+                + by
             )
             .auth(this.props.profile.token)
             .send()
@@ -141,6 +149,11 @@ export default class ViewBusinessStats extends React.Component {
                         label="Mes actual"
                         style={{width: "150px"}}
                     />
+                    <RadioButton
+                        value="current_year"
+                        label="Año actual"
+                        style={{width: "150px"}}
+                    />
                 </RadioButtonGroup>
                 {this.state.stats === null
                     ? <Wait/>
@@ -153,77 +166,66 @@ export default class ViewBusinessStats extends React.Component {
                                 >
                                     <strong>Ganancias</strong>
                                 </p>,
-                                <ResponsiveContainer
+                                <Chart
                                     key="profit_chart"
-                                    width="100%"
-                                    aspect={2}
-                                >
-                                    <LineChart
-                                        data={this.state.stats}
-                                        margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                                    >
-                                        <XAxis name="Día" dataKey="day"/>
-                                        <YAxis/>
-                                        <CartesianGrid strokeDasharray="3 3"/>
-                                        <Tooltip labelFormatter={(label) => {
-                                            return 'Día '+ label;
-                                        }}/>
-                                        <Legend />
-                                        <Line name="Ganancias" dataKey="profit" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
-                                    </LineChart>
-                                </ResponsiveContainer>,
+                                    data={this.state.stats}
+                                    xAxis={{
+                                        name: this.state.interval !== 'current_year'
+                                            ? 'Día' : 'Mes',
+                                        dataKey: this.state.interval !== 'current_year'
+                                            ? 'day' : 'month',
+                                    }}
+                                    line={{
+                                        name: "Ganancias",
+                                        dataKey: "profit",
+                                        unit: "Bf",
+                                        stroke: profitColor
+                                    }}
+                                />,
                                 <p
                                     key="sale_title"
                                     style={{textAlign: "center"}}
                                 >
                                     <strong>Ventas</strong>
                                 </p>,
-                                <ResponsiveContainer
+                                <Chart
                                     key="sale_chart"
-                                    width="100%"
-                                    aspect={2}
-                                >
-                                    <LineChart
-                                        width={600}
-                                        height={300}
-                                        data={this.state.stats}
-                                        margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                                    >
-                                        <XAxis name="Día" dataKey="day"/>
-                                        <YAxis/>
-                                        <CartesianGrid strokeDasharray="3 3"/>
-                                        <Tooltip labelFormatter={(label) => {
-                                            return 'Día '+ label;
-                                        }}/>
-                                        <Legend />
-                                        <Line name="Ventas" dataKey="sale" unit=" Bf" type="monotone" stroke={profitColor} activeDot={{r: 8}}/>
-                                    </LineChart>
-                                </ResponsiveContainer>,
+                                    data={this.state.stats}
+                                    xAxis={{
+                                        name: this.state.interval !== 'current_year'
+                                            ? 'Día' : 'Mes',
+                                        dataKey: this.state.interval !== 'current_year'
+                                            ? 'day' : 'month',
+                                    }}
+                                    line={{
+                                        name: "Ventas",
+                                        dataKey: "sale",
+                                        unit: "Bf",
+                                        stroke: saleColor
+                                    }}
+                                />,
                                 <p
                                     key="total_title"
                                     style={{textAlign: "center"}}
                                 >
                                     <strong>Total de llamadas</strong>
                                 </p>,
-                                <ResponsiveContainer
+                                <Chart
                                     key="total_chart"
-                                    width="100%"
-                                    aspect={2}
-                                >
-                                    <LineChart
-                                        data={this.state.stats}
-                                        margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                                    >
-                                        <XAxis name="Día" dataKey="day"/>
-                                        <YAxis/>
-                                        <CartesianGrid strokeDasharray="3 3"/>
-                                        <Tooltip labelFormatter={(label) => {
-                                            return 'Día '+ label;
-                                        }}/>
-                                        <Legend />
-                                        <Line name="Total de llamadas" dataKey="total" type="monotone" stroke={totalColor} activeDot={{r: 8}}/>
-                                    </LineChart>
-                                </ResponsiveContainer>
+                                    data={this.state.stats}
+                                    xAxis={{
+                                        name: this.state.interval !== 'current_year'
+                                            ? 'Día' : 'Mes',
+                                        dataKey: this.state.interval !== 'current_year'
+                                            ? 'day' : 'month',
+                                    }}
+                                    line={{
+                                        name: "Total de llamadas",
+                                        dataKey: "total",
+                                        unit: "Bf",
+                                        stroke: totalColor
+                                    }}
+                                />
                             ]
                         : <p>No hay datos</p>
                 }
