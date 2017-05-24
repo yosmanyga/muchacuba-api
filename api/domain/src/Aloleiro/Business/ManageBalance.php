@@ -36,7 +36,7 @@ class ManageBalance
      */
     public function increase(Business $business, $amount)
     {
-        $this->change($business, $amount);
+        $this->change($business, (float) $amount);
     }
 
     /**
@@ -47,7 +47,7 @@ class ManageBalance
      */
     public function decrease(Business $business, $amount)
     {
-        $this->change($business, $amount * -1);
+        $this->change($business, (float) $amount * -1);
     }
 
     /**
