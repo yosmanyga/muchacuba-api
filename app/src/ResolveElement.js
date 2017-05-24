@@ -4,7 +4,10 @@ export default class ResolveElement
         let item = items.find((item) => {
             if (
                 typeof item.hostname !== 'undefined'
-                && item.hostname === window.location.hostname
+                && (
+                    item.hostname === window.location.hostname
+                    || 'www.' + item.hostname === window.location.hostname
+                )
             ) {
                 return true;
             }
