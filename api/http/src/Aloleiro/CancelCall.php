@@ -5,6 +5,7 @@ namespace Muchacuba\Http\Aloleiro;
 use Muchacuba\Aloleiro\Business;
 use Muchacuba\Aloleiro\CancelCall as DomainCancelCall;
 use Muchacuba\Aloleiro\CollectCalls as DomainCollectCalls;
+use Muchacuba\Aloleiro\NonExistentCallException;
 use Symsonte\Http\Server;
 
 /**
@@ -52,10 +53,15 @@ class CancelCall
     {
         $post = $this->server->resolveBody();
 
-        $this->cancelCall->cancel(
-            $business,
-            $post['id']
-        );
+        try {
+            $this->cancelCall->cancel(
+                $business,
+                $post['id']
+            );
+        } catch (NonExistentCallException $e) {
+            // Ignore, it could be coming from an outdated view
+            // TODO: Remove this once the view is updated using sockets
+        }
 
         $calls = $this->collectCalls->collectPrepared($business);
 
