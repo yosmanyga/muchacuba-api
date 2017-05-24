@@ -21,7 +21,7 @@ class ComputeSystemCalls
     private $computeSystemCalls;
 
     /**
-     * @param Server                          $server
+     * @param Server                   $server
      * @param DomainComputeSystemCalls $computeSystemCalls
      */
     public function __construct(
@@ -34,16 +34,18 @@ class ComputeSystemCalls
 
     /**
      * @http\authorization({roles: ["aloleiro_admin"]})
-     * @http\resolution({method: "GET", path: "/aloleiro/compute-system-calls/{from}/{to}"})
+     * @http\resolution({method: "GET", path: "/aloleiro/compute-system-calls/{from}/{to}/{by}"})
      *
      * @param string $from
      * @param string $to
+     * @param string $by
      */
-    public function compute($from, $to)
+    public function compute($from, $to, $by)
     {
         $stats = $this->computeSystemCalls->compute(
             $from,
-            $to
+            $to,
+            $by
         );
 
         $this->server->sendResponse($stats);

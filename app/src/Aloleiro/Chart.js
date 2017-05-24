@@ -17,12 +17,12 @@ export default class ViewBusinessStats extends React.Component {
             name: React.PropTypes.string.isRequired,
             dataKey: React.PropTypes.string.isRequired
         }).isRequired,
-        line: React.PropTypes.shape({
+        lines: React.PropTypes.arrayOf(React.PropTypes.shape({
             name: React.PropTypes.string.isRequired,
             dataKey: React.PropTypes.string.isRequired,
             unit: React.PropTypes.string.isRequired,
             stroke: React.PropTypes.string.isRequired
-        }).isRequired,
+        }).isRequired),
     };
 
     render() {
@@ -45,14 +45,17 @@ export default class ViewBusinessStats extends React.Component {
                         return this.props.xAxis.name + ' ' + label;
                     }}/>
                     <Legend />
-                    <Line
-                        name={this.props.line.name}
-                        dataKey={this.props.line.dataKey}
-                        unit={' ' + this.props.line.unit}
-                        type="monotone"
-                        stroke={this.props.line.stroke}
-                        activeDot={{r: 8}}
-                    />
+                    {this.props.lines.map((line) => {
+                        return <Line
+                            key={line.dataKey}
+                            name={line.name}
+                            dataKey={line.dataKey}
+                            unit={' ' + line.unit}
+                            type="monotone"
+                            stroke={line.stroke}
+                            activeDot={{r: 8}}
+                        />
+                    })}
                 </LineChart>
             </ResponsiveContainer>
         );
