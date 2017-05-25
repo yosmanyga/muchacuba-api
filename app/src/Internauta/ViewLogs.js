@@ -31,6 +31,7 @@ export default class ViewLogs extends React.Component {
     static propTypes = {
         id: React.PropTypes.string.isRequired,
         logs: React.PropTypes.array.isRequired,
+        // (callback)
         onDelete: React.PropTypes.func.isRequired
     };
 
@@ -105,21 +106,17 @@ export default class ViewLogs extends React.Component {
                         label="Borrar"
                         labelAfterTouchTap="Borrando..."
                         icon="delete"
-                        onTouchTap={(finish) => {
-                            this._connectToServer
-                                .get('/internauta/delete-log-group/' + this.props.id)
-                                .send()
-                                .end((err, res) => {
-                                    if (err) {
-                                        // TODO
-
-                                        return;
-                                    }
-
-                                    finish();
-
-                                    this.props.onDelete(res.body);
-                                });
+                        onTouchTap={() => {
+                            this.props.onDelete(
+                                () => this._connectToServer
+                                    .get('/internauta/delete-log-group/' + this.props.id)
+                                    .send()
+                                    .end((err, res) => {
+                                        if (err) {
+                                            // TODO
+                                        }
+                                    })
+                            );
                         }}
                     />
                 </CardActions>

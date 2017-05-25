@@ -4,7 +4,6 @@ namespace Muchacuba\Http\Internauta;
 
 use Symsonte\Http\Server;
 use Muchacuba\Internauta\DeleteLogGroup as DomainDeleteLogGroup;
-use Muchacuba\Internauta\CollectLogs as DomainCollectLogs;
 
 /**
  * @di\controller({deductible: true})
@@ -17,28 +16,20 @@ class DeleteLogGroup
     private $deleteLogGroup;
 
     /**
-     * @var DomainCollectLogs
-     */
-    private $domainCollectLogs;
-
-    /**
      * @var Server
      */
     private $server;
 
     /**
      * @param DomainDeleteLogGroup $deleteLogGroup
-     * @param DomainCollectLogs    $domainCollectLogs
      * @param Server               $server
      */
     public function __construct(
         DomainDeleteLogGroup $deleteLogGroup,
-        DomainCollectLogs $domainCollectLogs,
         Server $server
     )
     {
         $this->deleteLogGroup = $deleteLogGroup;
-        $this->domainCollectLogs = $domainCollectLogs;
         $this->server = $server;
     }
 
@@ -51,6 +42,6 @@ class DeleteLogGroup
     {
         $this->deleteLogGroup->delete($id);
 
-        $this->server->sendResponse($this->domainCollectLogs->collect());
+        $this->server->sendResponse();
     }
 }

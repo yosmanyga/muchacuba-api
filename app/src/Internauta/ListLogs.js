@@ -105,10 +105,12 @@ export default class ListLogs extends React.Component {
                     key={branch.id}
                     id={branch.id}
                     logs={branch.logs}
-                    onDelete={(logs) => {
+                    onDelete={(callback) => {
                         this.setState({
-                            logs: logs
-                        });
+                            logs: this.state.logs.filter((log) => {
+                                return log.payload.id !== branch.id
+                            })
+                        }, callback);
                     }}
                 />
             });
