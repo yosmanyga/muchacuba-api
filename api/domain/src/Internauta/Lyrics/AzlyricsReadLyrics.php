@@ -56,7 +56,7 @@ class AzlyricsReadLyrics implements ReadLyrics
         $crawler = $crawler->filter('.lyricsh');
 
         $author = $crawler->first()->getNode(0)->textContent;
-        $author = str_replace('LYRICS', '', $author);
+        $author = str_replace('Lyrics', '', $author);
         $author = trim($author);
 
         return $author;
