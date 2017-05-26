@@ -9,7 +9,12 @@ class Product implements Persistable, \JsonSerializable
     /**
      * @var string
      */
-    private $id;
+    private $code;
+
+    /**
+     * @var string
+     */
+    private $value;
 
     /**
      * @var string
@@ -22,16 +27,19 @@ class Product implements Persistable, \JsonSerializable
     private $description;
 
     /**
-     * @param string $id
+     * @param string $code
+     * @param string $value
      * @param string $provider
      * @param string $description
      */
     public function __construct(
-        $id,
+        $code,
+        $value,
         $provider,
         $description
     ) {
-        $this->id = $id;
+        $this->code = $code;
+        $this->value = $value;
         $this->provider = $provider;
         $this->description = $description;
     }
@@ -39,9 +47,17 @@ class Product implements Persistable, \JsonSerializable
     /**
      * @return string
      */
-    public function getId()
+    public function getCode()
     {
-        return $this->id;
+        return $this->code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -66,7 +82,8 @@ class Product implements Persistable, \JsonSerializable
     public function bsonSerialize()
     {
         return [
-            '_id' => $this->id,
+            'code' => $this->code,
+            'value' => $this->value,
             'provider' => $this->provider,
             'description' => $this->description
         ];
@@ -77,7 +94,8 @@ class Product implements Persistable, \JsonSerializable
      */
     public function bsonUnserialize(array $data)
     {
-        $this->id = $data['_id'];
+        $this->code = $data['code'];
+        $this->value = $data['value'];
         $this->provider = $data['provider'];
         $this->description = $data['description'];
     }
@@ -88,7 +106,8 @@ class Product implements Persistable, \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->id,
+            'code' => $this->code,
+            'value' => $this->value,
             'provider' => $this->provider,
             'description' => $this->description
         ];

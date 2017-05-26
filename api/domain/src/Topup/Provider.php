@@ -6,6 +6,9 @@ use MongoDB\BSON\Persistable;
 
 class Provider implements Persistable, \JsonSerializable
 {
+    const TYPE_PHONE = 'phone';
+    const TYPE_EMAIL = 'email';
+
     /**
      * @var string
      */
@@ -32,24 +35,32 @@ class Provider implements Persistable, \JsonSerializable
     private $validation;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @param string $id
      * @param string $country
      * @param string $name
      * @param string $logo
      * @param string $validation
+     * @param string $type
      */
     public function __construct(
         $id,
         $country,
         $name,
         $logo,
-        $validation
+        $validation,
+        $type
     ) {
         $this->id = $id;
         $this->country = $country;
         $this->name = $name;
         $this->logo = $logo;
         $this->validation = $validation;
+        $this->type = $type;
     }
 
     /**
@@ -93,6 +104,14 @@ class Provider implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -102,7 +121,8 @@ class Provider implements Persistable, \JsonSerializable
             'country' => $this->country,
             'name' => $this->name,
             'logo' => $this->logo,
-            'validation' => $this->validation
+            'validation' => $this->validation,
+            'type' => $this->type
         ];
     }
 
@@ -116,6 +136,7 @@ class Provider implements Persistable, \JsonSerializable
         $this->name = $data['name'];
         $this->logo = $data['logo'];
         $this->validation = $data['validation'];
+        $this->type = $data['type'];
     }
 
     /**
@@ -128,7 +149,8 @@ class Provider implements Persistable, \JsonSerializable
             'country' => $this->country,
             'name' => $this->name,
             'logo' => $this->logo,
-            'validation' => $this->validation
+            'validation' => $this->validation,
+            'type' => $this->type
         ];
     }
 }

@@ -38,9 +38,62 @@ class ImportPayloads
     {
         $this->manageStorage->purge();
 
+        $this->importCurrencies();
+        $this->importRegions();
+        $this->importCountries();
         $this->importProviders();
         $this->importProducts();
         $this->importProductDescriptions();
+        $this->importPromotions();
+        $this->importPromotionDescriptions();
+    }
+
+    private function importCurrencies()
+    {
+        $currencies = $this->queryApi->query(
+            'GET',
+            '/api/EdtsV3/GetCurrencies'
+        );
+
+        foreach ($currencies['Items'] as $currencies) {
+            $this->manageStorage->connect()->insertOne(new Payload(
+                uniqid(),
+                Payload::TYPE_CURRENCY,
+                $currencies
+            ));
+        }
+    }
+
+    private function importRegions()
+    {
+        $regions = $this->queryApi->query(
+            'GET',
+            '/api/EdtsV3/GetRegions'
+        );
+
+        foreach ($regions['Items'] as $region) {
+            $this->manageStorage->connect()->insertOne(new Payload(
+                uniqid(),
+                Payload::TYPE_REGION,
+                $region
+            ));
+        }
+    }
+
+    private function importCountries()
+    {
+        $countries = $this->queryApi->query(
+            'GET',
+            '/api/EdtsV3/GetCountries'
+        );
+
+        foreach ($countries['Items'] as $countries) {
+            $this->manageStorage->connect()->insertOne(new Payload(
+                uniqid(),
+                Payload::TYPE_COUNTRY,
+                $countries
+            ));
+        }
     }
     
     private function importProviders()
@@ -112,6 +165,38 @@ class ImportPayloads
             $this->manageStorage->connect()->insertOne(new Payload(
                 uniqid(),
                 Payload::TYPE_PRODUCT_DESCRIPTION,
+                $description
+            ));
+        }
+    }
+
+    private function importPromotions()
+    {
+        $promotions = $this->queryApi->query(
+            'GET',
+            '/api/EdtsV3/GetPromotions'
+        );
+
+        foreach ($promotions['Items'] as $promotion) {
+            $this->manageStorage->connect()->insertOne(new Payload(
+                uniqid(),
+                Payload::TYPE_PROMOTION,
+                $promotion
+            ));
+        }
+    }
+
+    private function importPromotionDescriptions()
+    {
+        $descriptions = $this->queryApi->query(
+            'GET',
+            '/api/EdtsV3/GetPromotionDescriptions'
+        );
+
+        foreach ($descriptions['Items'] as $description) {
+            $this->manageStorage->connect()->insertOne(new Payload(
+                uniqid(),
+                Payload::TYPE_PROMOTION_DESCRIPTION,
                 $description
             ));
         }

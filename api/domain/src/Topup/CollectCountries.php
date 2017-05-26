@@ -31,8 +31,12 @@ class CollectCountries
      */
     public function collect()
     {
-        $countries = $this->manageStorage->connect()->find();
+        $countries = iterator_to_array($this->manageStorage->connect()->find());
 
-        return iterator_to_array($countries);
+        usort($countries, function(Country $countryA, Country $countryB) {
+            return ($countryA->getName() < $countryB->getName()) ? -1 : 1;
+        });
+
+        return $countries;
     }
 }

@@ -6,11 +6,16 @@ use MongoDB\BSON\Persistable;
 
 class Payload implements Persistable, \JsonSerializable
 {
+    const TYPE_CURRENCY = 'currency';
+    const TYPE_REGION = 'region';
+    const TYPE_COUNTRY = 'country';
     const TYPE_PROVIDER = 'provider';
     const TYPE_PROVIDER_LOGO = 'product-logo';
     const TYPE_PRODUCT = 'product';
     const TYPE_PRODUCT_DESCRIPTION = 'product-description';
-
+    const TYPE_PROMOTION = 'promotion';
+    const TYPE_PROMOTION_DESCRIPTION = 'promotion-description';
+    
     /**
      * @var string
      */

@@ -30,13 +30,20 @@ class QueryApi
     {
         try {
 
-            // Filtrar productos por pais
             $response = $this->queryApi->query(
                 'GET',
-                '/api/EdtsV3/GetProducts?countryIsos=CU',
+                '/api/EdtsV3/GetPromotions',
                 [
                 ]
             );
+
+//            // Filtrar productos por pais
+//            $response = $this->queryApi->query(
+//                'GET',
+//                '/api/EdtsV3/GetProducts?countryIsos=CU',
+//                [
+//                ]
+//            );
 
 //            // Filtrar productos por numero de telefono
 //            $response = $this->queryApi->query(

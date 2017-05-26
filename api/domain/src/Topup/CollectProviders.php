@@ -27,13 +27,20 @@ class CollectProviders
     }
 
     /**
+     * @param string|null $country
+     *
      * @return Provider[]
      */
-    public function collect()
+    public function collect($country = null)
     {
-        /** @var Provider[] $providers */
-        $providers = $this->manageStorage->connect()->find();
+        $criteria = [];
 
-        return $providers;
+        if (!is_null($country)) {
+            $criteria['country'] = $country;
+        }
+
+        $providers = $this->manageStorage->connect()->find($criteria);
+
+        return iterator_to_array($providers);
     }
 }

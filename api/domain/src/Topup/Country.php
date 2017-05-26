@@ -3,6 +3,7 @@
 namespace Muchacuba\Topup;
 
 use MongoDB\BSON\Persistable;
+use Muchacuba\Topup\Country\Dialing;
 
 class Country implements Persistable, \JsonSerializable
 {
@@ -17,47 +18,23 @@ class Country implements Persistable, \JsonSerializable
     private $name;
 
     /**
-     * @var string
+     * @var Dialing[]
      */
-    private $prefix;
+    private $dialings;
 
     /**
-     * @var int
-     */
-    private $minLength;
-
-    /**
-     * @var int
-     */
-    private $maxLength;
-
-    /**
-     * @var array
-     */
-    private $payload;
-
-    /**
-     * @param string $iso
-     * @param string $name
-     * @param string $prefix
-     * @param string $minLength
-     * @param string $maxLength
-     * @param array  $payload
+     * @param string    $iso
+     * @param string    $name
+     * @param Dialing[] $dialings
      */
     public function __construct(
         $iso,
         $name,
-        $prefix,
-        $minLength,
-        $maxLength,
-        $payload
+        array $dialings
     ) {
         $this->iso = $iso;
         $this->name = $name;
-        $this->prefix = $prefix;
-        $this->minLength = $minLength;
-        $this->maxLength = $maxLength;
-        $this->payload = $payload;
+        $this->dialings = $dialings;
     }
 
     /**
@@ -77,35 +54,11 @@ class Country implements Persistable, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return Dialing[]
      */
-    public function getPrefix()
+    public function getDialings()
     {
-        return $this->prefix;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinLength()
-    {
-        return $this->minLength;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxLength()
-    {
-        return $this->maxLength;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPayload()
-    {
-        return $this->payload;
+        return $this->dialings;
     }
 
     /**
@@ -116,10 +69,13 @@ class Country implements Persistable, \JsonSerializable
         return [
             '_id' => $this->iso,
             'name' => $this->name,
-            'prefix' => $this->prefix,
-            'minLength' => $this->minLength,
-            'maxLength' => $this->maxLength,
-            'payload' => $this->payload
+            'dialings' => array_map(function(Dialing $dialing) {
+                return new Dialing(
+                    $dialing->getPrefix(),
+                    $dialing->getMinLength(),
+                    $dialing->getMaxLength()
+                );
+            }, $this->dialings)
         ];
     }
 
@@ -130,10 +86,13 @@ class Country implements Persistable, \JsonSerializable
     {
         $this->iso = $data['_id'];
         $this->name = $data['name'];
-        $this->prefix = $data['prefix'];
-        $this->minLength = $data['minLength'];
-        $this->maxLength = $data['maxLength'];
-        $this->payload = $data['payload'];
+        $this->dialings = array_map(function($dialing) {
+            return new Dialing(
+                $dialing['prefix'],
+                $dialing['minLength'],
+                $dialing['maxLength']
+            );
+        }, $data['dialings']);
     }
 
     /**
@@ -144,8 +103,7 @@ class Country implements Persistable, \JsonSerializable
         return [
             'iso' => $this->iso,
             'name' => $this->name,
-            'prefix' => $this->prefix,
-            'payload' => $this->payload
+            'dialings' => $this->dialings
         ];
     }
 }

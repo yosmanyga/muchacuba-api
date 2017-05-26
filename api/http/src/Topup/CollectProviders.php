@@ -21,7 +21,7 @@ class CollectProviders
     private $collectProviders;
 
     /**
-     * @param Server                $server
+     * @param Server                 $server
      * @param DomainCollectProviders $collectProviders
      */
     public function __construct(
@@ -38,6 +38,18 @@ class CollectProviders
     public function collect()
     {
         $providers = $this->collectProviders->collect();
+
+        $this->server->sendResponse($providers);
+    }
+
+    /**
+     * @http\resolution({method: "GET", path: "/topup/collect-providers-by-country/{country}"})
+     *
+     * @param string $country
+     */
+    public function collectByCountry($country)
+    {
+        $providers = $this->collectProviders->collect($country);
 
         $this->server->sendResponse($providers);
     }

@@ -85,6 +85,10 @@ class ManageStorage implements PurgeStorage
      */
     public function prepare()
     {
+        $this->connect()->createIndex(
+            ['code' => 1, 'value' => 1],
+            ['unique' => true]
+        );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Topup;
 
+use Aura\Cli\Exception;
 use Muchacuba\Topup\Payload\ManageStorage as ManagePayloadStorage;
 use Muchacuba\Topup\Provider\ManageStorage as ManageProviderStorage;
 
@@ -59,12 +60,22 @@ class LoadProviders
                 }
             }
 
+            $validation = $provider->getData()['ValidationRegex'];
+            if (strpos($validation, '0-9') !== false) {
+                $type = Provider::TYPE_PHONE;
+            } elseif (strpos($provider->getData()['ValidationRegex'], '@') !== false) {
+                $type = Provider::TYPE_EMAIL;
+            } else {
+                throw new \Exception(sprintf('Unknown validation "%s"', $validation));
+            }
+
             $this->manageProviderStorage->connect()->insertOne(new Provider(
                 $provider->getData()['ProviderCode'],
                 $provider->getData()['CountryIso'],
                 $provider->getData()['Name'],
                 $logo,
-                $provider->getData()['ValidationRegex']
+                $validation,
+                $type
             ));
         }
     }

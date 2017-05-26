@@ -9,8 +9,8 @@ import {yellow50} from 'material-ui/styles/colors';
 import ResolveElement from '../ResolveElement';
 import Wait from '../Wait';
 
-import ListProducts from './ListProducts';
 import ListProviders from './ListProviders';
+import SendRecharges from './SendRecharges';
 
 export default class Front extends React.Component {
     static propTypes = {
@@ -73,13 +73,13 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/list-products',
-                    'element': <ListProducts
+                    'url': '/send-recharges',
+                    'element': <SendRecharges
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />,
-                    'def': true
+
                 },
                 {
                     'url': '/list-providers',
@@ -134,11 +134,11 @@ class Layout extends React.Component {
                             <p>{this.props.profile.name}</p>
                         </div>
                         <MenuItem
-                            key="list-products"
-                            onTouchTap={() => {this.props.onNavigate('/list-products')}}
-                            leftIcon={<FontIcon className="material-icons">class</FontIcon>}
+                            key="send-recharges"
+                            onTouchTap={() => {this.props.onNavigate('/send-recharges')}}
+                            leftIcon={<FontIcon className="material-icons">redeem</FontIcon>}
                         >
-                            Productos
+                            Enviar recarga
                         </MenuItem>
                         <MenuItem
                             key="list-providers"
