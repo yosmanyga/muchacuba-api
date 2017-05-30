@@ -2,10 +2,11 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Phone\InvalidNumberException;
 use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Muchacuba\Aloleiro\Call\InvalidDataException;
-use Muchacuba\Aloleiro\Phone\FixNumber;
+use Cubalider\Phone\FixNumber;
 
 /**
  * @di\service({
@@ -52,8 +53,8 @@ class PrepareCall
     {
         try {
             $to = $this->fixNumber->fix($to);
-        } catch (InvalidDataException $e) {
-            throw $e;
+        } catch (InvalidNumberException $e) {
+            throw new InvalidDataException(InvalidDataException::FIELD_TO);
         }
 
         if ($business->getBalance() <= 0) {

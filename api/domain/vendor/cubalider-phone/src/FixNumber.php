@@ -1,10 +1,6 @@
 <?php
 
-namespace Muchacuba\Aloleiro\Phone;
-
-use Muchacuba\Aloleiro\Business\InsufficientBalanceException;
-use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
-use Muchacuba\Aloleiro\Call\InvalidDataException;
+namespace Cubalider\Phone;
 
 /**
  * @di\service({
@@ -18,16 +14,14 @@ class FixNumber
      *
      * @return string
      *
-     * @throws InvalidDataException
+     * @throws InvalidNumberException
      */
     public function fix($number)
     {
         $number = str_replace(['+', '-', ' '], [''], $number);
 
         if (!ctype_digit($number)) {
-            throw new InvalidDataException(
-                InvalidDataException::FIELD_TO
-            );
+            throw new InvalidNumberException($number);
         }
 
         $number = '+' . $number;

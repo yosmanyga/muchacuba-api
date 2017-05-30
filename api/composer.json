@@ -66,6 +66,9 @@
             "Cubalider\\Navigation\\": [
                 "domain/vendor/cubalider-navigation/src"
             ],
+            "Cubalider\\Phone\\": [
+                "domain/vendor/cubalider-phone/src"
+            ],
             "Cubalider\\Voip\\": [
                 "domain/vendor/cubalider-voip/src"
             ],

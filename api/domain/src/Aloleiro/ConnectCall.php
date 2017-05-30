@@ -2,14 +2,14 @@
 
 namespace Muchacuba\Aloleiro;
 
+use Cubalider\Phone\InvalidNumberException;
 use Cubalider\Voip\ConnectResponse;
 use Cubalider\Voip\HangupResponse;
 use Cubalider\Voip\ListenIncomingEvent;
 use MongoDB\BSON\UTCDateTime;
 use Muchacuba\Aloleiro\Call\ManageStorage as ManageCallStorage;
 use Muchacuba\Aloleiro\Call\Instance;
-use Muchacuba\Aloleiro\Phone\FixNumber;
-use Muchacuba\Aloleiro\Phone\InvalidDataException;
+use Cubalider\Phone\FixNumber;
 
 /**
  * @di\service({
@@ -49,8 +49,8 @@ class ConnectCall implements ListenIncomingEvent
     {
         try {
             $from = $this->fixNumber->fix($from);
-        } catch (InvalidDataException $e) {
-            return new HangupResponse();
+        } catch (InvalidNumberException $e) {
+            return new HangupResponse("Número incorrecto");
         }
 
         /** @var Call $call */
@@ -68,7 +68,7 @@ class ConnectCall implements ListenIncomingEvent
         );
 
         if (is_null($call)) {
-            return new HangupResponse();
+            return new HangupResponse("Llamada no autorizada");
         }
 
         $this->manageCallStorage->connect()->updateOne(
