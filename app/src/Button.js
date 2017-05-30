@@ -8,6 +8,7 @@ export default class Button extends React.Component {
         layout: React.PropTypes.element,
         label: React.PropTypes.string.isRequired,
         labelAfterTouchTap: React.PropTypes.string,
+        disabled: React.PropTypes.bool,
         icon: React.PropTypes.string,
         // (finish)
         onTouchTap: React.PropTypes.func
@@ -38,7 +39,7 @@ export default class Button extends React.Component {
             ? this.props.labelAfterTouchTap
             : this.props.label;
 
-        const disabled = this.state.busy;
+        const disabled = this.state.busy || this.props.disabled;
 
         const button = <RaisedButton
             {...props}
