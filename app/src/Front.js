@@ -190,8 +190,8 @@ export default class Front extends React.Component {
                     this.state.location.pathname,
                     [
                         {
-                            'url': '/internauta',
-                            'element': <InternautaFront
+                            url: '/internauta',
+                            element: <InternautaFront
                                 url={this.state.location.pathname.replace('/internauta', '')}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
@@ -199,11 +199,11 @@ export default class Front extends React.Component {
                                 onNavigate={(url) => this._handleNavigate('/internauta' + url)}
                                 onNotify={this._handleNotify}
                             />,
-                            'def': true
+                            def: true
                         },
                         {
-                            'url': '/mule',
-                            'element': <MuleFront
+                            url: '/mule',
+                            element: <MuleFront
                                 url={this.state.location.pathname.replace('/mule', '')}
                                 layout={layout}
                                 query={query}
@@ -215,8 +215,8 @@ export default class Front extends React.Component {
                             />
                         },
                         {
-                            'url': '/chuchuchu',
-                            'element': <ChuchuchuFront
+                            url: '/chuchuchu',
+                            element: <ChuchuchuFront
                                 url={this.state.location.pathname.replace('/chuchuchu', '')}
                                 query={query}
                                 layout={layout}
@@ -228,9 +228,11 @@ export default class Front extends React.Component {
                             />
                         },
                         {
-                            'hostname': 'mundorecarga.com',
-                            'url': '',
-                            'element': <TopupFront
+                            hostname: [
+                                'mundorecarga.com',
+                                'yosmanyga.fwd.wf'
+                            ],
+                            element: <TopupFront
                                 url={this.state.location.pathname.replace('', '')}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}
@@ -242,9 +244,8 @@ export default class Front extends React.Component {
                             />
                         },
                         {
-                            'hostname': 'holapana.com',
-                            'url': '',
-                            'element': <AloleiroFront
+                            hostname: 'holapana.com',
+                            element: <AloleiroFront
                                 url={this.state.location.pathname.replace('', '')}
                                 layout={layout}
                                 onBackAuth={this._handleBackAuth}

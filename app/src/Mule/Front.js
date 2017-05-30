@@ -87,8 +87,8 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/list-my-offers',
-                    'element': <ListMyOffers
+                    url: '/list-my-offers',
+                    element: <ListMyOffers
                         layout={layout}
                         destinations={this.state.destinations}
                         onBackAuth={this.props.onBackAuth}
@@ -98,22 +98,22 @@ export default class Front extends React.Component {
                     />
                 },
                 {
-                    'url': '/view-offer',
-                    'element': <ViewOffer
+                    url: '/view-offer',
+                    element: <ViewOffer
                         layout={layout}
                         query={this.props.query}
                         destinations={this.state.destinations}
                     />
                 },
                 {
-                    'url': '/',
-                    'element': <FindOffers
+                    url: '/',
+                    element: <FindOffers
                         layout={layout}
                         destinations={this.state.destinations}
                         onNotify={this.props.onNotify}
                         onError={this.props.onError}
                     />,
-                    'def': true
+                    def: true
                 }
             ]
         );

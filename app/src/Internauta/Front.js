@@ -37,15 +37,15 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/welcome',
-                    'element': <Welcome
+                    url: '/welcome',
+                    element: <Welcome
                         layout={layout}
                     />,
-                    'def': true
+                    def: true
                 },
                 {
-                    'url': '/list-logs',
-                    'element': <ListLogs
+                    url: '/list-logs',
+                    element: <ListLogs
                         layout={layout}
                         onBackAuth={this.props.onBackAuth}
                         onFrontAuth={this.props.onFrontAuth}

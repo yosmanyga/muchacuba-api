@@ -2,22 +2,32 @@ export default class ResolveElement
 {
     resolve(url, items) {
         let item = items.find((item) => {
-            if (
-                typeof item.hostname !== 'undefined'
-                && (
-                    item.hostname === window.location.hostname
-                    || 'www.' + item.hostname === window.location.hostname
-                )
-            ) {
-                return true;
+            const type = typeof item.hostname;
+            if (type !== 'undefined') {
+                if (type === 'string') {
+                    item.hostname = [item.hostname];
+                }
+
+                return item.hostname.filter((hostname) => {
+                    return (
+                        hostname === window.location.hostname
+                        || 'www.' + hostname === window.location.hostname
+                    );
+                })
             }
 
-            return item.url !== '' && url.startsWith(item.url);
+            return (
+                typeof item.url !== 'undefined'
+                && url.startsWith(item.url)
+            );
         });
 
         if (typeof item === 'undefined') {
             item = items.find((item) => {
-                return typeof item.def !== 'undefined' && item.def === true
+                return (
+                    typeof item.def !== 'undefined'
+                    && item.def === true
+                );
             });
         }
 

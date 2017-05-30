@@ -62,8 +62,8 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/',
-                    'element': <All
+                    url: '/',
+                    element: <All
                         query={this.props.query}
                         layout={layout}
                         profile={this.state.profile}
@@ -72,7 +72,7 @@ export default class Front extends React.Component {
                         onNotify={this.props.onNotify}
                         onError={this.props.onError}
                     />,
-                    'def': true
+                    def: true
                 },
             ]
         );

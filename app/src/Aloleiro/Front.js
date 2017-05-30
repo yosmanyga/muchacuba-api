@@ -90,41 +90,41 @@ export default class Front extends React.Component {
             [
                 // Admin
                 {
-                    'url': '/list-system-rates',
-                    'element': <ListSystemRates
+                    url: '/list-system-rates',
+                    element: <ListSystemRates
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/manage-businesses',
-                    'element': <ManageBusinesses
+                    url: '/manage-businesses',
+                    element: <ManageBusinesses
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/manage-approvals',
-                    'element': <ManageApprovals
+                    url: '/manage-approvals',
+                    element: <ManageApprovals
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/view-system-stats',
-                    'element': <ViewSystemStats
+                    url: '/view-system-stats',
+                    element: <ViewSystemStats
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />,
-                    'def': _.includes(this.state.profile.roles, 'aloleiro_admin')
+                    def: _.includes(this.state.profile.roles, 'aloleiro_admin')
                 },
                 {
-                    'url': '/list-logs',
-                    'element': <ListLogs
+                    url: '/list-logs',
+                    element: <ListLogs
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
@@ -132,8 +132,8 @@ export default class Front extends React.Component {
                 },
                 // Owner
                 {
-                    'url': '/edit-business',
-                    'element': <EditBusiness
+                    url: '/edit-business',
+                    element: <EditBusiness
                         layout={layout}
                         profile={this.state.profile}
                         onNotify={this.props.onNotify}
@@ -141,53 +141,53 @@ export default class Front extends React.Component {
                     />
                 },
                 {
-                    'url': '/list-business-rates',
-                    'element': <ListBusinessRates
+                    url: '/list-business-rates',
+                    element: <ListBusinessRates
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/view-business-stats',
-                    'element': <ViewBusinessStats
+                    url: '/view-business-stats',
+                    element: <ViewBusinessStats
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/list-phones',
-                    'element': <ListPhones
+                    url: '/list-phones',
+                    element: <ListPhones
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />,
-                    'def': _.includes(this.state.profile.roles, 'aloleiro_owner')
+                    def: _.includes(this.state.profile.roles, 'aloleiro_owner')
                 },
                 // Operator
                 {
-                    'url': '/list-client-rates',
-                    'element': <ListClientRates
+                    url: '/list-client-rates',
+                    element: <ListClientRates
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />
                 },
                 {
-                    'url': '/list-client-calls',
-                    'element': <ListClientCalls
+                    url: '/list-client-calls',
+                    element: <ListClientCalls
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />,
-                    'def': _.includes(this.state.profile.roles, 'aloleiro_operator')
+                    def: _.includes(this.state.profile.roles, 'aloleiro_operator')
                 },
                 // No role
                 {
-                    'url': '/forbidden',
-                    'element': <Error message="No tienes permiso para acceder a esta página"/>,
-                    'def':
+                    url: '/forbidden',
+                    element: <Error message="No tienes permiso para acceder a esta página"/>,
+                    def:
                         !_.includes(this.state.profile.roles, 'aloleiro_admin')
                         && !_.includes(this.state.profile.roles, 'aloleiro_owner')
                         && !_.includes(this.state.profile.roles, 'aloleiro_operator')
