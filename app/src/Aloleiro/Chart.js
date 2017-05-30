@@ -20,7 +20,7 @@ export default class ViewBusinessStats extends React.Component {
         lines: React.PropTypes.arrayOf(React.PropTypes.shape({
             name: React.PropTypes.string.isRequired,
             dataKey: React.PropTypes.string.isRequired,
-            unit: React.PropTypes.string.isRequired,
+            unit: React.PropTypes.string,
             stroke: React.PropTypes.string.isRequired
         }).isRequired),
     };
@@ -50,7 +50,7 @@ export default class ViewBusinessStats extends React.Component {
                             key={line.dataKey}
                             name={line.name}
                             dataKey={line.dataKey}
-                            unit={' ' + line.unit}
+                            unit={line.unit ? ' ' + line.unit : null}
                             type="monotone"
                             stroke={line.stroke}
                             activeDot={{r: 8}}

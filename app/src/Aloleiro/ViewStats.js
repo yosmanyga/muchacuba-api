@@ -233,7 +233,6 @@ export default class ViewStats extends React.Component {
                                     lines={[{
                                         name: "Total de llamadas",
                                         dataKey: "total",
-                                        unit: this.props.unit,
                                         stroke: totalColor
                                     }]}
                                 />
