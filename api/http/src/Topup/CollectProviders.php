@@ -41,16 +41,4 @@ class CollectProviders
 
         $this->server->sendResponse($providers);
     }
-
-    /**
-     * @http\resolution({method: "GET", path: "/topup/collect-providers-by-country/{country}"})
-     *
-     * @param string $country
-     */
-    public function collectByCountry($country)
-    {
-        $providers = $this->collectProviders->collect($country);
-
-        $this->server->sendResponse($providers);
-    }
 }

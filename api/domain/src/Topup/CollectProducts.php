@@ -27,11 +27,19 @@ class CollectProducts
     }
 
     /**
+     * @param Provider $provider
+     *
      * @return Product[]
      */
-    public function collect()
+    public function collect(Provider $provider = null)
     {
-        $products = $this->manageStorage->connect()->find();
+        $criteria = [];
+
+        if(!is_null($provider)) {
+            $criteria['provider'] = $provider->getId();
+        }
+
+        $products = $this->manageStorage->connect()->find($criteria);
 
         return iterator_to_array($products);
     }

@@ -73,17 +73,18 @@ export default class Front extends React.Component {
             this.props.url,
             [
                 {
-                    'url': '/send-recharges',
-                    'element': <SendRecharges
+                    url: '/send-recharges',
+                    element: <SendRecharges
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}
                     />,
+                    def: true
 
                 },
                 {
-                    'url': '/list-providers',
-                    'element': <ListProviders
+                    url: '/list-providers',
+                    element: <ListProviders
                         layout={layout}
                         profile={this.state.profile}
                         onError={this.props.onError}

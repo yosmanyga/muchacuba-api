@@ -3,6 +3,7 @@
 namespace Muchacuba\Http\Topup;
 
 use Muchacuba\Topup\CollectProducts as DomainCollectProducts;
+use Muchacuba\Topup\Provider;
 use Symsonte\Http\Server;
 
 /**
@@ -38,6 +39,18 @@ class CollectProducts
     public function collect()
     {
         $products = $this->collectProducts->collect();
+
+        $this->server->sendResponse($products);
+    }
+
+    /**
+     * @http\resolution({method: "GET", path: "/topup/collect-products-by-provider/{provider}"})
+     *
+     * @param Provider $provider
+     */
+    public function collectByProvider(Provider $provider)
+    {
+        $products = $this->collectProducts->collect($provider);
 
         $this->server->sendResponse($products);
     }

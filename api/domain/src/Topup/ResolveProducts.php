@@ -10,34 +10,37 @@ namespace Muchacuba\Topup;
 class ResolveProducts
 {
     /**
+     * @var ResolveProviders
+     */
+    private $resolveProviders;
+    
+    /**
      * @var CollectProducts
      */
     private $collectProducts;
 
     /**
-     * @param CollectProducts $collectProducts
+     * @param ResolveProviders $resolveProviders
+     * @param CollectProducts  $collectProducts
      */
     public function __construct(
+        ResolveProviders $resolveProviders,
         CollectProducts $collectProducts
     )
     {
+        $this->resolveProviders = $resolveProviders;
         $this->collectProducts = $collectProducts;
     }
 
     /**
      * @param Provider $provider
-     * 
+     *
      * @return Product[]
      */
     public function resolve(Provider $provider)
     {
-        $products = [];
-        foreach ($this->collectProducts->collect() as $product) {
-            if ($product->getProvider() == $provider->getId()) {
-                $products[] = $product;
-            }
-        }
-
+        $products = $this->collectProducts->collect($provider);
+        
         return $products;
     }
 }
