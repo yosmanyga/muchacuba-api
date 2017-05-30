@@ -32,18 +32,25 @@ class Exception implements Persistable, \JsonSerializable
     private $line;
 
     /**
+     * @var array
+     */
+    private $trace;
+
+    /**
      * @param string $id
      * @param string $message
      * @param string $code
      * @param string $file
      * @param int    $line
+     * @param array  $trace
      */
     public function __construct(
         $id,
         $message,
         $code,
         $file,
-        $line
+        $line,
+        $trace
     )
     {
         $this->id = $id;
@@ -51,6 +58,7 @@ class Exception implements Persistable, \JsonSerializable
         $this->code = $code;
         $this->file = $file;
         $this->line = $line;
+        $this->trace = $trace;
     }
 
     /**
@@ -94,6 +102,14 @@ class Exception implements Persistable, \JsonSerializable
     }
 
     /**
+     * @return array
+     */
+    public function getTrace()
+    {
+        return $this->trace;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function bsonSerialize()
@@ -103,7 +119,8 @@ class Exception implements Persistable, \JsonSerializable
             'message' => $this->message,
             'code' => $this->code,
             'file' => $this->file,
-            'line' => $this->line
+            'line' => $this->line,
+            'trace' => $this->trace
         ];
     }
 
@@ -117,10 +134,11 @@ class Exception implements Persistable, \JsonSerializable
         $this->code = $data['code'];
         $this->file = $data['file'];
         $this->line = $data['line'];
+        $this->trace = $data['trace'];
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function jsonSerialize()
     {
@@ -128,7 +146,8 @@ class Exception implements Persistable, \JsonSerializable
             'id' => $this->id,
             'code' => $this->code,
             'file' => $this->file,
-            'line' => $this->line
+            'line' => $this->line,
+            'trace' => $this->trace,
         ];
     }
 }

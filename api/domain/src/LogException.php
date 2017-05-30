@@ -43,7 +43,8 @@ class LogException
             $e->getMessage(),
             $e->getCode(),
             $e->getFile(),
-            $e->getLine()
+            $e->getLine(),
+            $e->getTrace()
         );
 
         $this->manageStorage->connect()->insertOne($exception);
