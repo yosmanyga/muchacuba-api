@@ -68,7 +68,7 @@ class LoadRates
                 $this->translateNetwork->translate(
                     (string) $rowIterator->seek('B')->current()->getValue()
                 ),
-                (string) $rowIterator->seek('F')->current()->getValue(),
+                (string) $rowIterator->seek('D')->current()->getValue(),
                 'USD'
             );
         }
