@@ -189,7 +189,7 @@ export default class ViewStats extends React.Component {
                                     key="sale_title"
                                     style={{textAlign: "center"}}
                                 >
-                                    <strong>Ventas</strong>
+                                    <strong>Ventas & Compras</strong>
                                 </p>,
                                 <Chart
                                     key="sale_chart"
