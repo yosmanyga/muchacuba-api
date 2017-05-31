@@ -1,41 +1,35 @@
 {
-    "name": "cubalider/muchacuba",
+    "name": "muchacuba/muchacuba",
     "authors": [
         {
             "name": "Yosmany Garcia",
             "email": "yosmanyga@gmail.com"
-        },
-        {
-            "name": "Manuel Emilio Carpio",
-            "email": "mectwork@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.3.9",
-        "symsonte/symsonte": "@dev",
         "algolia/algoliasearch-client-php": "~1.10",
-        "cubalider/unique": "@dev",
-        "cubalider/authentication-profile": "@dev",
-        "cubalider/internet-profile": "@dev",
         "cubalider/privilege-profile": "@dev",
-        "facebook/graph-sdk": "~5.3",
+        "cubalider/unique": "@dev",
+        "cubalider/user": "@dev",
         "google/cloud": "^0.20.2",
         "guzzlehttp/guzzle": "^6.2",
         "guzzlehttp/psr7": "^1.3",
-        "mailgun/mailgun-php": "^2.1",
-        "monolog/monolog": "^1.22",
-        "php-http/curl-client": "^1.7",
-        "symsonte/security-asserter": "dev-master",
-        "yosmanyga/validation": "@dev",
         "kreait/firebase-tokens": "^1.5",
-        "phpoffice/phpexcel": "^1.8",
-        "phpunit/phpunit": "^6.1"
+        "mailgun/mailgun-php": "^2.1",
+        "mongodb/mongodb": "~1",
+        "php-http/curl-client": "^1.7",
+        "respect/validation": "~1",
+        "symsonte/symsonte": "@dev",
+        "symfony/intl": "^3.3",
+        "yosmanyga/validation": "@dev"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",
         "behat/behat": "~3",
         "fabpot/goutte": "^3.2",
         "fzaninotto/faker": "~1.6",
+        "sebastian/comparator": "^2.0",
         "symfony/debug": "~3",
         "symsonte/behat-extension": "@dev",
         "willdurand/geocoder": "~3.3"
@@ -43,48 +37,52 @@
     "autoload": {
         "psr-4": {
             "Muchacuba\\": [
-                "domain/setup",
-                "domain/src"
+                "setup",
+                "src/exception",
+                "src/http"
+            ],
+            "Muchacuba\\Internauta\\": [
+                "src/internauta"
             ],
             "Muchacuba\\Http\\": [
-                "http/setup",
-                "http/src"
+                "src/http"
             ],
             "Muchacuba\\Cli\\": [
-                "cli/setup",
-                "cli/src"
-            ],
-            "Cubalider\\": [
-                "domain/vendor/cubalider-storage/src"
-            ],
-            "Cubalider\\Facebook\\": [
-                "domain/vendor/cubalider-facebook/src"
-            ],
-            "Cubalider\\Geo\\": [
-                "domain/vendor/cubalider-geo-profile/src"
+                "src/cli"
             ],
             "Cubalider\\Navigation\\": [
-                "domain/vendor/cubalider-navigation/src"
-            ],
-            "Cubalider\\Phone\\": [
-                "domain/vendor/cubalider-phone/src"
-            ],
-            "Cubalider\\Voip\\": [
-                "domain/vendor/cubalider-voip/src"
-            ],
-            "Cubalider\\Voip\\Tests\\": [
-                "domain/vendor/cubalider-voip/tests"
+                "src/cubalider/navigation"
             ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Muchacuba\\": [
-                "domain/features"
+            "Muchacuba\\Internauta\\Test\\": [
+                "test/features/internauta"
             ]
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:cubalider/facebook-profile.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:cubalider/privilege-profile.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:cubalider/unique.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:cubalider/user.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:cubalider/privilege-profile.git"
+        },
         {
             "type": "vcs",
             "url": "git@github.com:yosmanyga/symsonte.git"

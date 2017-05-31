@@ -1,14 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
-Moment.locale('es');
 import {green100} from 'material-ui/styles/colors';
+
+Moment.locale('es');
 
 class SendRequest extends React.Component {
     static propTypes = {
-        log: React.PropTypes.object
+        log: PropTypes.object
     };
 
     render() {

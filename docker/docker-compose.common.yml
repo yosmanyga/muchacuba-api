@@ -7,8 +7,8 @@ services:
       - php
     working_dir: /var/www
     environment:
-      - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com,holapana.com,www.holapana.com
-      - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com,holapana.com,www.holapana.com
+      - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com
+      - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com
       - LETSENCRYPT_EMAIL=contact@cubalider.com
     restart: always
   php:
@@ -24,14 +24,6 @@ services:
     volumes:
       - ../api/var/db:/data/db
     restart: always
-#  mysql:
-#    image: mysql:5.7.17
-#    container_name: muchacuba_mysql
-#    volumes:
-#      - ../api/var/db_mysql:/var/lib/mysql
-#      - ./mysql:/etc/mysql/conf.d
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
 
 networks:
   default:

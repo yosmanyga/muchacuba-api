@@ -1,3 +1,0 @@
-#!/bin/sh
-
-php /var/www/bin/app.php aloleiro.import-rates >> /var/log/cron.log 2>&1

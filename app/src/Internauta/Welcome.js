@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import {Card, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import horoscope from './Image/horoscope.jpg';
@@ -9,7 +10,7 @@ import translation from './Image/translation.jpg';
 
 export default class Welcome extends React.Component {
     static propTypes = {
-        layout: React.PropTypes.element.isRequired,
+        layout: PropTypes.element.isRequired,
     };
 
     render() {
@@ -66,14 +67,15 @@ export default class Welcome extends React.Component {
         ];
 
         return (
-            <this.props.layout.type {...this.props.layout.props}>
+            <this.props.layout.type
+                {...this.props.layout.props}
+                appBar={null}
+            >
                 <Paper
                     zDepth={2}
                     style={{
                         display: "flex",
                         flexWrap: "wrap",
-                        alignItems: "center",
-                        justifyContent: "center",
                         padding: "10px"
                     }}
                 >
@@ -88,7 +90,7 @@ export default class Welcome extends React.Component {
                                         />
                                     }
                                 >
-                                    <img src={card.image} role="presentation" />
+                                    <img src={card.image} alt={card.title} />
                                 </CardMedia>
                                 <CardText>
                                     {card.description.map(function(description, i) {

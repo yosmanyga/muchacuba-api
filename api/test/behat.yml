@@ -1,0 +1,12 @@
+default:
+  extensions:
+    Symsonte\Behat\ServiceContainer\SymsonteExtension:
+      parametersFile: ../config/parameters.yml
+      cacheDir: ../var/cache
+      namespaces: ['Muchacuba', 'Cubalider', 'Symsonte']
+  suites:
+    internauta:
+      paths: [%paths.base%/features]
+      contexts:
+        - Muchacuba\Internauta\Test\Context
+        - Muchacuba\Internauta\Test\RequestContext

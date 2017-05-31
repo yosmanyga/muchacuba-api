@@ -1,0 +1,24 @@
+muchacuba.http.server.controller_dispatcher:
+    class: 'Symsonte\Http\Server\ControllerDispatcher'
+    arguments:
+        - '@symsonte.service_kit.resource.perpetual_cached_loader'
+        - '#symsonte.resource.builder'
+        - '@symsonte.service_kit.container'
+        - '@symsonte.http.server.request.resolution.nikic_fast_route_finder'
+        - '@symsonte.authorization.checker'
+        - '@symsonte.http.server.request.authentication.credential.authorization_resolver'
+        - '@muchacuba.http.credential_processor'
+        - '@muchacuba.http.role_collector'
+        - '#symsonte.http.server.convert_parameter'
+        - '@muchacuba.http.controller_caller'
+        - '@symsonte.http.server'
+
+muchacuba.cli.server.command_dispatcher:
+    class: 'Symsonte\Cli\Server\CommandDispatcher'
+    arguments:
+        - '@symsonte.service_kit.resource.cached_loader'
+        - '#symsonte.resource.builder'
+        - '@symsonte.service_kit.container'
+        - '@symsonte.cli.server.input.resolution.ordinary_finder'
+        - '@muchacuba.cli.command_caller'
+        - '@symsonte.cli.server'

@@ -29,13 +29,3 @@ services:
   mongo:
     ports:
       - 27017:27017
-#  phpmyadmin:
-#    image: phpmyadmin/phpmyadmin:4.6
-#    container_name: muchacuba_phpmyadmin
-#    ports:
-#      - 8080:80
-#    links:
-#      - mysql:db
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#    restart: always

@@ -1,13 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
-Moment.locale('es');
 import {red100} from 'material-ui/styles/colors';
+
+Moment.locale('es');
 
 class LyricsProcessRequestNotFound extends React.Component {
     static propTypes = {
-        log: React.PropTypes.object
+        log: PropTypes.object
     };
 
     render() {

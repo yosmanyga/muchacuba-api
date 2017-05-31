@@ -1,3 +1,0 @@
-test/var/cache/*
-!test/var/cache/.gitkeep
-/vendor/
