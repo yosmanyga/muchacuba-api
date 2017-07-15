@@ -97,6 +97,7 @@ class SongsTraducidasReadLyrics implements ReadLyrics
             $text = preg_replace(
                 [
                     '/<h1(.*?)>(.*?)<\/h1>/',
+                    '/<div(.*?)>(.*?)<\/div>/',
                     '/<div>/',
                     '/<p(.*?)>(.*?)<\/p>/',
                     '/<p>/',
