@@ -154,7 +154,9 @@ class ProcessRequest implements BaseProcessRequest
         if (isset($author, $title, $lyrics)) {
             $body = sprintf("%s\n%s\n\n%s", $author, $title, $lyrics);
 
-            if (strlen($body) > 5000) {
+            // i.e.: https://www.songstraducidas.com/letratraducida-Mirrors_48347.htm
+            // is 8595 length
+            if (strlen($body) > 10000) {
                 $events[] = new Event(
                     $this,
                     'BigBody',
