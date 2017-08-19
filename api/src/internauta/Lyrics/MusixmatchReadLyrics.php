@@ -88,6 +88,10 @@ class MusixmatchReadLyrics implements ReadLyrics
      */
     private function resolveLyrics(Crawler $crawler)
     {
+        if ($crawler->filter('.mxm-empty__title')->count() !== 0) {
+            throw new UnsupportedLinkException();
+        }
+
         $englishCrawler = $crawler->filter('.mxm-lyrics__content');
 
         if ($englishCrawler->count() !== 0) {
