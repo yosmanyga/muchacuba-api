@@ -73,7 +73,7 @@ class ProcessRequests
 
             try {
                 $processResult = $this->processRequest->process(
-                    $request->getFrom(),
+                    str_replace('Re:', '', $request->getFrom()),
                     strtolower($request->getTo()),
                     $request->getSubject(),
                     $request->getBody()
