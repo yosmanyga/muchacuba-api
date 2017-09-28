@@ -54,7 +54,19 @@ class SendEmail
             );
             file_put_contents($filename, base64_decode($attachment));
 
-            list($width, $height, $type, $attr) = getimagesize($filename);
+            try {
+                list($width, $height, $type, $attr) = getimagesize($filename);
+            } catch (\Exception $e) {
+                $events[] = new Event(
+                    $this,
+                    'Exception',
+                    [
+                        'exception' => 'getimagesize'
+                    ]
+                );
+
+                continue;
+            }
             unset($width, $height, $attr);
 
             if (!is_null($type)) {

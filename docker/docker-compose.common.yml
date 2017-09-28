@@ -10,20 +10,17 @@ services:
       - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com
       - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com
       - LETSENCRYPT_EMAIL=contact@cubalider.com
-    restart: always
   php:
     image: cubalider/php
     container_name: muchacuba_php
     links:
       - mongo
     working_dir: /var/www
-    restart: always
   mongo:
     image: mvertes/alpine-mongo:3.2.10-3
     container_name: muchacuba_mongo
     volumes:
       - ../api/var/db:/data/db
-    restart: always
 
 networks:
   default:

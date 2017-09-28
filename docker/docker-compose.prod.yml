@@ -4,10 +4,14 @@ services:
     volumes:
       - ./nginx/default_prod.conf:/etc/nginx/conf.d/default.conf
       - ../app/build:/var/www
+    restart: always
   php:
     volumes:
       - ./php/php_prod.ini:/usr/local/etc/php/php.ini
       - ../api:/var/www/
+    restart: always
+  mongo:
+    restart: always
   cron:
     image: cubalider/php
     container_name: muchacuba_cron
