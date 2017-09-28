@@ -31,7 +31,7 @@ const localRequest = (
     data,
     onSuccess // onSuccess(response)
 ) => {
-    uri = 'http://localhost:3000' + uri;
+    uri = 'https://localhost:3000' + uri;
 
     let request = (method === 'GET')
         ? Superagent.get(uri)
