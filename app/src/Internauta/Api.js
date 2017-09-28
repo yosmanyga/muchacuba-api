@@ -1,5 +1,5 @@
 import {login} from '../Base/Firebase';
-import {request, handle} from '../Base/Request';
+import {request, localRequest, handle} from '../Base/Request';
 
 const collectLogs = (
     onSuccess, // (logs)
@@ -48,7 +48,39 @@ const deleteLogGroup = (
     });
 };
 
+const debugLocally = (
+    sender,
+    recipient,
+    subject,
+    onSuccess
+) => {
+    login((token) => {
+        localRequest(
+            'POST',
+            '/internauta/mailgun/push-request',
+            token,
+            {
+                sender: sender,
+                recipient: recipient,
+                subject: subject,
+                'stripped-text': ''
+            },
+            (response) => {
+                handle(response, [
+                    {
+                        code: 'success',
+                        callback: () => {
+                            onSuccess();
+                        }
+                    }
+                ]);
+            }
+        )
+    });
+};
+
 export {
     collectLogs,
-    deleteLogGroup
+    deleteLogGroup,
+    debugLocally
 };

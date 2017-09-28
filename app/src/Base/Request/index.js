@@ -24,6 +24,32 @@ const request = (
     });
 };
 
+const localRequest = (
+    method,
+    uri,
+    token,
+    data,
+    onSuccess // onSuccess(response)
+) => {
+    uri = 'http://localhost:3000' + uri;
+
+    let request = (method === 'GET')
+        ? Superagent.get(uri)
+        : Superagent.post(uri);
+
+    request.send(data);
+
+    if (token) {
+        request.set('Authorization', token);
+    }
+
+    request.end((err, res) => {
+        if (onSuccess !== 'undefined') {
+            onSuccess(res)
+        }
+    });
+};
+
 const handle = (response, handlers) => {
     handlers.forEach((handler) => {
         if (
@@ -54,4 +80,4 @@ const handle = (response, handlers) => {
     })
 };
 
-export {request, handle};
+export {request, localRequest, handle};

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {green50, red50, yellow50} from 'material-ui/styles/colors';
+import Dialog from 'material-ui/Dialog';
 import Moment from 'moment';
 import {} from 'moment/locale/es';
 
-import {collectLogs, deleteLogGroup} from './Api';
+import {collectLogs, deleteLogGroup, debugLocally} from './Api';
 
 import {Button, Wait} from '../Base/UI';
 
@@ -40,7 +41,9 @@ export default class ListLogs extends React.Component {
         super(props);
 
         this.state = {
-            logs: null
+            logs: null,
+            branch: null,
+            debugDialog: false
         };
     }
 
@@ -73,6 +76,19 @@ export default class ListLogs extends React.Component {
                 <Paper style={{padding: "10px"}}>
                     {this._buildGroups(this.state.logs)}
                 </Paper>
+                {this.state.debugDialog === true ? <DebugDialog
+                    branch={this.state.branch}
+                    onDebug={() => {
+                        this.setState({
+                            debugDialog: false
+                        });
+                    }}
+                    onCancel={() => {
+                        this.setState({
+                            debugDialog: false
+                        });
+                    }}
+                /> : null}
             </layout.type>
         );
     }
@@ -93,6 +109,12 @@ export default class ListLogs extends React.Component {
                             branch.id
                         );
                     });
+                }}
+                onDebug={(finish) => {
+                    this.setState({
+                        branch: branch,
+                        debugDialog: true
+                    }, finish);
                 }}
             />
         });
@@ -127,7 +149,9 @@ class GroupBlock extends React.Component {
         id: PropTypes.string.isRequired,
         logs: PropTypes.array.isRequired,
         // ()
-        onDelete: PropTypes.func.isRequired
+        onDelete: PropTypes.func.isRequired,
+        // ()
+        onDebug: PropTypes.func.isRequired
     };
 
     constructor() {
@@ -201,8 +225,74 @@ class GroupBlock extends React.Component {
                         icon="delete"
                         onTouchTap={this.props.onDelete}
                     />
+                    <Button
+                        label="Debugguear"
+                        icon="build"
+                        onTouchTap={this.props.onDebug}
+                    />
                 </CardActions>
             </Card>
+        );
+    }
+}
+
+class DebugDialog extends React.Component {
+    static propTypes = {
+        branch: PropTypes.object.isRequired,
+        // ()
+        onDebug: PropTypes.func.isRequired,
+        // ()
+        onCancel: PropTypes.func.isRequired
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            busy: false,
+        };
+    }
+
+    render() {
+        return(
+            <Dialog
+                open={true}
+                title="Debugguear localmente"
+                actions={[
+                    <Button
+                        label="Cancelar"
+                        disabled={this.state.busy === true}
+                        onTouchTap={this.props.onCancel}
+                    />,
+                    <Button
+                        label={!this.state.busy ? "Enviar" : "Enviando..."}
+                        primary={true}
+                        disabled={this.state.busy === true}
+                        onTouchTap={() => {
+                            this.setState({
+                                busy: true
+                            }, () => {
+                                debugLocally(
+                                    'yosmanyga@gmail.com',
+                                    this.props.branch.logs[0].payload.recipient,
+                                    this.props.branch.logs[0].payload.subject,
+                                    this.props.onDebug
+                                );
+                            });
+                        }}
+                        style={{
+                            marginLeft: "8px"
+                        }}
+                    />
+                ]}
+                modal={true}
+                autoScrollBodyContent={true}
+                onRequestClose={this.props.onCancel}
+            >
+                <p>Sender: yosmanyga@gmail.com</p>
+                <p>Recipient: {this.props.branch.logs[0].payload.recipient}</p>
+                <p>Subject: {this.props.branch.logs[0].payload.subject}</p>
+            </Dialog>
         );
     }
 }
