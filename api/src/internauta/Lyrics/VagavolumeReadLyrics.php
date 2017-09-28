@@ -38,6 +38,11 @@ class VagavolumeReadLyrics implements ReadLyrics
 
         $crawler = $this->requestPage->request($link);
 
+        // Is a lyrics page?
+        if ($crawler->filter('#lyr_original')->count() == 0) {
+            throw new UnsupportedLinkException();
+        }
+
         try {
             $author = $this->resolveAuthor($crawler);
         } catch (UnsupportedLinkException $e) {
