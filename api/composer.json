@@ -9,9 +9,9 @@
     "require": {
         "php": ">=5.3.9",
         "algolia/algoliasearch-client-php": "~1.10",
+        "cubalider/facebook-profile": "@dev",
         "cubalider/privilege-profile": "@dev",
         "cubalider/unique": "@dev",
-        "cubalider/user": "@dev",
         "google/cloud": "^0.20.2",
         "guzzlehttp/guzzle": "^6.2",
         "guzzlehttp/psr7": "^1.3",
@@ -39,7 +39,8 @@
             "Muchacuba\\": [
                 "setup",
                 "src/exception",
-                "src/http"
+                "src/http",
+                "src/user"
             ],
             "Muchacuba\\Internauta\\": [
                 "src/internauta"
@@ -74,14 +75,6 @@
         {
             "type": "vcs",
             "url": "git@github.com:cubalider/unique.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:cubalider/user.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:cubalider/privilege-profile.git"
         },
         {
             "type": "vcs",
