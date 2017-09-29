@@ -37,23 +37,20 @@ class PushRequest
      * @http\resolution({method: "POST", path: "/internauta/mailgun/push-request"})
      *
      * @param array $parsedBody
-     * @param array $body
      *
      * @return string $id
      */
-    public function push($parsedBody, $body)
+    public function push($parsedBody)
     {
-        $body = $body ?: $parsedBody;
-
         $id = $this->insertRequest->insert(
-            $body['sender'],
-            $body['recipient'],
-            $body['subject'],
-            $body['stripped-text']
+            $parsedBody['sender'],
+            $parsedBody['recipient'],
+            $parsedBody['subject'],
+            $parsedBody['stripped-text']
         );
 
         $payload = array_merge(
-            $body,
+            $parsedBody,
             [
                 'id' => $id,
             ]
