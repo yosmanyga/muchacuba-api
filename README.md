@@ -28,3 +28,19 @@ docker exec -it muchacuba_php sh
 cd domain
 
 ../vendor/bin/behat
+
+## Backup & restore
+
+# En el container mongo prod
+apk add --no-cache mongodb-tools
+mongodump --db muchacuba
+rm -rf /data/db/dump
+mv dump /data/db
+
+# En mi pc
+scp -r root@muchacuba.com:/root/muchacuba/api/var/db/dump/ /home/yosmanyga/Work/Projects/cubalider/muchacuba/code/api/var/db
+
+# En el container mongo dev
+apk add --no-cache mongodb-tools
+mongorestore --drop --db muchacuba /data/db/dump/muchacuba
+rm -rf /data/db/dump/muchacuba/*
