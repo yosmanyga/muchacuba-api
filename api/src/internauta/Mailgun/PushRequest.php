@@ -42,15 +42,32 @@ class PushRequest
      */
     public function push($parsedBody)
     {
+        return $this->process($parsedBody);
+    }
+
+    /**
+     * @http\resolution({method: "POST", path: "/internauta/debug"})
+     *
+     * @param array $body
+     *
+     * @return string $id
+     */
+    public function debug($body)
+    {
+        return $this->process($body);
+    }
+
+    private function process($body)
+    {
         $id = $this->insertRequest->insert(
-            $parsedBody['sender'],
-            $parsedBody['recipient'],
-            $parsedBody['subject'],
-            $parsedBody['stripped-text']
+            $body['sender'],
+            $body['recipient'],
+            $body['subject'],
+            $body['stripped-text']
         );
 
         $payload = array_merge(
-            $parsedBody,
+            $body,
             [
                 'id' => $id,
             ]

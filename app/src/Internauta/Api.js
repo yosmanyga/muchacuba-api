@@ -57,7 +57,7 @@ const debugLocally = (
     login((token) => {
         localRequest(
             'POST',
-            '/internauta/mailgun/push-request',
+            '/internauta/debug',
             token,
             {
                 sender: sender,
