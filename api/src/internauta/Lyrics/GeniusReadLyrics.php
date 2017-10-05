@@ -40,7 +40,11 @@ class GeniusReadLyrics implements ReadLyrics
 
         $title = $this->resolveTitle($crawler);
 
-        $lyrics = $this->resolveLyrics($crawler);
+        try {
+            $lyrics = $this->resolveLyrics($crawler);
+        } catch (UnsupportedLinkException $e) {
+            throw $e;
+        }
 
         return [$author, $title, $lyrics];
     }
@@ -78,6 +82,8 @@ class GeniusReadLyrics implements ReadLyrics
      * @param Crawler $crawler
      *
      * @return string
+     *
+     * @throws UnsupportedLinkException
      */
     private function resolveLyrics(Crawler $crawler)
     {
@@ -86,6 +92,10 @@ class GeniusReadLyrics implements ReadLyrics
         $lyrics = $crawler->filterXPath('//text()')->extract(['_text']);
         $lyrics = array_map('trim', $lyrics);
         $lyrics = implode("\n", $lyrics);
+
+        if (!$lyrics) {
+            throw new UnsupportedLinkException();
+        }
 
         return $lyrics;
     }
