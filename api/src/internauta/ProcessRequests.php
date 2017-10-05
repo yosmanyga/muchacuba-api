@@ -73,9 +73,9 @@ class ProcessRequests
 
             try {
                 $processResult = $this->processRequest->process(
-                    str_replace('Re:', '', $request->getFrom()),
+                    $request->getFrom(),
                     strtolower($request->getTo()),
-                    $request->getSubject(),
+                    $this->cleanSubject($request->getSubject()),
                     $request->getBody()
                 );
 
@@ -131,6 +131,16 @@ class ProcessRequests
         }
 
         return $i;
+    }
+
+    /**
+     * @param string $subject
+     *
+     * @return string
+     */
+    private function cleanSubject($subject)
+    {
+        return trim(str_replace('Re:', '', $subject));
     }
 
     /**
