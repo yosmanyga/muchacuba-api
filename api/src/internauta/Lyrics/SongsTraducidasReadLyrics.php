@@ -86,26 +86,34 @@ class SongsTraducidasReadLyrics implements ReadLyrics
      */
     private function resolveLyrics(Crawler $crawler)
     {
-        $crawler = $crawler->filter('#two-columns article');
-
         /* Big hack, because there is a problem in the html with an unclosed div */
+
+        $content = file_get_contents($crawler->getUri());
+        $content = preg_replace(
+            ['/<div(.*?)>/', '/<\/div>/'],
+            '',
+            $content
+        );
+        $crawler = new Crawler(null, $crawler->getUri());
+        $crawler->addContent($content);
+        $crawler = $crawler->filter('#two-columns article');
 
         $lyrics = [];
         for ($i = 0; $i <= 1; $i++) {
             $text = $crawler->eq($i)->html();
-            $text = substr($text, 0, strpos($text, '<script'));
             $text = preg_replace(
                 [
-                    '/<h1(.*?)>(.*?)<\/h1>/',
-                    '/<div(.*?)>(.*?)<\/div>/',
-                    '/<div>/',
-                    '/<p(.*?)>(.*?)<\/p>/',
-                    '/<p>/',
+                    '/<h1(.*?)>(.*?)<\/h1>/s',
+                    '/<br(.*?)>/s',
+                    '/<ins(.*?)>(.*?)<\/ins>/s',
+                    '/<script(.*?)>(.*?)<\/script>/s',
+                    '/<!--(.*?)-->/s',
                 ],
                 '',
                 $text
             );
-            $text = str_replace("\r\n", '', $text);
+            $text = str_replace(['<p>', '</p>'], '', $text);
+            $text = str_replace('  ', ' ', $text);
             $text = str_replace('<br>', "\n", $text);
             $text = trim($text);
 
