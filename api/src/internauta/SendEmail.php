@@ -65,6 +65,9 @@ class SendEmail
                     ]
                 );
 
+                unset($attachments[$i]);
+                unlink($filename);
+
                 continue;
             }
             unset($width, $height, $attr);
@@ -84,6 +87,9 @@ class SendEmail
                             'type' => $type
                         ]
                     );
+
+                    unset($attachments[$i]);
+                    unlink($filename);
 
                     continue;
                 }
