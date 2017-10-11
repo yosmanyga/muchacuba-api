@@ -9,8 +9,6 @@ docker-compose \
 -p muchacuba \
 up -d
 
-## Api
-
 cd api
 
 composer install
@@ -18,6 +16,12 @@ composer install
 cp api/config/parameters.dist.yml api/config/parameters.yml
 
 chmod a+w api/var/cache
+
+## Dev debug
+
+docker exec -ot muchacuba_php
+
+php bin/app.php
 
 ## Dev tests
 

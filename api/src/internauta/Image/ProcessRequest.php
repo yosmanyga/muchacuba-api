@@ -70,6 +70,17 @@ class ProcessRequest implements BaseProcessRequest
         $responses = [];
         $events = [];
 
+        if (!$subject) {
+            $responses[] = new Response(
+                "Imágenes Muchacuba <letras@muchacuba.com>",
+                $sender,
+                sprintf('Re: %s', $subject),
+                'Debes escribir lo que buscas en el asunto del correo.'
+            );
+
+            return new ProcessResult($responses, $events);
+        }
+
         $amount = $this->resolveAmount($subject, 3, 20);
 
         $subject = $this->cleanSubject($subject);
