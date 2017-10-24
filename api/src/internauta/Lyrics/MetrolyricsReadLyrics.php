@@ -86,6 +86,8 @@ class MetrolyricsReadLyrics implements ReadLyrics
      * @param Crawler $crawler
      *
      * @return string
+     *
+     * @throws UnsupportedLinkException
      */
     private function resolveLyrics(Crawler $crawler)
     {
@@ -94,6 +96,10 @@ class MetrolyricsReadLyrics implements ReadLyrics
         $lyrics = $crawler->filterXPath('//p/text()')->extract(['_text']);
         $lyrics = array_map('trim', $lyrics);
         $lyrics = implode("\n", $lyrics);
+
+        if (empty($lyrics)) {
+            throw new UnsupportedLinkException();
+        }
 
         return $lyrics;
     }

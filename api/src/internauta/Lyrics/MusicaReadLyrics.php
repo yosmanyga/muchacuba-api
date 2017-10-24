@@ -94,6 +94,7 @@ class MusicaReadLyrics implements ReadLyrics
             return trim($item);
         }, $lyrics);
         $lyrics = implode("\n", $lyrics);
+        $lyrics = trim($lyrics);
 
         return $lyrics;
     }
