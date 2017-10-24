@@ -19,9 +19,12 @@ chmod a+w api/var/cache
 
 ## Dev debug
 
-docker exec -ot muchacuba_php
+Abrir https://localhost:3000 -> Advanced -> Proceed (unsafe)
+Debug en unoo de los pedidos -> Enviar
 
-php bin/app.php
+docker exec -it muchacuba_php
+
+php bin/app.php /internauta/process-requests
 
 ## Dev tests
 
