@@ -177,9 +177,9 @@ class ProcessRequest implements BaseProcessRequest
     {
         return <<<EOF
 Escribe a revolico@muchacuba.com para recibir anuncios de revolico.
-En el asunto escribe las palabras a buscar, ej: laptop core i7
-Para recibir más de 3 anuncios escribe el número entre corchetes, ej: laptop core i7 [10]
-Para recibir los anuncios con sus fotos agrega la letra f, ej: laptop core i7 [10f]
+En el asunto escribe las palabras a buscar, ej: tv 32 pulgadas
+Para recibir más de 3 anuncios escribe el número entre corchetes, ej: tv 32 pulgadas [10]
+Para recibir los anuncios con sus fotos agrega la letra f, ej: tv 32 pulgadas [10f]
 EOF;
     }
 

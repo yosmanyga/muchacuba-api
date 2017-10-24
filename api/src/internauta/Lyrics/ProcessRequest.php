@@ -218,6 +218,7 @@ class ProcessRequest implements BaseProcessRequest
         return <<<EOF
 Escribe a letras@muchacuba.com para recibir letras de canciones.
 En el asunto escribe el artista, título o parte de la letra.
+A veces se puede recibir la traducción de la letra si se agrega: (traducir a español)
 EOF;
     }
 }

@@ -40,7 +40,7 @@ export default class Welcome extends React.Component {
                 description: [
                     "Escribe a letras@muchacuba.com para recibir letras de canciones.",
                     "En el asunto escribe el artista, título o parte de la letra.",
-                    "Para canciones en inglés escribe a lyrics@muchacuba.com"
+                    "A veces se puede recibir la traducción de la letra si se agrega: (traducir a español)"
                 ]
             },
             {
@@ -59,9 +59,9 @@ export default class Welcome extends React.Component {
                 image: revolico,
                 description: [
                     "Escribe a revolico@muchacuba.com para buscar anuncios en revolico.",
-                    "En el asunto escribe las palabras a buscar, ej: laptop core i7",
-                    "Para recibir más de 3 anuncios escribe el número entre corchetes, ej: laptop core i7 [10]",
-                    "Para recibir los anuncios con sus fotos agrega la letra f, ej: laptop core i7 [10f]"
+                    "En el asunto escribe las palabras a buscar, ej: tv 32 pulgadas",
+                    "Para recibir más de 3 anuncios escribe el número entre corchetes, ej: tv 32 pulgadas [10]",
+                    "Para recibir los anuncios con sus fotos agrega la letra f, ej: tv 32 pulgadas [10f]"
                 ]
             }
         ];
