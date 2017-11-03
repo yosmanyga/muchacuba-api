@@ -49,14 +49,18 @@ class ProcessRequest implements BaseProcessRequest
         }
 
         if (empty($subject) && !empty($body)) {
-            return new ProcessResult([
-                new Response(
-                    'Traducción Muchacuba <traduccion@muchacuba.com>',
-                    $sender,
-                    sprintf('Re: %s', $subject),
-                    "Escribe en el asunto lo que quieras traducir.\nPor el momento no estamos traduciendo lo que venga en cuerpo del mensaje."
-                )
-            ], []);
+            if ($sender == 'esperanza.ssp@infomed.sld.cu' || $sender == 'yosmanyga@gmail.com') {
+                $subject = $body;
+            } else {
+                return new ProcessResult([
+                    new Response(
+                        'Traducción Muchacuba <traduccion@muchacuba.com>',
+                        $sender,
+                        sprintf('Re: %s', $subject),
+                        "Escribe en el asunto lo que quieras traducir.\nPor el momento no estamos traduciendo lo que venga en cuerpo del mensaje."
+                    )
+                ], []);
+            }
         }
 
         // Not needed
