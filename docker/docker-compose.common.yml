@@ -9,7 +9,7 @@ services:
     environment:
       - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com
       - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com
-      - LETSENCRYPT_EMAIL=contact@cubalider.com
+      - LETSENCRYPT_EMAIL=contact@muchacuba.com
   php:
     image: cubalider/php
     container_name: muchacuba_php
