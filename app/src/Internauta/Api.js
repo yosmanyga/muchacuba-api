@@ -52,6 +52,7 @@ const debugLocally = (
     sender,
     recipient,
     subject,
+    body,
     onSuccess
 ) => {
     login((token) => {
@@ -63,7 +64,7 @@ const debugLocally = (
                 sender: sender,
                 recipient: recipient,
                 subject: subject,
-                'stripped-text': ''
+                'stripped-text': body
             },
             (response) => {
                 handle(response, [

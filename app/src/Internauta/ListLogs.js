@@ -276,6 +276,7 @@ class DebugDialog extends React.Component {
                                     'yosmanyga@gmail.com',
                                     this.props.branch.logs[0].payload.recipient,
                                     this.props.branch.logs[0].payload.subject,
+                                    this.props.branch.logs[0].payload['body-plain'],
                                     this.props.onDebug
                                 );
                             });
