@@ -32,8 +32,7 @@ class ProcessRequest implements BaseProcessRequest
     )
     {
         $this->client = new TranslateClient([
-            'key' => $googleServerApi,
-            'serviceDefinitionPath' => sprintf('%s/ProcessRequest/translate-v2.json', __DIR__)
+            'key' => $googleServerApi
         ]);
     }
 
