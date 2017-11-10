@@ -14,7 +14,7 @@ class SendRequest extends React.Component {
     };
 
     render() {
-        let body = this.props.log.payload.body.replace(/\n/g, '<br/>');
+        const body = this.props.log.payload['body-plain'].replace(/\n/g, '<br/>');
 
         return (
             <Card style={{backgroundColor: green100}}>
@@ -28,10 +28,7 @@ class SendRequest extends React.Component {
                     <p><strong>From</strong>: {this.props.log.payload.sender}</p>
                     <p><strong>To</strong>: {this.props.log.payload.recipient}</p>
                     <p><strong>Subject</strong>: {this.props.log.payload.subject}</p>
-                    {this.props.log.payload.body !== ''
-                        ? <p dangerouslySetInnerHTML={{__html: body}}/>
-                        : null
-                    }
+                    {body && <p dangerouslySetInnerHTML={{__html: body}}/>}
                     <GridList cellHeight="auto">
                         {this.props.log.payload.attachments.map(function(attachment, i) {
                             return (

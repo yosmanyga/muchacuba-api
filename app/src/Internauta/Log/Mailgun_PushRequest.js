@@ -13,6 +13,8 @@ class MailgunPushRequest extends React.Component {
     };
 
     render() {
+        const body = this.props.log.payload['body-plain'].replace(/\n/g, '<br/>');
+
         return (
             <Card style={{backgroundColor: green100}}>
                 <CardHeader
@@ -25,10 +27,7 @@ class MailgunPushRequest extends React.Component {
                     <p><strong>From</strong>: {this.props.log.payload.sender}</p>
                     <p><strong>To</strong>: {this.props.log.payload.recipient}</p>
                     <p><strong>Subject</strong>: {this.props.log.payload.subject}</p>
-                    {this.props.log.payload.body !== ''
-                        ? <p>{this.props.log.payload.body}</p>
-                        : null
-                    }
+                    {body && <p dangerouslySetInnerHTML={{__html: body}}/>}
                 </CardText>
             </Card>
         );
