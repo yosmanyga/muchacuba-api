@@ -56,7 +56,7 @@ class ProcessRequest implements BaseProcessRequest
                     new Response(
                         'Traducción Muchacuba <traduccion@muchacuba.com>',
                         $sender,
-                        sprintf('Re: %s', $subject),
+                        sprintf('Re: %s...', substr($subject, 0, 10)),
                         "Escribe en el asunto lo que quieras traducir.\nPor el momento no estamos traduciendo lo que venga en cuerpo del mensaje."
                     )
                 ], []);
@@ -81,7 +81,7 @@ class ProcessRequest implements BaseProcessRequest
         $responses[] = new Response(
             'Traducción Muchacuba <traduccion@muchacuba.com>',
             $sender,
-            sprintf('Re: %s...', wordwrap($subject)),
+            sprintf('Re: %s...', substr($subject, 0, 10)),
             $body
         );
 
