@@ -60,6 +60,14 @@ class ProcessRequests
 
         $i = 0;
         foreach ($requests as $request) {
+            /* Spam */
+
+            if (strpos($request->getFrom(), '.date') !== null) {
+                $this->delete($request->getId());
+
+                continue;
+            }
+
             /** @var Event[] $events */
             $events = [];
 
