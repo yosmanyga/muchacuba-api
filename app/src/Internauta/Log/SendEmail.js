@@ -14,7 +14,7 @@ class SendRequest extends React.Component {
     };
 
     render() {
-        const body = this.props.log.payload['body-plain'].replace(/\n/g, '<br/>');
+        const body = this.props.log.payload.body.replace(/\n/g, '<br/>');
 
         return (
             <Card style={{backgroundColor: green100}}>
