@@ -22,7 +22,8 @@
         "respect/validation": "~1",
         "symsonte/symsonte": "@dev",
         "symfony/intl": "^3.3",
-        "yosmanyga/validation": "@dev"
+        "yosmanyga/validation": "@dev",
+        "willdurand/email-reply-parser": "^2.6"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",

@@ -7,6 +7,7 @@ use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\UnsupportedRequestException;
+use EmailReplyParser\Parser\EmailParser;
 
 /**
  * @di\service({
@@ -50,7 +51,7 @@ class ProcessRequest implements BaseProcessRequest
 
         if (empty($subject) && !empty($body)) {
             if ($sender == 'esperanza.ssp@infomed.sld.cu' || $sender == 'yosmanyga@gmail.com') {
-                $subject = $body;
+                $subject = (new EmailParser())->parse($body)->getVisibleText();
             } else {
                 return new ProcessResult([
                     new Response(
