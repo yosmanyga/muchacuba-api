@@ -62,7 +62,10 @@ class ProcessRequests
         foreach ($requests as $request) {
             /* Spam */
 
-            if (strpos($request->getFrom(), '.date') !== false) {
+            if (
+                strpos($request->getFrom(), '.date') !== false
+                || $request->getTo() == 'sales@muchacuba.com'
+            ) {
                 $this->delete($request->getId());
 
                 continue;
