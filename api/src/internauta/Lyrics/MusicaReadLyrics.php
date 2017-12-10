@@ -73,9 +73,13 @@ class MusicaReadLyrics implements ReadLyrics
     private function resolveTitle(Crawler $crawler)
     {
         $crawler = $crawler
-            ->filter('table.rst table tr:nth-child(2) a:nth-child(4)');
+            ->filter('h2');
 
-        $title = $crawler->first()->getNode(0)->textContent;
+        $title = $crawler->text();
+        $title = str_replace("LETRA '", '', $title);
+        $title = substr($title, 0, strlen($title) - 1);
+        $title = strtolower($title);
+        $title = ucfirst($title);
 
         return $title;
     }
