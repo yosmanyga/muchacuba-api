@@ -100,15 +100,20 @@ export default class ListLogs extends React.Component {
                 id={branch.id}
                 logs={branch.logs}
                 onDelete={() => {
-                    this.setState({
-                        logs: this.state.logs.filter((log) => {
-                            return log.payload.id !== branch.id
-                        })
-                    }, () => {
-                        deleteLogGroup(
-                            branch.id
-                        );
-                    });
+                    deleteLogGroup(
+                        branch.id
+                    );
+
+                    // Too slow
+                    // this.setState({
+                    //     logs: this.state.logs.filter((log) => {
+                    //         return log.payload.id !== branch.id
+                    //     })
+                    // }, () => {
+                    //     deleteLogGroup(
+                    //         branch.id
+                    //     );
+                    // });
                 }}
                 onDebug={(finish) => {
                     this.setState({
