@@ -100,20 +100,15 @@ export default class ListLogs extends React.Component {
                 id={branch.id}
                 logs={branch.logs}
                 onDelete={() => {
-                    deleteLogGroup(
-                        branch.id
-                    );
-
-                    // Too slow
-                    // this.setState({
-                    //     logs: this.state.logs.filter((log) => {
-                    //         return log.payload.id !== branch.id
-                    //     })
-                    // }, () => {
-                    //     deleteLogGroup(
-                    //         branch.id
-                    //     );
-                    // });
+                    this.setState({
+                        logs: this.state.logs.filter((log) => {
+                            return log.payload.id !== branch.id
+                        })
+                    }, () => {
+                        deleteLogGroup(
+                            branch.id
+                        );
+                    });
                 }}
                 onDebug={(finish) => {
                     this.setState({
@@ -158,6 +153,10 @@ class GroupBlock extends React.Component {
         // ()
         onDebug: PropTypes.func.isRequired
     };
+
+    shouldComponentUpdate() {
+        return false;
+    }
 
     constructor() {
         super();
