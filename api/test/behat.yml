@@ -3,7 +3,7 @@ default:
     Symsonte\Behat\ServiceContainer\SymsonteExtension:
       parametersFile: ../config/parameters.yml
       cacheDir: ../var/cache
-      namespaces: ['Muchacuba', 'Cubalider', 'Symsonte']
+      namespaces: ['Muchacuba\\', 'Cubalider\\', 'Symsonte\\']
   suites:
     internauta:
       paths: [%paths.base%/features]
