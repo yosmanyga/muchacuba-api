@@ -72,6 +72,7 @@ class ProcessRequest implements BaseProcessRequest
                 'letra@muchacuba.com',
                 'lyrics@muchacuba.com',
                 'lyric@muchacuba.com',
+                'lirics@muchacuba.com',
                 'letter@muchacuba.com'
             ]
         )) {
