@@ -128,14 +128,14 @@ class ProcessRequest implements BaseProcessRequest
             return new ProcessResult($responses, $events);
         }
 
-        $requests[] = new Response(
+        $responses[] = new Response(
             'Horóscopo Muchacuba <horoscopo@muchacuba.com>',
             $sender,
             sprintf('Re: %s', $subject),
             $body
         );
 
-        return new ProcessResult($requests, $events);
+        return new ProcessResult($responses, $events);
     }
 
     /**

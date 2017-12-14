@@ -53,7 +53,7 @@ class ProcessRequest implements BaseProcessRequest
 
         $body = $this->getWeather();
 
-        $requests[] = new Response(
+        $responses[] = new Response(
             'Muchacuba <tiempo@muchacuba.com>',
             $sender,
             'Estado del tiempo',
