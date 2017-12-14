@@ -51,11 +51,7 @@ class ProcessRequest implements BaseProcessRequest
         $responses = [];
         $events = [];
 
-        $body = sprintf(
-            "%s\n\n\n%s",
-            $this->getWeatherForToday(),
-            $this->getWeatherForTomorrow()
-        );
+        $body = $this->getWeather();
 
         $responses[] = new Response(
             'Muchacuba <tiempo@muchacuba.com>',
@@ -80,62 +76,71 @@ EOF;
     /**
      * @return string
      */
-    private function getWeatherForToday()
+    private function getWeather()
     {
-        $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PT&TB2=/Pronostico/pttn.txt');
-
-        $header = $crawler
-            ->filter('.tablaborde .contenidoPagina b')
-            ->text();
+        $crawler = $this->requestPage->request('http://tiempo.cuba.cu/');
 
         $body = $crawler
-            ->filter('.tablaborde .contenidoPagina p')
-            ->html();
-        $body = preg_replace(
-            [
-                '/<font(.*?)>(.*?)<\/font>/s',
-                '/<br(.*?)>/s',
-            ],
-            '',
-            $body
-        );
+            ->filter('#contt3 > div > div > div')
+            ->each(function(Crawler $crawler) {
+                return trim($crawler->text());
+            });
+        $body = implode("\n", $body);
 
-        return sprintf("%s\n\n%s", $header, $body);
+        return $body;
     }
 
-    /**
-     * @return string
-     */
-    private function getWeatherForTomorrow()
-    {
-        $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PTM&TB2=/Pronostico/Ptm.txt');
-
-        $header = $crawler
-            ->filter('.bordeBlanco .contenidoPagina b')
-            ->text();
-
-        $body = $crawler
-            ->filter('.bordeBlanco .contenidoPagina p')
-            ->html();
-        $body = preg_replace(
-            [
-                '/<font(.*?)>(.*?)<\/font>/s',
-                '/<br(.*?)>/s',
-            ],
-            '',
-            $body
-        );
-
-        return sprintf("%s\n\n%s", $header, $body);
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return string
-     */
-    private function parseWeather($url)
-    {
-
-    }
+// It doesn't work. Maybe the problem is related to google app engine?
+//
+//    /**
+//     * @return string
+//     */
+//    private function getWeatherForToday()
+//    {
+//        $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PT&TB2=/Pronostico/pttn.txt');
+//
+//        $header = $crawler
+//            ->filter('.tablaborde .contenidoPagina b')
+//            ->text();
+//
+//        $body = $crawler
+//            ->filter('.tablaborde .contenidoPagina p')
+//            ->html();
+//        $body = preg_replace(
+//            [
+//                '/<font(.*?)>(.*?)<\/font>/s',
+//                '/<br(.*?)>/s',
+//            ],
+//            '',
+//            $body
+//        );
+//
+//        return sprintf("%s\n\n%s", $header, $body);
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    private function getWeatherForTomorrow()
+//    {
+//        $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PTM&TB2=/Pronostico/Ptm.txt');
+//
+//        $header = $crawler
+//            ->filter('.bordeBlanco .contenidoPagina b')
+//            ->text();
+//
+//        $body = $crawler
+//            ->filter('.bordeBlanco .contenidoPagina p')
+//            ->html();
+//        $body = preg_replace(
+//            [
+//                '/<font(.*?)>(.*?)<\/font>/s',
+//                '/<br(.*?)>/s',
+//            ],
+//            '',
+//            $body
+//        );
+//
+//        return sprintf("%s\n\n%s", $header, $body);
+//    }
 }
