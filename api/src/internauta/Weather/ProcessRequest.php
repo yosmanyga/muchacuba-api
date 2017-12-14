@@ -51,7 +51,11 @@ class ProcessRequest implements BaseProcessRequest
         $responses = [];
         $events = [];
 
-        $body = $this->getWeather();
+        $body = sprintf(
+            "%s\n\n\n%s",
+            $this->getWeatherForToday(),
+            $this->getWeatherForTomorrow()
+        );
 
         $responses[] = new Response(
             'Muchacuba <tiempo@muchacuba.com>',
@@ -76,7 +80,7 @@ EOF;
     /**
      * @return string
      */
-    private function getWeather()
+    private function getWeatherForToday()
     {
         $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PT&TB2=/Pronostico/pttn.txt');
 
@@ -97,5 +101,41 @@ EOF;
         );
 
         return sprintf("%s\n\n%s", $header, $body);
+    }
+
+    /**
+     * @return string
+     */
+    private function getWeatherForTomorrow()
+    {
+        $crawler = $this->requestPage->request('http://www.met.inf.cu/asp/genesis.asp?TB0=PLANTILLAS&TB1=PTM&TB2=/Pronostico/Ptm.txt');
+
+        $header = $crawler
+            ->filter('.bordeBlanco .contenidoPagina b')
+            ->text();
+
+        $body = $crawler
+            ->filter('.bordeBlanco .contenidoPagina p')
+            ->html();
+        $body = preg_replace(
+            [
+                '/<font(.*?)>(.*?)<\/font>/s',
+                '/<br(.*?)>/s',
+            ],
+            '',
+            $body
+        );
+
+        return sprintf("%s\n\n%s", $header, $body);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    private function parseWeather($url)
+    {
+
     }
 }
