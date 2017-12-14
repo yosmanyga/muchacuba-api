@@ -2,13 +2,10 @@
 
 namespace Muchacuba\Internauta;
 
-use Muchacuba\Internauta\InsertRequest;
-use Muchacuba\Internauta\InsertLog;
-
 /**
  * @di\service()
  */
-class ManuallyPushRequest
+class ManualPushRequest
 {
     /**
      * @var InsertRequest
@@ -22,7 +19,7 @@ class ManuallyPushRequest
 
     /**
      * @param InsertRequest $insertRequest
-     * @param InsertLog    $insertLog
+     * @param InsertLog     $insertLog
      */
     public function __construct(
         InsertRequest $insertRequest,
@@ -34,7 +31,7 @@ class ManuallyPushRequest
     }
 
     /**
-     * @cli\resolution({command: "/internauta/manually-push-request"})
+     * @cli\resolution({command: "/internauta/manual-push-request"})
      *
      * @param string $sender
      * @param string $recipient
