@@ -71,7 +71,9 @@ class ProcessRequests
                 strpos($request->getFrom(), '.date') !== false
                 || $to == 'sales@muchacuba.com'
             ) {
-                $this->delete($request->getId());
+                $this->manageStorage->connect()->deleteOne([
+                    '_id' => $request->getId(),
+                ]);
 
                 continue;
             }
@@ -103,7 +105,7 @@ class ProcessRequests
                 foreach ($processResult->getResponses() as $response) {
                     $sendResult = $this->sendEmail->send(
                         $response->getFrom(),
-                        $to,
+                        $response->getTo(),
                         $response->getSubject(),
                         $response->getBody(),
                         $response->getAttachments()
@@ -127,7 +129,9 @@ class ProcessRequests
                 );
             }
 
-            $this->delete($request->getId());
+            $this->manageStorage->connect()->deleteOne([
+                '_id' => $request->getId(),
+            ]);
 
             // Event logging
             foreach($events as $event) {
@@ -157,21 +161,5 @@ class ProcessRequests
     private function cleanSubject($subject)
     {
         return trim(str_replace('Re:', '', $subject));
-    }
-
-    /**
-     * @param string $id
-     *
-     * @throws \Exception
-     */
-    private function delete($id)
-    {
-        $result = $this->manageStorage->connect()->deleteOne([
-            '_id' => $id,
-        ]);
-
-        if ($result->getDeletedCount() === 0) {
-            throw new \Exception(sprintf('Request with id "%s" was not found.', $id));
-        }
     }
 }
