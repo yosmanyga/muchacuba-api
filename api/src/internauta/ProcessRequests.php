@@ -4,6 +4,7 @@ namespace Muchacuba\Internauta;
 
 use Muchacuba\Internauta\Request\ManageStorage;
 use Muchacuba\Internauta\Delegate\ProcessRequest;
+use Email\Parse;
 
 /**
  * @di\service()
@@ -60,11 +61,15 @@ class ProcessRequests
 
         $i = 0;
         foreach ($requests as $request) {
+            $to = Parse::getInstance()->parse(
+                $request->getTo()
+            )['email_addresses'][0]['simple_address'];
+
             /* Spam */
 
             if (
                 strpos($request->getFrom(), '.date') !== false
-                || $request->getTo() == 'sales@muchacuba.com'
+                || $to == 'sales@muchacuba.com'
             ) {
                 $this->delete($request->getId());
 
@@ -85,7 +90,7 @@ class ProcessRequests
             try {
                 $processResult = $this->processRequest->process(
                     $request->getFrom(),
-                    strtolower($request->getTo()),
+                    $to,
                     $this->cleanSubject($request->getSubject()),
                     $request->getBody()
                 );
@@ -98,7 +103,7 @@ class ProcessRequests
                 foreach ($processResult->getResponses() as $response) {
                     $sendResult = $this->sendEmail->send(
                         $response->getFrom(),
-                        $response->getTo(),
+                        $to,
                         $response->getSubject(),
                         $response->getBody(),
                         $response->getAttachments()
