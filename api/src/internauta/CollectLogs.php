@@ -29,6 +29,6 @@ class CollectLogs
      */
     public function collect()
     {
-        return new Logs($this->manageStorage->connect()->find());
+        return new Logs($this->manageStorage->connect()->find([], ['limit' => 100]));
     }
 }
