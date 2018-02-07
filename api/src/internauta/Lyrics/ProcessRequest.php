@@ -73,7 +73,8 @@ class ProcessRequest implements BaseProcessRequest
                 'lyrics@muchacuba.com',
                 'lyric@muchacuba.com',
                 'lirics@muchacuba.com',
-                'letter@muchacuba.com'
+                'letter@muchacuba.com',
+                'lletras@muchacuba.com',
             ]
         )) {
             throw new UnsupportedRequestException();
