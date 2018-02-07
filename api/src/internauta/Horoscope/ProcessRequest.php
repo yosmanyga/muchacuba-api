@@ -164,32 +164,34 @@ EOF;
         // The title comes with spaces at the beginning and end
         $title = trim($title);
 
+        $quote = $crawler
+            ->filter('.uvn-flex-article-pullquote')
+            ->first()->getNode(0)->textContent;
+        $quote = trim($quote);
+
         $texts = $crawler
-            ->filter('.uvn-flex-article-body p')
-            ->each(function(Crawler $crawler) {
-                $titleCrawler = $crawler->filter('b');
+                ->filter('.uvn-flex-article-body p, .uvn-flex-article-body h3')
+                ->each(function(Crawler $crawler) {
+                    if ($crawler->first()->getNode(0)->tagName == 'h3') {
+                        $text = sprintf("%s\n", $crawler->first()->getNode(0)->textContent);
+                        $text = trim($text);
+                    } else {
+                        $text = implode("\n", $crawler->filterXPath('//p/text()')->extract(['_text']));
+                        $text = trim($text);
+                    }
 
-                if ($titleCrawler->count() != 0) {
-                    $title = sprintf("%s\n", $titleCrawler->first()->getNode(0)->textContent);
-                } else {
-                    $title = '';
-                }
+                    return $text;
+                });
 
-                $text = implode("\n", $crawler->filterXPath('//p/text()')->extract(['_text']));
-                $text = trim($text);
-
-                return sprintf("%s%s", $title, $text);
-            });
-
-        foreach ($texts as $i => $text) {
-            // Remove final texts, not related to the horoscope
-            if (strlen($text) < 80) {
-                unset($texts[$i]);
+        $texts = array_filter(
+            $texts,
+            function($text) {
+                return !empty($text);
             }
-        }
+        );
 
         $text = implode("\n\n", $texts);
 
-        return sprintf("%s\n\n%s", $title, $text);
+        return sprintf("%s\n\n%s\n\n%s", $title, $quote, $text);
     }
 }
