@@ -164,24 +164,30 @@ EOF;
         // The title comes with spaces at the beginning and end
         $title = trim($title);
 
-        $quote = $crawler
-            ->filter('.uvn-flex-article-pullquote')
-            ->first()->getNode(0)->textContent;
-        $quote = trim($quote);
+        $body = sprintf("%s", $title);
+
+        $quoteCrawler = $crawler
+            ->filter('.uvn-flex-article-pullquote');
+        if ($quoteCrawler->count() > 0) {
+            $quote = $quoteCrawler->first()->getNode(0)->textContent;
+            $quote = trim($quote);
+
+            $body = sprintf("%s\n\n%s", $body, $quote);
+        }
 
         $texts = $crawler
-                ->filter('.uvn-flex-article-body p, .uvn-flex-article-body h3')
-                ->each(function(Crawler $crawler) {
-                    if ($crawler->first()->getNode(0)->tagName == 'h3') {
-                        $text = sprintf("%s\n", $crawler->first()->getNode(0)->textContent);
-                        $text = trim($text);
-                    } else {
-                        $text = implode("\n", $crawler->filterXPath('//p/text()')->extract(['_text']));
-                        $text = trim($text);
-                    }
+            ->filter('.uvn-flex-article-body p, .uvn-flex-article-body h3')
+            ->each(function(Crawler $crawler) {
+                if ($crawler->first()->getNode(0)->tagName == 'h3') {
+                    $text = sprintf("%s\n", $crawler->first()->getNode(0)->textContent);
+                    $text = trim($text);
+                } else {
+                    $text = implode("\n", $crawler->filterXPath('//p/text()')->extract(['_text']));
+                    $text = trim($text);
+                }
 
-                    return $text;
-                });
+                return $text;
+            });
 
         $texts = array_filter(
             $texts,
@@ -192,6 +198,8 @@ EOF;
 
         $text = implode("\n\n", $texts);
 
-        return sprintf("%s\n\n%s\n\n%s", $title, $quote, $text);
+        $body = sprintf("%s\n\n%s", $body, $text);
+
+        return $body;
     }
 }
