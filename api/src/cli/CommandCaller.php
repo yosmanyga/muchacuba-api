@@ -13,15 +13,34 @@ use Symsonte\Cli\Server\CommandCaller as BaseCommandCaller;
 class CommandCaller implements BaseCommandCaller
 {
     /**
-     * @var callable
+     * @var string
      */
-    private $logException;
+    private $raven;
+
+    /**
+     * @di\arguments({
+     *     raven: "%raven%",
+     * })
+     *
+     * @param string $raven
+     */
+    public function __construct(string $raven)
+    {
+        $this->raven = $raven;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function call($command, $method, $parameters)
     {
+        $client = new \Raven_Client($this->raven);
+
+        $error_handler = new \Raven_ErrorHandler($client);
+        $error_handler->registerExceptionHandler();
+        $error_handler->registerErrorHandler();
+        $error_handler->registerShutdownFunction();
+
         try {
             $payload = call_user_func_array([$command, $method], $parameters);
 
@@ -29,16 +48,9 @@ class CommandCaller implements BaseCommandCaller
         } catch (Exception $e) {
             $response = $this->generateKey($e);
         } catch (\Exception $e) {
-            //call_user_func_array([$this->logException, '__invoke'], [$e]);
-
-            $response = $this->generateKey($e);
+            throw $e;
         } catch (\Throwable $e) {
             throw $e;
-            //call_user_func_array([$this->logException, '__invoke'], [$e]);
-
-//            $response = [
-//                'code' => 'failure',
-//            ];
         }
 
         return $response;

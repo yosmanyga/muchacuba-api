@@ -42,3 +42,5 @@ aloleiro_company_profit_percent: "" # In percent
 # Topup
 topup_ding_id: ""
 topup_ding_password: ""
+# Sentry
+raven: ""

@@ -24,7 +24,8 @@
         "symfony/intl": "^3.3",
         "yosmanyga/validation": "@dev",
         "willdurand/email-reply-parser": "^2.6",
-        "mmucklo/email-parse": "^2.0"
+        "mmucklo/email-parse": "^2.0",
+        "sentry/sentry": "^1.8"
     },
     "require-dev": {
         "coduo/php-matcher": "~2",
