@@ -127,6 +127,16 @@ class ProcessRequest implements BaseProcessRequest
                     );
 
                     continue;
+                } catch (\Throwable $e) {
+                    $events[] = new Event(
+                        $this,
+                        'Invalid',
+                        [
+                            'link' => $result['link']
+                        ]
+                    );
+
+                    continue;
                 }
 
                 $size = strlen($image);
