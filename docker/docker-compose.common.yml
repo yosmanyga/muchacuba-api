@@ -1,7 +1,7 @@
 version: '2'
 services:
   nginx:
-    image: nginx:1.11.9-alpine
+    image: nginx:1.13.8-alpine
     container_name: muchacuba_nginx
     links:
       - php
@@ -17,7 +17,7 @@ services:
       - mongo
     working_dir: /var/www
   mongo:
-    image: mvertes/alpine-mongo:3.2.10-3
+    image: cubalider/mongo
     container_name: muchacuba_mongo
     volumes:
       - ../api/var/db:/data/db
