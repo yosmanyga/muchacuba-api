@@ -53,10 +53,16 @@ class LetrasReadLyrics implements ReadLyrics
      * @param Crawler $crawler
      *
      * @return string
+     *
+     * @throws UnsupportedLinkException
      */
     private function resolveAuthor(Crawler $crawler)
     {
         $crawler = $crawler->filter('#js-lyric-cnt h2');
+
+        if ($crawler->count() == 0) {
+            throw new UnsupportedLinkException();
+        }
 
         $author = $crawler->first()->getNode(0)->textContent;
 
