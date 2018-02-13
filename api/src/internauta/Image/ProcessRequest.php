@@ -117,7 +117,7 @@ class ProcessRequest implements BaseProcessRequest
                     ));
                 }
                 // Problem downloading the image?
-                catch (\Exception $e) {
+                catch (\ErrorException $e) {
                     $events[] = new Event(
                         $this,
                         'Invalid',
@@ -127,7 +127,9 @@ class ProcessRequest implements BaseProcessRequest
                     );
 
                     continue;
-                } catch (\Throwable $e) {
+                }
+                // Problem downloading the image?
+                catch (\Exception $e) {
                     $events[] = new Event(
                         $this,
                         'Invalid',
