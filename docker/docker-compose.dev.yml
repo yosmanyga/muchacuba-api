@@ -1,7 +1,7 @@
 version: '2'
 services:
   node:
-    image: cubalider/node
+    image: yosmy/node
     container_name: muchacuba_node
     ports:
       - 3000:3000

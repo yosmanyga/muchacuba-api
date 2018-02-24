@@ -2,11 +2,9 @@
 
 namespace Muchacuba\Internauta\Weather;
 
-use Cubalider\Navigation\RequestPage;
-use Muchacuba\Internauta\Event;
+use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
-use Muchacuba\Internauta\SearchGoogle;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\UnsupportedRequestException;
 use Symfony\Component\DomCrawler\Crawler;

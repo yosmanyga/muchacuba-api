@@ -1,6 +1,6 @@
 <?php
 
-namespace Cubalider\Navigation\Computer;
+namespace Yosmy\Navigation\Computer;
 
 use MongoDB\Client;
 use MongoDB\Collection;

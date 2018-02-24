@@ -45,7 +45,7 @@ rm -rf /data/db/dump
 mv dump /data/db
 
 # En mi pc
-scp -r root@muchacuba.com:/root/muchacuba/api/var/db/dump/ /home/yosmanyga/Work/Projects/cubalider/muchacuba/code/api/var/db
+scp -r root@muchacuba.com:/root/muchacuba/api/var/db/dump/ /home/yosmanyga/Work/Projects/yosmy/muchacuba/code/api/var/db
 
 # En el container mongo dev
 apk add --no-cache mongodb-tools

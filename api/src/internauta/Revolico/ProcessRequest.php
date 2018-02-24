@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Revolico;
 
-use Cubalider\Navigation\RequestPage;
+use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;

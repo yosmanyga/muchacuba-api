@@ -13,7 +13,7 @@ services:
   mongo:
     restart: always
   cron:
-    image: cubalider/php
+    image: yosmy/php
     container_name: muchacuba_cron
     volumes:
       - ../api:/var/www

@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta;
 
-use Cubalider\Navigation\RequestPage;
+use Yosmy\Navigation\RequestPage;
 use GuzzleHttp\Client;
 
 /**

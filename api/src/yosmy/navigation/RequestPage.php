@@ -1,6 +1,6 @@
 <?php
 
-namespace Cubalider\Navigation;
+namespace Yosmy\Navigation;
 
 use Symfony\Component\DomCrawler\Crawler;
 

@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Http;
 
-use Cubalider\Privilege as  PrivilegeProfile;
+use Yosmy\Privilege;
 use Symsonte\Authorization\Role\Collector as BaseCollector;
 
 /**
@@ -13,15 +13,15 @@ use Symsonte\Authorization\Role\Collector as BaseCollector;
 class RoleCollector implements BaseCollector
 {
     /**
-     * @var PrivilegeProfile\PickProfile
+     * @var Privilege\PickProfile
      */
     private $pickPrivilegeProfile;
 
     /**
-     * @param PrivilegeProfile\PickProfile $pickPrivilegeProfile
+     * @param Privilege\PickProfile $pickPrivilegeProfile
      */
     function __construct(
-        PrivilegeProfile\PickProfile $pickPrivilegeProfile
+        Privilege\PickProfile $pickPrivilegeProfile
     )
     {
         $this->pickPrivilegeProfile = $pickPrivilegeProfile;
@@ -34,7 +34,7 @@ class RoleCollector implements BaseCollector
     {
         try {
             $profile = $this->pickPrivilegeProfile->pick($user);
-        } catch (PrivilegeProfile\NonexistentProfileException $e) {
+        } catch (Privilege\Profile\NonexistentException $e) {
             // If it doesn't have a profile, it means that the user is new
             // and this call was done by init-user
 

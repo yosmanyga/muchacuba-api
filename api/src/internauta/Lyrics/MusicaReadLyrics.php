@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Lyrics;
 
-use Cubalider\Navigation\RequestPage;
+use Yosmy\Navigation\RequestPage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**

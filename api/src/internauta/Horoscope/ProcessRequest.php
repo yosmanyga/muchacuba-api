@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Horoscope;
 
-use Cubalider\Navigation\RequestPage;
+use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Response;
@@ -159,24 +159,15 @@ EOF;
         $crawler = $this->requestPage->request($link, false);
 
         $title = $crawler
-            ->filter('.uvn-flex-article h1')
+            ->filter('h1')
             ->first()->getNode(0)->textContent;
         // The title comes with spaces at the beginning and end
         $title = trim($title);
 
         $body = sprintf("%s", $title);
 
-        $quoteCrawler = $crawler
-            ->filter('.uvn-flex-article-pullquote');
-        if ($quoteCrawler->count() > 0) {
-            $quote = $quoteCrawler->first()->getNode(0)->textContent;
-            $quote = trim($quote);
-
-            $body = sprintf("%s\n\n%s", $body, $quote);
-        }
-
         $texts = $crawler
-            ->filter('.uvn-flex-article-body p, .uvn-flex-article-body h3')
+            ->filter('#article-chunks p, #article-chunks h3')
             ->each(function(Crawler $crawler) {
                 if ($crawler->first()->getNode(0)->tagName == 'h3') {
                     $text = sprintf("%s\n", $crawler->first()->getNode(0)->textContent);

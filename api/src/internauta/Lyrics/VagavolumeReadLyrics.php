@@ -2,7 +2,7 @@
 
 namespace Muchacuba\Internauta\Lyrics;
 
-use Cubalider\Navigation\RequestPage;
+use Yosmy\Navigation\RequestPage;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -43,11 +43,7 @@ class VagavolumeReadLyrics implements ReadLyrics
             throw new UnsupportedLinkException();
         }
 
-        try {
-            $author = $this->resolveAuthor($crawler);
-        } catch (UnsupportedLinkException $e) {
-            throw $e;
-        }
+        $author = $this->resolveAuthor($crawler);
 
         $title = $this->resolveTitle($crawler);
 

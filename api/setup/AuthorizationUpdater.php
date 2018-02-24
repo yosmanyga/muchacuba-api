@@ -68,7 +68,7 @@ class AuthorizationUpdater implements Updater
                 'merge',
                 [
                     new ObjectArgument($this->loader->load([
-                        'dir' => sprintf("%s/../vendor/cubalider", __DIR__),
+                        'dir' => sprintf("%s/../vendor/yosmy", __DIR__),
                         'filter' => '*.php',
                         'extra' => [
                             'type' => 'annotation',

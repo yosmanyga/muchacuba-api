@@ -11,13 +11,13 @@ services:
       - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com
       - LETSENCRYPT_EMAIL=contact@muchacuba.com
   php:
-    image: cubalider/php
+    image: yosmy/php
     container_name: muchacuba_php
     links:
       - mongo
     working_dir: /var/www
   mongo:
-    image: cubalider/mongo
+    image: yosmy/mongo
     container_name: muchacuba_mongo
     volumes:
       - ../api/var/db:/data/db

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cubalider\Navigation;
+namespace Yosmy\Navigation;
 
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
@@ -15,7 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class ResolveAgents
 {
     /**
-     * @cli\resolution({command: "cubalider.navigation.resolve-agents"})
+     * @cli\resolution({command: "yosmy.navigation.resolve-agents"})
      *
      * @return array
      */

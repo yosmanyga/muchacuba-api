@@ -1,6 +1,6 @@
 <?php
 
-namespace Cubalider\Navigation;
+namespace Yosmy\Navigation;
 
 use Goutte\Client;
 
@@ -18,7 +18,7 @@ class ResolveProxies
      *
      * @return array
      *
-     * @cli\resolution({command: "cubalider.navigation.resolve-proxies"})
+     * @cli\resolution({command: "yosmy.navigation.resolve-proxies"})
      */
     public function resolve($amount = 100)
     {
@@ -36,39 +36,39 @@ class ResolveProxies
         );
     }
 
-    /**
-     * @param Client $client
-     * @param int    $amount
-     *
-     * @return array
-     */
-    private function resolveFromSpinproxies(Client $client, $amount)
-    {
-        $data = json_decode(
-            file_get_contents(sprintf(
-                'https://spinproxies.com/api/v1/proxylist?%s&%s&%s&%s&%s&%s',
-                'key=kzu9kk633b0veas1msrkymh1z355fg',
-                'format=json',
-                'type=elite,anonymous',
-                'protocols=ALL',
-                //'country_code=ALL', empty if set this parameter
-                'new=false',
-                'limit=100'
-            )),
-            true
-        );
-
-        $proxies = [];
-        foreach ($data['data']['proxies'] as $i => $proxy) {
-            $proxies[$i] = [
-                'ip' => $proxy['ip'],
-                'port' => $proxy['port'],
-                'protocol' => $proxy['protocol'],
-            ];
-        }
-
-        return $proxies;
-    }
+//    /**
+//     * @param Client $client
+//     * @param int    $amount
+//     *
+//     * @return array
+//     */
+//    private function resolveFromSpinproxies(Client $client, $amount)
+//    {
+//        $data = json_decode(
+//            file_get_contents(sprintf(
+//                'https://spinproxies.com/api/v1/proxylist?%s&%s&%s&%s&%s&%s',
+//                'key=kzu9kk633b0veas1msrkymh1z355fg',
+//                'format=json',
+//                'type=elite,anonymous',
+//                'protocols=ALL',
+//                //'country_code=ALL', empty if set this parameter
+//                'new=false',
+//                'limit=100'
+//            )),
+//            true
+//        );
+//
+//        $proxies = [];
+//        foreach ($data['data']['proxies'] as $i => $proxy) {
+//            $proxies[$i] = [
+//                'ip' => $proxy['ip'],
+//                'port' => $proxy['port'],
+//                'protocol' => $proxy['protocol'],
+//            ];
+//        }
+//
+//        return $proxies;
+//    }
 
     /**
      * @param Client $client

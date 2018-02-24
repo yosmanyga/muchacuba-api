@@ -2,8 +2,8 @@
 
 namespace Muchacuba\Internauta;
 
-use Cubalider\Navigation\MarkComputer;
-use Cubalider\Navigation\CreateClients;
+use Yosmy\Navigation\MarkComputer;
+use Yosmy\Navigation\CreateClients;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**

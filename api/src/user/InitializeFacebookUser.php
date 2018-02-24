@@ -2,9 +2,9 @@
 
 namespace Muchacuba;
 
-use Cubalider\Unique;
-use Cubalider\Facebook;
-use Cubalider\Privilege;
+use Yosmy\Unique;
+use Yosmy\Facebook;
+use Yosmy\Privilege;
 
 /**
  * @di\service()
@@ -38,7 +38,7 @@ class InitializeFacebookUser
      * @param ListenInitFacebookUser[] $listenServices
      *
      * @di\arguments({
-     *     listenServices: '#cubalider.init_facebook_user'
+     *     listenServices: '#yosmy.init_facebook_user'
      * })
      */
     public function __construct(
@@ -74,13 +74,13 @@ class InitializeFacebookUser
     {
         try {
             $this->createUniqueness->create($guest);
-        } catch (Unique\ExistentUniquenessException $e) {
+        } catch (Unique\Uniqueness\ExistentException $e) {
             // Profiles already created
         }
 
         try {
             $this->insertPrivilegeProfile->insert($guest, []);
-        } catch (Privilege\ExistentProfileException $e) {
+        } catch (Privilege\Profile\ExistentException $e) {
         }
 
         try {
@@ -91,7 +91,7 @@ class InitializeFacebookUser
                 $email,
                 $picture
             );
-        } catch (Facebook\ExistentProfileException $e) {
+        } catch (Facebook\Profile\ExistentException $e) {
         }
 
         foreach ($this->listenServices as $listenService) {

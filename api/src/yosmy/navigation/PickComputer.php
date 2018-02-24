@@ -1,8 +1,8 @@
 <?php
 
-namespace Cubalider\Navigation;
+namespace Yosmy\Navigation;
 
-use Cubalider\Navigation\Computer\ManageStorage;
+use Yosmy\Navigation\Computer\ManageStorage;
 
 /**
  * @author Yosmany Garcia <yosmanyga@gmail.com>
