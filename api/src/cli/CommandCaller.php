@@ -68,7 +68,7 @@ class CommandCaller implements BaseCommandCaller
                 preg_replace(
                     '/(?<=[a-zA-Z0-9])[A-Z]/',
                     '-\\0',
-                    (new \ReflectionClass($class))->getShortName()
+                    $class
                 ),
                 '\\',
                 '.'

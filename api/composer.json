@@ -40,7 +40,6 @@
         "psr-4": {
             "Muchacuba\\": [
                 "setup",
-                "src/exception",
                 "src/http",
                 "src/user"
             ],
