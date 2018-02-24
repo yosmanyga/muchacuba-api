@@ -12,7 +12,7 @@ $app = new App(new PerpetualCachedContainer(
     sprintf('%s/../config/parameters.yml', __DIR__),
     [],
     sprintf('%s/../var/cache', __DIR__),
-    ['Muchacuba\\', 'Cubalider\\', 'Symsonte\\']
+    ['Muchacuba\\', 'Yosmy\\', 'Symsonte\\']
 ));
 $app->execute(
     'muchacuba.http.server.controller_dispatcher',
