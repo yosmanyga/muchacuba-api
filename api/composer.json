@@ -41,6 +41,7 @@
             "Muchacuba\\": [
                 "setup",
                 "src/http",
+                "src/upgrade",
                 "src/user"
             ],
             "Muchacuba\\Internauta\\": [
