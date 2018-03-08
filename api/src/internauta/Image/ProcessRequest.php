@@ -105,41 +105,21 @@ class ProcessRequest implements BaseProcessRequest
             $amount = min($amount, count($results));
 
             foreach ($results as $result) {
-                try {
-                    $image = base64_encode(file_get_contents(
-                        $result['link'],
-                        false,
-                        stream_context_create(array(
-                            'http' => array(
-                                'timeout' => 5
-                            )
-                        ))
-                    ));
-                }
-                // Problem downloading the image?
-                catch (\ErrorException $e) {
-                    $events[] = new Event(
-                        $this,
-                        'Invalid',
-                        [
-                            'link' => $result['link']
-                        ]
-                    );
+                $image = @file_get_contents(
+                    $result['link'],
+                    false,
+                    stream_context_create(array(
+                        'http' => array(
+                            'timeout' => 5
+                        )
+                    ))
+                );
 
+                if (!$image) {
                     continue;
                 }
-                // Problem downloading the image?
-                catch (\Exception $e) {
-                    $events[] = new Event(
-                        $this,
-                        'Invalid',
-                        [
-                            'link' => $result['link']
-                        ]
-                    );
 
-                    continue;
-                }
+                $image = base64_encode($image);
 
                 $size = strlen($image);
                 if ($size > 1000000) {
