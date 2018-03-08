@@ -69,7 +69,7 @@ class ProcessRequest implements BaseProcessRequest
     {
         if (!in_array(
             current(explode('@', $recipient)),
-            ['horoscopo', 'hooroscopo', 'oroscopo', 'zodiaco', 'sodiaco']
+            ['horoscopo', 'horozcopo', 'hooroscopo', 'oroscopo', 'zodiaco', 'sodiaco']
         )) {
             throw new UnsupportedRequestException();
         }
