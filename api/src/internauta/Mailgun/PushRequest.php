@@ -48,10 +48,10 @@ class PushRequest
         }
 
         $id = $this->insertRequest->insert(
-            $parsedBody['sender'],
-            $parsedBody['recipient'],
-            $parsedBody['subject'],
-            $parsedBody['stripped-text']
+            $this->normalize($parsedBody['sender']),
+            $this->normalize($parsedBody['recipient']),
+            $this->normalize($parsedBody['subject']),
+            $this->normalize($parsedBody['stripped-text'])
         );
 
         $payload = array_merge(
@@ -68,5 +68,27 @@ class PushRequest
         );
 
         return $id;
+    }
+
+    /**
+     * @param string $text
+     *
+     * @return string
+     */
+    private function normalize(string $text)
+    {
+        $text = iconv(
+            mb_detect_encoding(
+                $text,
+                mb_detect_order(),
+                true
+            ),
+            "UTF-8",
+            $text
+        );
+
+        $text = strtolower($text);
+
+        return $text;
     }
 }
