@@ -71,12 +71,16 @@ class PushRequest
     }
 
     /**
-     * @param string $text
+     * @param string|null $text
      *
      * @return string
      */
-    private function normalize(string $text)
+    private function normalize(string $text = null)
     {
+        if ($text === null) {
+            return '';
+        }
+
         $text = iconv(
             mb_detect_encoding(
                 $text,
