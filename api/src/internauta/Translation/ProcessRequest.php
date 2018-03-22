@@ -44,7 +44,7 @@ class ProcessRequest implements BaseProcessRequest
     {
         if (!in_array(
             current(explode('@', $recipient)),
-            ['traduccion', 'traducir', 'traduce', 'translation', 'translate']
+            ['traduccion', 'traducciones', 'traducir', 'traduce', 'translation', 'translate']
         )) {
             throw new UnsupportedRequestException();
         }
