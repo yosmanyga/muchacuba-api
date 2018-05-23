@@ -1,28 +1,36 @@
 # Dev init
 
-docker run -it --rm -v $(pwd)/app:/app -w /app --name node node:7.5.0-alpine sh
-npm install
+docker network create frontend
+
+docker network create backend
 
 docker-compose \
--f docker/docker-compose.common.yml \
--f docker/docker-compose.dev.yml \
--p muchacuba \
+-f docker/common.yml \
+-f docker/dev.yml \
+-p muchacuba_api \
 up -d
-
-cd api
 
 composer install
 
-cp api/config/parameters.dist.yml api/config/parameters.yml
+cp config/parameters.dist.yml config/parameters.yml
 
-chmod a+w api/var/cache
+chmod a+w var/cache
+
+# Prod
+
+docker-compose \
+-f docker/common.yml \
+-f docker/prod.yml \
+-p muchacuba_api \
+up -d
 
 ## Dev debug
 
 Abrir https://localhost:3000 -> Advanced -> Proceed (unsafe)
+Abrir https://muchacuba.com/#/internauta/list-logs
 Debug en uno de los pedidos -> Enviar
 
-docker exec -it muchacuba_php
+docker exec -it muchacuba_api_php
 
 php bin/app.php /internauta/process-requests
 
@@ -30,7 +38,7 @@ php bin/app.php /internauta/process-requests
 
 ### Behat
 
-docker exec -it muchacuba_php sh
+docker exec -it muchacuba_api_php sh
 
 cd domain
 
@@ -45,7 +53,7 @@ rm -rf /data/db/dump
 mv dump /data/db
 
 # En mi pc
-scp -r root@muchacuba.com:/root/muchacuba/api/var/db/dump/ /home/yosmanyga/Work/Projects/yosmy/muchacuba/code/api/var/db
+scp -r root@muchacuba.com:/root/muchacuba/var/db/dump/ /home/yosmanyga/Work/Projects/yosmy/muchacuba/code/var/db
 
 # En el container mongo dev
 apk add --no-cache mongodb-tools
