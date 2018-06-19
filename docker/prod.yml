@@ -14,7 +14,7 @@ services:
     restart: always
   cron:
     image: yosmy/php
-    container_name: muchacuba_cron
+    container_name: muchacuba_api_cron
     volumes:
       - ../:/var/www
       - ./php/php_prod.ini:/usr/local/etc/php/php.ini
