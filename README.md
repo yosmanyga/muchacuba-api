@@ -32,6 +32,8 @@ Debug en uno de los pedidos -> Enviar
 
 docker exec -it muchacuba_api_php
 
+php bin/app.php /internauta/manual-push-request "yosmanyga@gmail.com" "horoscopo@muchacuba.com" "sagitario"
+
 php bin/app.php /internauta/process-requests
 
 ## Dev tests
