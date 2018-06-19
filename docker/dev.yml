@@ -4,7 +4,6 @@ services:
   nginx:
     volumes:
       - ./nginx/default_dev.conf:/etc/nginx/conf.d/default.conf
-      - ../app/build:/var/www
     ports:
       - 80:80
     networks:
@@ -12,11 +11,20 @@ services:
   php:
     volumes:
       - ./php/php_dev.ini:/usr/local/etc/php/php.ini
-      - ../api:/var/www/
+      - ../:/var/www/
     environment:
       PHP_IDE_CONFIG: "serverName=docker"
       PHP_XDEBUG_ENABLED: 1
-      XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.18.0.1"
+      XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=172.17.0.1"
   mongo:
     ports:
       - 27017:27017
+  mongo-express:
+    image: mongo-express
+    container_name: muchacuba_api_mongo_express
+    depends_on:
+      - mongo
+    networks:
+      - backend
+    ports:
+      - 8081:8081
