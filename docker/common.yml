@@ -2,15 +2,15 @@ version: '3'
 
 services:
   nginx:
-    image: nginx:1.13.8-alpine
+    image: yosmy/nginx
     container_name: muchacuba_api_nginx
     networks:
       - frontend
       - backend
     working_dir: /var/www
     environment:
-      - VIRTUAL_HOST=muchacuba.com,www.muchacuba.com
-      - LETSENCRYPT_HOST=muchacuba.com,www.muchacuba.com
+      - VIRTUAL_HOST=api.muchacuba.com
+      - LETSENCRYPT_HOST=api.muchacuba.com
       - LETSENCRYPT_EMAIL=contact@muchacuba.com
   php:
     image: yosmy/php
@@ -22,7 +22,7 @@ services:
     image: yosmy/mongo
     container_name: muchacuba_api_mongo
     volumes:
-      - ../api/var/db:/data/db
+      - ../var/db:/data/db
     networks:
       - backend
 
