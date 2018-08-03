@@ -150,6 +150,10 @@ class ProcessRequest implements BaseProcessRequest
             }
 
             $start += $amount;
+
+            if ($start > 30) {
+                break;
+            }
         }
 
         if (empty($responses)) {
