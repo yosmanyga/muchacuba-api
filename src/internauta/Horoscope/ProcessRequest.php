@@ -19,50 +19,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class ProcessRequest implements BaseProcessRequest
 {
     /**
-     * @var string
-     */
-    private $googleServerApi;
-
-    /**
-     * @var string
-     */
-    private $googleCx;
-
-    /**
-     * @var SearchGoogle
-     */
-    private $searchGoogle;
-
-    /**
-     * @var RequestPage
-     */
-    private $requestPage;
-
-    /**
-     * @param string       $googleServerApi
-     * @param string       $googleCx
-     * @param SearchGoogle $searchGoogle
-     * @param RequestPage  $requestPage
-     *
-     * @di\arguments({
-     *     googleServerApi: '%google_server_api%',
-     *     googleCx:        '%google_cx_horoscope%'
-     * })
-     */
-    public function __construct(
-        $googleServerApi,
-        $googleCx,
-        SearchGoogle $searchGoogle,
-        RequestPage $requestPage
-    )
-    {
-        $this->googleServerApi = $googleServerApi;
-        $this->googleCx = $googleCx;
-        $this->searchGoogle = $searchGoogle;
-        $this->requestPage = $requestPage;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function process($sender, $recipient, $subject, $body)
@@ -74,59 +30,10 @@ class ProcessRequest implements BaseProcessRequest
             throw new UnsupportedRequestException();
         }
 
-        // Not needed
-        unset($body);
-
         $responses = [];
         $events = [];
 
-        $results = $this->searchGoogle->search(
-            $this->googleServerApi,
-            $this->googleCx,
-            sprintf(
-                'horoscopo %s %s',
-                // Used this parameter to find the exact horoscope page for current day
-                (new \IntlDateFormatter(
-                    'es',
-                    \IntlDateFormatter::FULL,
-                    \IntlDateFormatter::FULL,
-                    'America/Havana',
-                    \IntlDateFormatter::GREGORIAN,
-                    "eeee d 'de' LLLL Y"
-                ))->format(time()),
-                $subject
-            )
-        );
-
-        if (count($results) == 0) {
-            $events[] = new Event(
-                $this,
-                'NotFound',
-                [
-                    'subject' => $subject
-                ]
-            );
-
-            return new ProcessResult($responses, $events);
-        }
-
-        $body = null;
-
-        foreach ($results as $result) {
-            $body = $this->readHoroscope($result['link']);
-
-            break;
-        }
-
-        if ($body === null) {
-            $events[] = new Event(
-                $this,
-                'NotFound',
-                []
-            );
-
-            return new ProcessResult($responses, $events);
-        }
+        $body = $this->readHoroscope($subject);
 
         $responses[] = new Response(
             'Horóscopo Muchacuba <horoscopo@muchacuba.com>',
@@ -150,46 +57,47 @@ EOF;
     }
 
     /**
-     * @param string $link
+     * @param string $subject
      *
      * @return string
      */
-    private function readHoroscope($link)
+    private function readHoroscope($subject)
     {
-        $crawler = $this->requestPage->request($link, false);
+        $data = file_get_contents('https://api.adderou.cl/tyaas/');
 
-        $title = $crawler
-            ->filter('h1')
-            ->first()->getNode(0)->textContent;
-        // The title comes with spaces at the beginning and end
-        $title = trim($title);
+        $data = json_decode($data, true);
 
-        $body = sprintf("%s", $title);
+        $shortest = -1;
+        foreach ($data['horoscopo'] as $sign => $rows) {
+            $lev = levenshtein($subject, $rows['nombre']);
 
-        $texts = $crawler
-            ->filter('#article-chunks p, #article-chunks h3')
-            ->each(function(Crawler $crawler) {
-                if ($crawler->first()->getNode(0)->tagName == 'h3') {
-                    $text = sprintf("%s\n", $crawler->first()->getNode(0)->textContent);
-                    $text = trim($text);
-                } else {
-                    $text = implode("\n", $crawler->filterXPath('//p/text()')->extract(['_text']));
-                    $text = trim($text);
-                }
+            // Exact match?
+            if ($lev == 0) {
+                $closest = $rows;
+                $shortest = 0;
 
-                return $text;
-            });
-
-        $texts = array_filter(
-            $texts,
-            function($text) {
-                return !empty($text);
+                break;
             }
+
+            // If this distance is less than the next found shortest
+            // distance, OR if a next shortest word has not yet been found
+            if ($lev <= $shortest || $shortest < 0) {
+                // Set the closest match, and shortest distance
+                $closest = $rows;
+                $shortest = $lev;
+            }
+        }
+
+        $body = sprintf(
+            "Signo: %s\n\nFecha: %s\n\nAmor: %s\n\nSalud: %s\n\nDinero: %s\n\nColor: %s\n\nNúmero: %s\n\n\n\n",
+            $closest['nombre'],
+            $closest['fechaSigno'],
+            $closest['amor'],
+            $closest['salud'],
+            $closest['dinero'],
+            $closest['color'],
+            $closest['numero']
         );
-
-        $text = implode("\n\n", $texts);
-
-        $body = sprintf("%s\n\n%s", $body, $text);
 
         return $body;
     }
