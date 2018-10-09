@@ -12,7 +12,9 @@ use Muchacuba\Internauta\UnsupportedRequestException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * @di\service()
+ * @di\service({
+ *     tags: [{name: 'internauta.process_request', key: 'horoscope'}]
+ * })
  */
 class UnivisionProcessRequest implements BaseProcessRequest
 {

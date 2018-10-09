@@ -9,7 +9,7 @@ use Muchacuba\Internauta\Request\ManageStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symsonte\Behat\ContainerAwareContext;
 use Symsonte\Service\Container;
-use Muchacuba\Internauta\Horoscope\ProcessRequest as HoroscopeProcessRequest;
+use Muchacuba\Internauta\Horoscope\UnivisionProcessRequest as HoroscopeProcessRequest;
 use Muchacuba\Internauta\Translation\ProcessRequest as TranslationProcessRequest;
 use Muchacuba\Internauta\Lyrics\ProcessRequest as LyricsProcessRequest;
 use Muchacuba\Internauta\Image\ProcessRequest as ImageProcessRequest;

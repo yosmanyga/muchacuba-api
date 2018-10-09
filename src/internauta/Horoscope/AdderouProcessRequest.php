@@ -12,11 +12,9 @@ use Muchacuba\Internauta\UnsupportedRequestException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * @di\service({
- *     tags: [{name: 'internauta.process_request', key: 'horoscope'}]
- * })
+ * @di\service()
  */
-class ProcessRequest implements BaseProcessRequest
+class AdderouProcessRequest implements BaseProcessRequest
 {
     /**
      * {@inheritdoc}
