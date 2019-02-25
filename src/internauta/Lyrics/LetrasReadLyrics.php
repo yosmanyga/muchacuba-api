@@ -66,6 +66,8 @@ class LetrasReadLyrics implements ReadLyrics
 
         $author = $crawler->first()->getNode(0)->textContent;
 
+        $author = trim($author);
+
         return $author;
     }
 
@@ -90,10 +92,13 @@ class LetrasReadLyrics implements ReadLyrics
      */
     private function resolveLyrics(Crawler $crawler)
     {
-        $crawler = $crawler->filter('article');
+        $crawler = $crawler->filter('.cnt-letra-trad');
 
-        $lyrics = $crawler->first()->html();
-        $lyrics = str_replace(['<p>', '</p>', '<br>', '"'], ['', '', "\n", ''], $lyrics);
+        $lyrics = $crawler->filterXPath('//p/text()')->extract(['_text']);
+        $lyrics = array_map(function($item) {
+            return trim($item);
+        }, $lyrics);
+        $lyrics = implode("\n", $lyrics);
 
         return $lyrics;
     }
