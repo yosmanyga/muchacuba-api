@@ -113,7 +113,7 @@ class UnivisionProcessRequest implements BaseProcessRequest
         $body = null;
 
         foreach ($results as $result) {
-            $body = $this->readHoroscope($result['link']);
+            $body = $this->readHoroscope1($result['link']);
 
             break;
         }
@@ -154,7 +154,52 @@ EOF;
      *
      * @return string
      */
-    private function readHoroscope($link)
+    private function readHoroscope1($link)
+    {
+        $crawler = $this->requestPage->request($link, false);
+
+        $title = $crawler
+            ->filter('h1')
+            ->first()->getNode(0)->textContent;
+
+        $body = sprintf("%s", $title);
+
+        $texts = $crawler
+            ->filter('meta[itemProp="caption"]')
+            ->each(function(Crawler $crawler) {
+                $text = $crawler->first()->getNode(0)->getAttribute('content');
+                $text = str_replace(['<b>', '</b>'], '', $text);
+                $text = str_replace(['<i>', '</i>'], '', $text);
+                $text = str_replace(['<br/>', ' -'], "\n", $text);
+                $text = str_replace(['&quot;'], '', $text);
+
+                return $text;
+            });
+
+        $texts = array_filter(
+            $texts,
+            function($text) {
+                return !empty($text);
+            }
+        );
+
+        if (!$texts) {
+            return $this->readHoroscope2($link);
+        }
+
+        $text = implode("\n\n", $texts);
+
+        $body = sprintf("%s\n\n%s", $body, $text);
+
+        return $body;
+    }
+
+    /**
+     * @param string $link
+     *
+     * @return string
+     */
+    private function readHoroscope2($link)
     {
         $crawler = $this->requestPage->request($link, false);
 
