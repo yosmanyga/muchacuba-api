@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Internauta\Horoscope;
 
+use Muchacuba\Internauta\ResolveSimilarity;
 use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
@@ -10,6 +11,7 @@ use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\SearchGoogle;
 use Muchacuba\Internauta\UnsupportedRequestException;
 use Symfony\Component\DomCrawler\Crawler;
+use IntlDateFormatter;
 
 /**
  * @di\service({
@@ -18,6 +20,11 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class UnivisionProcessRequest implements BaseProcessRequest
 {
+    /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
     /**
      * @var string
      */
@@ -39,10 +46,11 @@ class UnivisionProcessRequest implements BaseProcessRequest
     private $requestPage;
 
     /**
-     * @param string       $googleServerApi
-     * @param string       $googleCx
-     * @param SearchGoogle $searchGoogle
-     * @param RequestPage  $requestPage
+     * @param ResolveSimilarity $resolveSimilarity
+     * @param string            $googleServerApi
+     * @param string            $googleCx
+     * @param SearchGoogle      $searchGoogle
+     * @param RequestPage       $requestPage
      *
      * @di\arguments({
      *     googleServerApi: '%google_server_api%',
@@ -50,12 +58,13 @@ class UnivisionProcessRequest implements BaseProcessRequest
      * })
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle,
         RequestPage $requestPage
-    )
-    {
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
@@ -67,9 +76,9 @@ class UnivisionProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['horoscopo', 'horozcopo', 'hooroscopo', 'oroscopo', 'zodiaco', 'sodiaco']
+        if (!$this->resolveSimilarity->resolve(
+            ['horoscopo', 'zodiaco'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }
@@ -86,12 +95,12 @@ class UnivisionProcessRequest implements BaseProcessRequest
             sprintf(
                 'horoscopo %s %s',
                 // Used this parameter to find the exact horoscope page for current day
-                (new \IntlDateFormatter(
+                (new IntlDateFormatter(
                     'es',
-                    \IntlDateFormatter::FULL,
-                    \IntlDateFormatter::FULL,
+                    IntlDateFormatter::FULL,
+                    IntlDateFormatter::FULL,
                     'America/Havana',
-                    \IntlDateFormatter::GREGORIAN,
+                    IntlDateFormatter::GREGORIAN,
                     "eeee d 'de' LLLL Y"
                 ))->format(time()),
                 $subject

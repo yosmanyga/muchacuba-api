@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Internauta\Weather;
 
+use Muchacuba\Internauta\ResolveSimilarity;
 use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
@@ -17,17 +18,24 @@ use Symfony\Component\DomCrawler\Crawler;
 class ProcessRequest implements BaseProcessRequest
 {
     /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
+    /**
      * @var RequestPage
      */
     private $requestPage;
 
     /**
-     * @param RequestPage  $requestPage
+     * @param ResolveSimilarity  $resolveSimilarity
+     * @param RequestPage        $requestPage
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         RequestPage $requestPage
-    )
-    {
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->requestPage = $requestPage;
     }
 
@@ -36,9 +44,9 @@ class ProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['tiempo', 'pronostico', 'weather', 'meteorologia', 'ciclon', 'huracan', 'estado']
+        if (!$this->resolveSimilarity->resolve(
+            ['tiempo', 'pronostico', 'weather', 'meteorologia', 'ciclon', 'huracan', 'estado'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }

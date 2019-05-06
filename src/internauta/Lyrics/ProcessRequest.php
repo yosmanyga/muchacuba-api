@@ -2,12 +2,14 @@
 
 namespace Muchacuba\Internauta\Lyrics;
 
+use Muchacuba\Internauta\ResolveSimilarity;
 use Muchacuba\Internauta\UnsupportedRequestException;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\SearchGoogle;
+use Exception;
 
 /**
  * @di\service({
@@ -16,6 +18,11 @@ use Muchacuba\Internauta\SearchGoogle;
  */
 class ProcessRequest implements BaseProcessRequest
 {
+    /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
     /**
      * @var string
      */
@@ -37,6 +44,7 @@ class ProcessRequest implements BaseProcessRequest
     private $delegateReadLyrics;
 
     /**
+     * @param ResolveSimilarity  $resolveSimilarity
      * @param string             $googleServerApi
      * @param string             $googleCx
      * @param SearchGoogle       $searchGoogle
@@ -48,12 +56,13 @@ class ProcessRequest implements BaseProcessRequest
      * })
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle,
         DelegateReadLyrics $delegateReadLyrics
-    )
-    {
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
@@ -65,17 +74,9 @@ class ProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            $recipient,
-            [
-                'letras@muchacuba.com',
-                'letra@muchacuba.com',
-                'lyrics@muchacuba.com',
-                'lyric@muchacuba.com',
-                'lirics@muchacuba.com',
-                'letter@muchacuba.com',
-                'lletras@muchacuba.com',
-            ]
+        if (!$this->resolveSimilarity->resolve(
+            ['letras', 'lyrics', 'letter'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }
@@ -138,7 +139,7 @@ class ProcessRequest implements BaseProcessRequest
                 );
 
                 continue;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $events[] = new Event(
                     $this,
                     'Exception',

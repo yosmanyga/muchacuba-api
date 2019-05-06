@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Internauta\Revolico;
 
+use Muchacuba\Internauta\ResolveSimilarity;
 use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
@@ -18,6 +19,11 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class ProcessRequest implements BaseProcessRequest
 {
+    /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
     /**
      * @var string
      */
@@ -39,10 +45,11 @@ class ProcessRequest implements BaseProcessRequest
     private $requestPage;
 
     /**
-     * @param string       $googleServerApi
-     * @param string       $googleCx
-     * @param SearchGoogle $searchGoogle
-     * @param RequestPage $requestPage
+     * @param ResolveSimilarity  $resolveSimilarity
+     * @param string             $googleServerApi
+     * @param string             $googleCx
+     * @param SearchGoogle       $searchGoogle
+     * @param RequestPage        $requestPage
      *
      * @di\arguments({
      *     googleServerApi: '%google_server_api%',
@@ -50,12 +57,13 @@ class ProcessRequest implements BaseProcessRequest
      * })
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle,
         RequestPage $requestPage
-    )
-    {
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
@@ -67,9 +75,9 @@ class ProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['revolico', 'rebolico', 'anuncios', 'anuncio']
+        if (!$this->resolveSimilarity->resolve(
+            ['revolico', 'anuncios'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }

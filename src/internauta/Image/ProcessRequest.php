@@ -4,6 +4,7 @@ namespace Muchacuba\Internauta\Image;
 
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
+use Muchacuba\Internauta\ResolveSimilarity;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\SearchGoogle;
@@ -16,6 +17,11 @@ use Muchacuba\Internauta\UnsupportedRequestException;
  */
 class ProcessRequest implements BaseProcessRequest
 {
+    /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
     /**
      * @var string
      */
@@ -32,9 +38,10 @@ class ProcessRequest implements BaseProcessRequest
     private $searchGoogle;
 
     /**
-     * @param string       $googleServerApi
-     * @param string       $googleCx
-     * @param SearchGoogle $searchGoogle
+     * @param ResolveSimilarity $resolveSimilarity
+     * @param string            $googleServerApi
+     * @param string            $googleCx
+     * @param SearchGoogle      $searchGoogle
      *
      * @di\arguments({
      *     googleServerApi: '%google_server_api%',
@@ -42,11 +49,13 @@ class ProcessRequest implements BaseProcessRequest
      * })
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         $googleServerApi,
         $googleCx,
         SearchGoogle $searchGoogle
     )
     {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->googleServerApi = $googleServerApi;
         $this->googleCx = $googleCx;
         $this->searchGoogle = $searchGoogle;
@@ -57,9 +66,9 @@ class ProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['imagenes', 'imagen', 'images', 'image', 'imágenes']
+        if (!$this->resolveSimilarity->resolve(
+            ['imagenes'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }

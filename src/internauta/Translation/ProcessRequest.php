@@ -4,6 +4,7 @@ namespace Muchacuba\Internauta\Translation;
 
 use Google\Cloud\Translate\TranslateClient;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
+use Muchacuba\Internauta\ResolveSimilarity;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\UnsupportedRequestException;
@@ -17,21 +18,28 @@ use EmailReplyParser\Parser\EmailParser;
 class ProcessRequest implements BaseProcessRequest
 {
     /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
+    /**
      * @var TranslateClient
      */
     private $client;
 
     /**
-     * @param string $googleServerApi
+     * @param ResolveSimilarity  $resolveSimilarity
+     * @param string             $googleServerApi
      *
      * @di\arguments({
      *     googleServerApi: '%google_server_api%'
      * })
      */
     public function __construct(
+        ResolveSimilarity $resolveSimilarity,
         $googleServerApi
-    )
-    {
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
         $this->client = new TranslateClient([
             'key' => $googleServerApi
         ]);
@@ -42,9 +50,9 @@ class ProcessRequest implements BaseProcessRequest
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['traduccion', 'traducciones', 'traducir', 'traduce', 'translation', 'translate']
+        if (!$this->resolveSimilarity->resolve(
+            ['traduccion', 'translation'],
+            $recipient
         )) {
             throw new UnsupportedRequestException();
         }
