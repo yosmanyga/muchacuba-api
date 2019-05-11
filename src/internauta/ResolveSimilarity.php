@@ -12,6 +12,8 @@ class ResolveSimilarity
     /**
      * @param string[] $comparators
      * @param string   $recipient
+     *
+     * @return bool
      */
     public function resolve($comparators, $recipient)
     {
@@ -20,7 +22,7 @@ class ResolveSimilarity
         foreach ($comparators as $comparator) {
             $s = similar_text($recipient, $comparator);
 
-            if ($s > 5) {
+            if ($s >= 5) {
                 break;
             }
 
