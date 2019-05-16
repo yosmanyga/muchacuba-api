@@ -22,7 +22,7 @@ class ResolveSimilarity
         foreach ($comparators as $comparator) {
             $s = similar_text($recipient, $comparator);
 
-            if ($s >= 5) {
+            if ($s > 5) {
                 return true;
             }
         }
