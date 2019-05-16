@@ -23,12 +23,10 @@ class ResolveSimilarity
             $s = similar_text($recipient, $comparator);
 
             if ($s >= 5) {
-                break;
+                return true;
             }
-
-            return false;
         }
 
-        return true;
+        return false;
     }
 }
