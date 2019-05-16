@@ -8,7 +8,6 @@ use Muchacuba\Internauta\ResolveSimilarity;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\SearchGoogle;
-use Muchacuba\Internauta\UnsupportedRequestException;
 
 /**
  * @di\service({
@@ -64,15 +63,19 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function support($sender, $recipient, $subject, $body)
     {
-        if (!$this->resolveSimilarity->resolve(
+        return $this->resolveSimilarity->resolve(
             ['imagenes'],
             $recipient
-        )) {
-            throw new UnsupportedRequestException();
-        }
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function process($sender, $recipient, $subject, $body)
+    {
         // Not needed
         unset($body);
 

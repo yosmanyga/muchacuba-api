@@ -3,7 +3,6 @@
 namespace Muchacuba\Internauta\Lyrics;
 
 use Muchacuba\Internauta\ResolveSimilarity;
-use Muchacuba\Internauta\UnsupportedRequestException;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\Response;
@@ -72,15 +71,19 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function support($sender, $recipient, $subject, $body)
     {
-        if (!$this->resolveSimilarity->resolve(
+        return $this->resolveSimilarity->resolve(
             ['letras', 'lyrics', 'letter'],
             $recipient
-        )) {
-            throw new UnsupportedRequestException();
-        }
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function process($sender, $recipient, $subject, $body)
+    {
         $responses = [];
         $events = [];
 

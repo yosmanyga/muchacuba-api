@@ -2,6 +2,7 @@
 
 namespace Muchacuba\Internauta\Horoscope;
 
+use Muchacuba\Internauta\ResolveSimilarity;
 use Yosmy\Navigation\RequestPage;
 use Muchacuba\Internauta\Event;
 use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
@@ -17,17 +18,35 @@ use Symfony\Component\DomCrawler\Crawler;
 class AdderouProcessRequest implements BaseProcessRequest
 {
     /**
+     * @var ResolveSimilarity
+     */
+    private $resolveSimilarity;
+
+    /**
+     * @param ResolveSimilarity $resolveSimilarity
+     */
+    public function __construct(
+        ResolveSimilarity $resolveSimilarity
+    ) {
+        $this->resolveSimilarity = $resolveSimilarity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function support($sender, $recipient, $subject, $body)
+    {
+        return $this->resolveSimilarity->resolve(
+            ['horoscopo', 'horozcopo', 'hooroscopo', 'oroscopo', 'zodiaco', 'sodiaco'],
+            $recipient
+        );
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function process($sender, $recipient, $subject, $body)
     {
-        if (!in_array(
-            current(explode('@', $recipient)),
-            ['horoscopo', 'horozcopo', 'hooroscopo', 'oroscopo', 'zodiaco', 'sodiaco']
-        )) {
-            throw new UnsupportedRequestException();
-        }
-
         $responses = [];
         $events = [];
 

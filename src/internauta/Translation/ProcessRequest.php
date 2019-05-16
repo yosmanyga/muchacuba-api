@@ -7,7 +7,6 @@ use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\ResolveSimilarity;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
-use Muchacuba\Internauta\UnsupportedRequestException;
 use EmailReplyParser\Parser\EmailParser;
 
 /**
@@ -48,15 +47,19 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function support($sender, $recipient, $subject, $body)
     {
-        if (!$this->resolveSimilarity->resolve(
+        return $this->resolveSimilarity->resolve(
             ['traduccion', 'translation'],
             $recipient
-        )) {
-            throw new UnsupportedRequestException();
-        }
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function process($sender, $recipient, $subject, $body)
+    {
         if (empty($subject) && !empty($body)) {
             if ($sender == 'esperanza.ssp@infomed.sld.cu' || $sender == 'yosmanyga@gmail.com') {
                 $subject = (new EmailParser())->parse($body)->getVisibleText();

@@ -9,7 +9,6 @@ use Muchacuba\Internauta\ProcessRequest as BaseProcessRequest;
 use Muchacuba\Internauta\Response;
 use Muchacuba\Internauta\ProcessResult;
 use Muchacuba\Internauta\SearchGoogle;
-use Muchacuba\Internauta\UnsupportedRequestException;
 use Symfony\Component\DomCrawler\Crawler;
 use IntlDateFormatter;
 
@@ -74,15 +73,19 @@ class UnivisionProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function support($sender, $recipient, $subject, $body)
     {
-        if (!$this->resolveSimilarity->resolve(
+        return $this->resolveSimilarity->resolve(
             ['horoscopo', 'zodiaco'],
             $recipient
-        )) {
-            throw new UnsupportedRequestException();
-        }
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function process($sender, $recipient, $subject, $body)
+    {
         // Not needed
         unset($body);
 

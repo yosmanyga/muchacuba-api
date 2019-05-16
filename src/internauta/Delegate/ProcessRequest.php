@@ -10,7 +10,7 @@ use Muchacuba\Internauta\UnsupportedRequestException;
 /**
  * @di\service()
  */
-class ProcessRequest implements BaseProcessRequest
+class ProcessRequest
 {
     /**
      * @var BaseProcessRequest[]
@@ -32,7 +32,7 @@ class ProcessRequest implements BaseProcessRequest
      * })
      */
     public function __construct(
-        $processRequestServices = [],
+        $processRequestServices,
         BaseProcessRequest $fallbackProcessRequest
     )
     {
@@ -59,12 +59,19 @@ class ProcessRequest implements BaseProcessRequest
             ], []);
         }
 
+        $higher = 0;
+        $service = null;
         foreach ($this->processRequestServices as $processRequest) {
-            try {
-                return $processRequest->process($sender, $recipient, $subject, $body);
-            } catch (UnsupportedRequestException $e) {
-                continue;
+            $support = $processRequest->support($sender, $recipient, $subject, $body);
+
+            if ($support > $higher) {
+                $higher = $support;
+                $service = $processRequest;
             }
+        }
+
+        if ($service) {
+            return $service->process($sender, $recipient, $subject, $body);
         }
 
         return $this->fallbackProcessRequest->process($sender, $recipient, $subject, $body);

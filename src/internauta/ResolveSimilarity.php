@@ -13,20 +13,21 @@ class ResolveSimilarity
      * @param string[] $comparators
      * @param string   $recipient
      *
-     * @return bool
+     * @return int
      */
     public function resolve($comparators, $recipient)
     {
         $recipient = current(explode('@', $recipient));
 
+        $higher = 0;
         foreach ($comparators as $comparator) {
             $s = similar_text($recipient, $comparator);
 
-            if ($s > 5) {
-                return true;
+            if ($s > $higher) {
+                $higher = $s;
             }
         }
 
-        return false;
+        return $higher;
     }
 }

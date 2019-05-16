@@ -73,15 +73,19 @@ class ProcessRequest implements BaseProcessRequest
     /**
      * {@inheritdoc}
      */
-    public function process($sender, $recipient, $subject, $body)
+    public function support($sender, $recipient, $subject, $body)
     {
-        if (!$this->resolveSimilarity->resolve(
+        return $this->resolveSimilarity->resolve(
             ['revolico', 'anuncios'],
             $recipient
-        )) {
-            throw new UnsupportedRequestException();
-        }
+        );
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function process($sender, $recipient, $subject, $body)
+    {
         // Not needed
         unset($body);
 

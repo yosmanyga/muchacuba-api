@@ -10,9 +10,17 @@ interface ProcessRequest
      * @param string $subject
      * @param string $body
      *
-     * @return ProcessResult
+     * @return int
+     */
+    public function support($sender, $recipient, $subject, $body);
+
+    /**
+     * @param string $sender
+     * @param string $recipient
+     * @param string $subject
+     * @param string $body
      *
-     * @throws UnsupportedRequestException
+     * @return ProcessResult
      */
     public function process($sender, $recipient, $subject, $body);
 
