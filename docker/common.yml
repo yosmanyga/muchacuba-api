@@ -5,8 +5,8 @@ services:
     image: yosmy/nginx
     container_name: muchacuba_api_nginx
     networks:
-      - frontend
-      - backend
+      - proxy
+      - muchacuba
     working_dir: /var/www
     environment:
       - VIRTUAL_HOST=api.muchacuba.com
@@ -16,7 +16,7 @@ services:
     image: yosmy/php
     container_name: muchacuba_api_php
     networks:
-      - backend
+      - muchacuba
     working_dir: /var/www
   mongo:
     image: yosmy/mongo
@@ -24,10 +24,10 @@ services:
     volumes:
       - ../var/db:/data/db
     networks:
-      - backend
+      - muchacuba
 
 networks:
-  frontend:
+  proxy:
     external: true
-  backend:
+  muchacuba:
     external: true

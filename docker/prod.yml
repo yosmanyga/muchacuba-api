@@ -20,7 +20,11 @@ services:
       - ./php/php_prod.ini:/usr/local/etc/php/php.ini
       - ./cron:/root/cron
     networks:
-      - backend
+      - muchacuba
     working_dir: /var/www
     entrypoint: /root/cron/entrypoint.sh
     restart: always
+
+networks:
+  muchacuba:
+    external: true
